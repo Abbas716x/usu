@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#030307">
+<title>716QX | NEXUS OS 4.0</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                obsidian: '#030307',
+                void: '#05050c',
+                panel: '#0a0a15',
+                cardDark: 'rgba(12, 12, 24, 0.72)',
+                neonCyan: '#00F0FF',
+                neonViolet: '#B14EFF',
+                neonEmerald: '#00FF9D',
+                neonRose: '#FF2E63',
+                neonAmber: '#FFB700',
+                neonPink: '#FF2EA6',
+                gridLine: 'rgba(0, 240, 255, 0.08)'
+            },
+            fontFamily: {
+                ar: ['Tajawal', 'sans-serif'],
+                display: ['Orbitron', 'sans-serif'],
+                tech: ['Rajdhani', 'sans-serif'],
+                mono: ['JetBrains Mono', 'monospace']
+            }
+        }
+    }
+}
+</script>
+
+<script>
+// حماية بسيطة (تلميع فقط - لا تعتمد عليها أمنياً)
+(function(){
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) ||
+            (e.ctrlKey && ['U','u','S','s'].includes(e.key))
+        ) { e.preventDefault(); return false; }
+    });
+})();
+</script>
+</head>
+
+<body class="h-screen flex flex-col selection:bg-neonViolet/40 selection:text-white">
+
+<!-- ===== طبقات الخلفية ===== -->
+<canvas id="grid-canvas"></canvas>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="aurora aurora-1"></div>
+<div class="aurora aurora-2"></div>
+<div class="aurora aurora-3"></div>
+<div class="noise"></div>
+
+<!-- ===== شريط علوي علوي (HUD) ===== -->
+<div class="top-hud">
+    <div class="hud-left">
+        <span class="hud-dot hud-dot-green"></span>
+        <span class="font-tech text-[10px] tracking-[0.3em] text-neonEmerald">SYSTEM ONLINE</span>
+    </div>
+    <div class="hud-center">
+        <span class="font-mono text-[10px] tracking-[0.3em] text-neonCyan">NEXUS://716QX.OS.V4.0</span>
+    </div>
+    <div class="hud-right">
+        <span id="hud-clock" class="font-mono text-[10px] tracking-[0.2em] text-neonViolet">--:--:--</span>
+    </div>
+</div>
+
+<!-- ===== Toast ===== -->
+<div id="toast-container" class="fixed top-16 left-1/2 -translate-x-1/2 z-[400] flex flex-col gap-2 pointer-events-none items-center"></div>
+
+<!-- ===== Sidebar ===== -->
+<aside id="drawer" class="cyber-drawer fixed top-0 right-0 w-[340px] h-full z-[250] translate-x-full">
+    <div class="drawer-inner h-full flex flex-col p-8">
+        <div class="flex justify-between items-start mb-10">
+            <div class="flex items-center gap-4">
+                <div class="logo-orb">
+                    <div class="logo-inner font-display font-black text-white text-xl">R</div>
+                    <div class="logo-ring"></div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-display font-black tracking-widest text-white">716QX</h2>
+                    <span class="text-[9px] text-neonCyan font-mono tracking-[0.35em]">NEXUS OS 4.0</span>
+                </div>
+            </div>
+            <button onclick="window.toggleDrawer()" class="close-x">✕</button>
+        </div>
+
+        <div class="data-stream mb-6">
+            <div class="data-stream-inner">
+                <span class="text-[9px] font-mono text-neonCyan">◆ FEED: <span id="feed-text">INITIALIZING CORE...</span></span>
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-2 flex-1">
+            <button id="nav-dashboard" onclick="window.switchView('dashboard')" class="nav-link">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </span>
+                <span class="flex-1 text-right">لوحة التحكم</span>
+                <span class="nav-tag">01</span>
+            </button>
+            <button id="nav-tables" onclick="window.switchView('tables')" class="nav-link">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                </span>
+                <span class="flex-1 text-right">خريطة الطاولات</span>
+                <span class="nav-tag">02</span>
+            </button>
+            <button id="nav-debts" onclick="window.switchView('debts')" class="nav-link">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+                </span>
+                <span class="flex-1 text-right">الديون والتسديد</span>
+                <span class="nav-tag nav-tag-rose">03</span>
+            </button>
+            <button id="nav-invoices" onclick="window.switchView('invoices')" class="nav-link">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/></svg>
+                </span>
+                <span class="flex-1 text-right">سجل الفواتير</span>
+                <span class="nav-tag">04</span>
+            </button>
+            <button id="nav-menu" onclick="window.switchView('menu')" class="nav-link">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                </span>
+                <span class="flex-1 text-right">الأقسام والمنيو</span>
+                <span class="nav-tag">05</span>
+            </button>
+        </nav>
+
+        <div class="pt-6 border-t border-white/5 space-y-3">
+            <div class="sys-stats">
+                <div class="flex justify-between text-[10px] font-mono text-gray-500 mb-1">
+                    <span>CORE.LOAD</span><span id="core-load">12%</span>
+                </div>
+                <div class="load-bar"><div id="load-bar-fill" class="load-fill"></div></div>
+            </div>
+            <button onclick="if(confirm('إعادة ضبط المصنع للنظام وحذف كافة السجلات؟')) window.resetSystemFull()" class="danger-btn">
+                ⚠ إعادة ضبط المصنع
+            </button>
+        </div>
+    </div>
+</aside>
+
+<div id="drawer-overlay" onclick="window.toggleDrawer()" class="drawer-overlay"></div>
+
+<!-- ===== Main ===== -->
+<main class="flex-1 h-full overflow-y-auto relative flex flex-col no-scrollbar">
+
+    <!-- Header -->
+    <header class="main-header sticky top-0 z-40">
+        <div class="header-glow"></div>
+        <div class="p-5 md:px-8 flex justify-between items-center relative z-10">
+            <div class="flex items-center gap-5">
+                <button onclick="window.toggleDrawer()" class="icon-btn">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                </button>
+                <div>
+                    <h1 class="text-xl font-display font-black tracking-widest flex items-center gap-1 text-white">
+                        716QX<span class="text-neonCyan text-2xl animate-pulse">.</span>
+                    </h1>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-neonEmerald animate-pulse"></span>
+                        <span id="live-clock" class="text-[10px] text-neonCyan font-mono tracking-[0.2em]">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center gap-1 bg-black/50 p-1.5 rounded-2xl border border-white/5 backdrop-blur-xl">
+                <button onclick="window.switchView('dashboard')" class="top-tab">لوحة التحكم</button>
+                <button onclick="window.switchView('tables')" class="top-tab">الجداول</button>
+                <button onclick="window.switchView('debts')" class="top-tab">الديون</button>
+                <button onclick="window.switchView('invoices')" class="top-tab">الفواتير</button>
+                <button onclick="window.switchView('menu')" class="top-tab">المنيو</button>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="window.switchView('tables'); setTimeout(()=>document.querySelector('#search-tables')?.focus(),200)" class="icon-btn hidden lg:flex" title="بحث (Ctrl+K)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </button>
+                <button onclick="window.openAddTableModal()" class="btn-neon">
+                    <span class="btn-neon-icon">+</span>
+                    <span class="hidden sm:inline">طاولة جديدة</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== Dashboard ===== -->
+    <div id="view-dashboard" class="view p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="hud-badge">▸ MODULE 01</span>
+                    <span class="hud-badge hud-badge-cyan">REAL-TIME</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight">مركز التحكم المالي</h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">المبيعات اليومية مستمرة، الترحيل يدوي عند الحاجة</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button onclick="if(confirm('تصفير مبيعات اليوم وترحيلها للإيراد الشهري؟')) window.resetDailyRevenue()" class="btn-ghost-success">
+                    <span>⟳</span> ترحيل اليوم ← الشهر
+                </button>
+                <button onclick="if(confirm('تصفير الإيراد الشهري بالكامل؟')) window.resetMonthlyRevenue()" class="btn-ghost-warn">
+                    <span>⌬</span> تصفير الشهر
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div class="stat-card stat-emerald">
+                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-mono text-neonEmerald tracking-widest">SALES.TODAY</span>
+                    <span class="pulse-dot pulse-green"></span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="stat-daily" class="text-3xl font-mono font-black text-white">0</h3>
+                    <span class="text-[10px] text-neonEmerald font-mono">IQD</span>
+                </div>
+                <div class="stat-bar"><div class="stat-bar-fill bg-neonEmerald" style="width:65%"></div></div>
+                <span class="text-[10px] text-gray-500 font-mono mt-2 block">LIVE ● RUNNING</span>
+            </div>
+
+            <div class="stat-card stat-cyan">
+                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-mono text-neonCyan tracking-widest">SALES.YESTERDAY</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="stat-yesterday" class="text-3xl font-mono font-black text-neonCyan">0</h3>
+                    <span class="text-[10px] text-neonCyan font-mono">IQD</span>
+                </div>
+                <div class="stat-bar"><div class="stat-bar-fill bg-neonCyan" style="width:40%"></div></div>
+                <span class="text-[10px] text-gray-500 font-mono mt-2 block">ARCHIVED.LAST</span>
+            </div>
+
+            <div class="stat-card stat-amber">
+                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-mono text-neonAmber tracking-widest">REVENUE.MONTH</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="stat-monthly" class="text-3xl font-mono font-black text-neonAmber">0</h3>
+                    <span class="text-[10px] text-neonAmber font-mono">IQD</span>
+                </div>
+                <div class="stat-bar"><div class="stat-bar-fill bg-neonAmber" style="width:80%"></div></div>
+                <span class="text-[10px] text-gray-500 font-mono mt-2 block">CUMULATIVE.SUM</span>
+            </div>
+
+            <div class="stat-card stat-violet">
+                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-mono text-neonViolet tracking-widest">SESSIONS.ACTIVE</span>
+                    <span class="pulse-dot pulse-violet"></span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 id="stat-active" class="text-3xl font-mono font-black text-neonViolet">0</h3>
+                    <span class="text-[10px] text-neonViolet font-mono">LIVE</span>
+                </div>
+                <div class="stat-bar"><div class="stat-bar-fill bg-neonViolet" style="width:100%"></div></div>
+                <span class="text-[10px] text-gray-500 font-mono mt-2 block">STATIONS.ONLINE</span>
+            </div>
+        </div>
+
+        <h3 class="text-lg font-black text-white mb-4 flex items-center gap-3">
+            <span class="text-neonCyan font-mono text-xs">▶</span> اختصارات سريعة
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <div onclick="window.switchView('tables')" class="quick-card quick-violet">
+                <div class="quick-icon">🎮</div>
+                <div>
+                    <h4 class="font-black text-white text-base">خريطة الطاولات</h4>
+                    <p class="text-gray-400 text-xs mt-1 font-tech">مراقبة الجلسات الحية</p>
+                </div>
+                <span class="quick-arrow">←</span>
+            </div>
+            <div onclick="window.switchView('debts')" class="quick-card quick-rose">
+                <div class="quick-icon">📒</div>
+                <div>
+                    <h4 class="font-black text-white text-base">دفتر الديون</h4>
+                    <p class="text-gray-400 text-xs mt-1 font-tech">حسابات الزبائن والآجل</p>
+                </div>
+                <span class="quick-arrow">←</span>
+            </div>
+            <div onclick="window.switchView('menu')" class="quick-card quick-cyan">
+                <div class="quick-icon">⚙</div>
+                <div>
+                    <h4 class="font-black text-white text-base">الأقسام والمنيو</h4>
+                    <p class="text-gray-400 text-xs mt-1 font-tech">الأسعار والعدادات</p>
+                </div>
+                <span class="quick-arrow">←</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Tables ===== -->
+    <div id="view-tables" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="hud-badge">▸ MODULE 02</span>
+                    <span class="hud-badge hud-badge-green">LIVE.GRID</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight">خريطة الطاولات المباشرة</h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">تحديث حي فوري للوقت والحسابات</p>
+            </div>
+            <input type="text" id="search-tables" onkeyup="window.searchTables()" placeholder="⌕ ابحث برقم الطاولة أو الزبون..." class="cyber-input w-full md:w-80">
+        </div>
+        <div id="tables-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </div>
+
+    <!-- ===== Table Detail ===== -->
+    <div id="view-table-detail" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+            <button onclick="window.switchView('tables')" class="btn-ghost">
+                <span>←</span> العودة للخريطة
+            </button>
+            <div class="text-center">
+                <div class="hud-badge mb-2">▸ TABLE.SESSION</div>
+                <h2 id="detail-table-name" class="text-2xl md:text-3xl font-black text-white font-display tracking-wider">—</h2>
+                <span id="detail-customer-badge" class="text-xs text-neonCyan font-mono">GUEST</span>
+            </div>
+            <div class="w-24"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-8 cyber-panel p-6 md:p-8 flex flex-col">
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+                    <div>
+                        <h3 class="text-xl font-black text-white">الطلبات والوقت</h3>
+                        <p class="text-gray-400 text-xs mt-1 font-tech">عدادات حية + دفع مبكر لكل صنف</p>
+                    </div>
+                    <button onclick="window.openProductPicker()" class="btn-neon">
+                        <span>+</span> إضافة طلب
+                    </button>
+                </div>
+                <div id="detail-items-list" class="overflow-y-auto no-scrollbar space-y-3.5 max-h-[600px]"></div>
+            </div>
+
+            <div class="lg:col-span-4 cyber-panel p-6 md:p-8 sticky top-24">
+                <div class="panel-header mb-6">
+                    <span class="hud-badge hud-badge-violet">▸ BALANCE.PANEL</span>
+                    <h3 class="text-lg font-black text-white mt-3">لوحة الحساب الإجمالي</h3>
+                </div>
+
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="cyber-label">اسم العميل</label>
+                        <input type="text" id="input-table-customer" onchange="window.updateCustomerName(this.value)" placeholder="مثال: أحمد VIP" class="cyber-input">
+                    </div>
+                    <div>
+                        <label class="cyber-label">خصم مباشر (IQD)</label>
+                        <input type="number" id="input-table-discount" oninput="window.updateDiscountIQD(this.value)" min="0" placeholder="0" class="cyber-input font-mono">
+                    </div>
+                </div>
+
+                <div class="balance-box">
+                    <div class="balance-row">
+                        <span class="text-gray-400 text-xs">إجمالي الحساب:</span>
+                        <span id="sum-subtotal" class="font-mono font-bold text-white text-sm">0 IQD</span>
+                    </div>
+                    <div class="balance-row">
+                        <span class="text-neonEmerald text-xs">مدفوع مسبقاً:</span>
+                        <span id="sum-early-paid" class="font-mono font-bold text-neonEmerald text-sm">0 IQD</span>
+                    </div>
+                    <div class="balance-row">
+                        <span class="text-neonRose text-xs">الخصم:</span>
+                        <span id="sum-discount-val" class="font-mono font-bold text-neonRose">-0 IQD</span>
+                    </div>
+                    <div class="h-px bg-gradient-to-r from-transparent via-neonCyan/40 to-transparent my-3"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-black">المطلوب:</span>
+                        <span class="font-mono text-3xl font-black text-neonCyan flex items-end gap-1">
+                            <span id="sum-final">0</span>
+                            <span class="text-xs text-gray-400 font-normal mb-1">IQD</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 mt-6">
+                    <button onclick="window.openCheckoutModal()" class="btn-neon-full">
+                        ✓ إغلاق الحساب / تحويل دين
+                    </button>
+                    <button onclick="window.openTransferModal()" class="btn-ghost">⇄ نقل أو دمج طاولة</button>
+                    <button onclick="if(confirm('حذف هذه الطاولة؟')) window.deleteTable()" class="danger-link">إلغاء الطاولة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Debts ===== -->
+    <div id="view-debts" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="hud-badge hud-badge-rose">▸ MODULE 03</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight">سجل الديون</h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">تسديد كلي أو جزئي مع تسجيل تلقائي</p>
+            </div>
+            <input type="text" id="search-debts" onkeyup="window.renderDebtsList()" placeholder="⌕ ابحث باسم المدين..." class="cyber-input w-full md:w-80">
+        </div>
+        <div id="debts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- ===== Invoices ===== -->
+    <div id="view-invoices" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="hud-badge">▸ MODULE 04</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight">أرشيف الفواتير</h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">عرض، طباعة، وتصدير</p>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+                <button onclick="window.exportInvoicesCSV()" class="btn-ghost-success">📊 تصدير CSV</button>
+                <button onclick="if(confirm('مسح كامل أرشيف الفواتير؟')) window.clearAllInvoices()" class="btn-ghost-danger">🗑 مسح الأرشيف</button>
+            </div>
+        </div>
+        <div class="cyber-panel overflow-hidden">
+            <div class="overflow-x-auto no-scrollbar">
+                <table class="w-full text-right min-w-[800px]">
+                    <thead class="bg-black/60 border-b border-white/5">
+                        <tr class="font-mono text-[10px] tracking-widest text-gray-500">
+                            <th class="p-5">INVOICE.ID</th>
+                            <th class="p-5">TABLE / CUSTOMER</th>
+                            <th class="p-5">TOTAL</th>
+                            <th class="p-5">STATUS</th>
+                            <th class="p-5">TIMESTAMP</th>
+                            <th class="p-5">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-list" class="divide-y divide-white/5 text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Menu ===== -->
+    <div id="view-menu" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="hud-badge hud-badge-cyan">▸ MODULE 05</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight">إدارة الأقسام والمنيو</h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">عدادات تنازلية، تصاعدية، وأصناف مباشرة</p>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+                <button onclick="window.openModal('modal-add-category')" class="btn-ghost">📁 + قسم جديد</button>
+                <button onclick="window.openAddProductModal()" class="btn-neon">+ صنف جديد</button>
+            </div>
+        </div>
+
+        <div id="menu-category-nav" class="sticky top-24 z-20 mb-6 flex gap-2 overflow-x-auto no-scrollbar rounded-2xl bg-black/70 p-2 backdrop-blur-2xl border border-white/5"></div>
+        <div id="menu-categories-container" class="space-y-8"></div>
+    </div>
+</main>
+
+<!-- ===== Modals ===== -->
+<div id="modal-add-table" class="cyber-modal hidden">
+    <div class="modal-box modal-violet">
+        <button onclick="window.closeModal('modal-add-table')" class="modal-x">✕</button>
+        <div class="modal-header">
+            <span class="hud-badge">▸ INIT.SESSION</span>
+            <h3 class="text-2xl font-black text-white mt-3">فتح طاولة جديدة</h3>
+            <p class="text-gray-400 text-xs mt-1 font-tech">أدخل اسماً أو رقماً لبدء الجلسة</p>
+        </div>
+        <input type="text" id="input-new-table-name" placeholder="مثال: جهاز 5 VIP" class="cyber-input mb-4">
+        <div class="flex flex-wrap gap-2 mb-6">
+            <button onclick="window.suggestTableName('PS5 - جهاز ')">🎮 صالة PS5</button>
+            <button onclick="window.suggestTableName('غرفة VIP #')">👑 غرفة VIP</button>
+            <button onclick="window.suggestTableName('طاولة كافيه ')">☕ طاولة كافيه</button>
+        </div>
+        <button onclick="window.confirmAddTable()" class="btn-neon-full">✓ تأكيد الفتح</button>
+    </div>
+</div>
+
+<div id="modal-product-picker" class="cyber-modal hidden">
+    <div class="modal-box modal-cyan max-w-3xl flex flex-col max-h-[85vh]">
+        <button onclick="window.closeModal('modal-product-picker')" class="modal-x">✕</button>
+        <div class="modal-header mb-4 flex items-start gap-3">
+            <button id="picker-back-btn" onclick="window.pickerShowCategories()" class="hidden btn-ghost-small">← الأقسام</button>
+            <div>
+                <h3 id="picker-title" class="text-xl font-black text-white">اختر القسم</h3>
+                <p id="picker-subtitle" class="text-gray-400 text-xs mt-1 font-tech">اضغط على القسم لعرض الأصناف</p>
+            </div>
+        </div>
+        <div
