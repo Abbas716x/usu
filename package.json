@@ -1,0 +1,8 @@
+{
+  "name": "716qx-nexus",
+  "version": "7.1.0",
+  "private": true,
+  "dependencies": {
+    "@libsql/client": "^0.6.0"
+  }
+}
