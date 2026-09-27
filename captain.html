@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>716QX CAPTAIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Tajawal:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#000010;color:#fff;font-family:'Tajawal',sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:radial-gradient(circle at 15% 20%,rgba(0,255,136,.15),transparent 45%),radial-gradient(circle at 85% 80%,rgba(0,255,255,.15),transparent 45%),#000010;background-attachment:fixed}
+.glass{background:rgba(255,255,255,.04);backdrop-filter:blur(28px);border:1.5px solid rgba(255,255,255,.1);border-radius:22px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:14px;font-weight:900;font-size:14px;border:none;cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#00FF88,#00FFFF);color:#002a17}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,255,136,.6)}
+.btn-danger{background:linear-gradient(135deg,#FF0080,#C026D3);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.05);border:1.5px solid rgba(0,255,255,.3);color:#fff}
+.btn-ghost:hover{background:rgba(0,255,255,.12);color:#00FFFF}
+.inp{width:100%;padding:14px 16px;border-radius:13px;background:rgba(0,0,0,.4);border:1.5px solid rgba(0,255,136,.25);color:#fff;font-size:14px;font-weight:600;outline:none}
+.inp:focus{border-color:#00FF88;box-shadow:0 0 0 3px rgba(0,255,136,.15)}
+.modal-bd{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bd.show{display:flex}
+.modal-panel{width:100%;max-width:520px;background:rgba(15,15,35,.95);backdrop-filter:blur(40px);border:1.5px solid rgba(0,255,136,.25);border-radius:26px;padding:32px;position:relative;max-height:92vh;overflow-y:auto}
+.modal-x{position:absolute;top:16px;left:16px;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:15px}
+.card{padding:22px;border-radius:20px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.08);transition:all .3s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 30px rgba(0,255,136,.2);border-color:#00FF88}
+.cat-card{padding:22px;border-radius:18px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.1);cursor:pointer;text-align:center;transition:all .3s}
+.cat-card:hover{transform:translateY(-6px) scale(1.03);border-color:#00FF88;box-shadow:0 0 30px rgba(0,255,136,.3)}
+.badge{display:inline-block;padding:4px 11px;border-radius:8px;font-size:10px;font-weight:900;font-family:'JetBrains Mono',monospace}
+.badge-live{background:rgba(0,255,136,.15);color:#00FF88;border:1px solid rgba(0,255,136,.4)}
+.qty-btn{width:36px;height:36px;border-radius:12px;background:rgba(0,255,136,.12);border:1.5px solid rgba(0,255,136,.35);color:#00FF88;font-size:20px;font-weight:900;cursor:pointer}
+.qty-btn:hover{background:rgba(0,255,136,.25);color:#fff}
+#toast-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast{padding:13px 22px;border-radius:14px;font-weight:900;font-size:13px;background:rgba(10,10,31,.95);backdrop-filter:blur(20px);border:1.5px solid;max-width:400px;animation:toastIn .3s}
+@keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.toast.success{color:#00FF88;border-color:rgba(0,255,136,.4)}
+.toast.error{color:#FF0080;border-color:rgba(255,0,128,.4)}
+.toast.info{color:#00FFFF;border-color:rgba(0,255,255,.4)}
+.no-scrollbar::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+
+<div id="toast-wrap"></div>
+
+<!-- Login -->
+<div id="login-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="glass" style="width:100%;max-width:420px;padding:36px">
+        <div style="text-align:center;margin-bottom:28px">
+            <div style="width:80px;height:80px;margin:0 auto 16px;border-radius:22px;background:linear-gradient(135deg,#00FF88,#00FFFF);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 40px rgba(0,255,136,.6)">👨‍💼</div>
+            <h1 style="font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900">CAPTAIN.PANEL</h1>
+            <p style="color:#8a8a9a;font-size:12px;margin-top:8px;font-family:'JetBrains Mono',monospace">NEXUS 7.1 • LIMITED ACCESS</p>
+        </div>
+        <label style="display:block;font-size:12px;font-weight:900;color:#00FF88;margin-bottom:7px;font-family:'JetBrains Mono',monospace">SITE.ID</label>
+        <input type="text" class="inp" id="login-site" placeholder="site_id" style="margin-bottom:16px" autocomplete="off">
+        <label style="display:block;font-size:12px;font-weight:900;color:#00FF88;margin-bottom:7px;font-family:'JetBrains Mono',monospace">USERNAME</label>
+        <input type="text" class="inp" id="login-user" placeholder="captain" style="margin-bottom:16px" autocomplete="off">
+        <label style="display:block;font-size:12px;font-weight:900;color:#00FF88;margin-bottom:7px;font-family:'JetBrains Mono',monospace">PASSWORD</label>
+        <input type="password" class="inp" id="login-pass" placeholder="••••••" style="margin-bottom:24px" autocomplete="off">
+        <button class="btn btn-primary" style="width:100%;padding:16px" onclick="doLogin()">🔓 دخول</button>
+        <p id="login-err" style="color:#FF0080;font-size:12px;text-align:center;margin-top:14px;min-height:18px"></p>
+    </div>
+</div>
+
+<!-- Main -->
+<div id="main-panel" style="display:none;padding:16px;max-width:1200px;margin:0 auto">
+
+    <div class="glass" style="padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#00FF88,#00FFFF);display:flex;align-items:center;justify-content:center;font-size:20px">👨‍💼</div>
+            <div>
+                <h1 style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900">CAPTAIN</h1>
+                <p style="color:#8a8a9a;font-size:10px;font-family:'JetBrains Mono',monospace" id="captain-info">—</p>
+            </div>
+        </div>
+        <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost" onclick="switchView('tables')">🎮 الطاولات</button>
+            <button class="btn btn-danger" onclick="logout()">خروج</button>
+        </div>
+    </div>
+
+    <!-- Tables View -->
+    <section id="view-tables" class="view" style="display:block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+            <h2 style="font-size:20px;font-weight:900">الطاولات النشطة</h2>
+            <button class="btn btn-primary" onclick="openAddTableModal()">+ طاولة جديدة</button>
+        </div>
+        <div id="tables-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px"></div>
+    </section>
+
+    <!-- Table Detail -->
+    <section id="view-detail" class="view" style="display:none">
+        <button class="btn btn-ghost" onclick="switchView('tables')" style="margin-bottom:16px">← رجوع</button>
+        <div class="glass" style="padding:20px;margin-bottom:16px">
+            <h2 id="detail-name" style="font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900">—</h2>
+            <p id="detail-customer" style="color:#8a8a9a;font-size:12px;margin-top:6px;font-family:'JetBrains Mono',monospace">GUEST</p>
+            <button class="btn btn-primary" style="margin-top:14px" onclick="openPicker()">+ إضافة منتج</button>
+        </div>
+        <div id="detail-items" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div class="glass" style="padding:16px;margin-top:16px;text-align:center">
+            <span style="color:#8a8a9a;font-size:12px;font-family:'JetBrains Mono',monospace">TOTAL</span>
+            <div id="detail-total" style="font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;color:#00FF88;margin-top:6px">0</div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal: Add Table -->
+<div class="modal-bd" id="modal-table">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-table')">✕</button>
+        <h3 style="font-size:20px;font-weight:900;margin-bottom:18px">فتح طاولة</h3>
+        <label style="display:block;font-size:12px;font-weight:900;color:#00FF88;margin-bottom:7px">اسم الطاولة</label>
+        <input type="text" class="inp" id="new-table-name" placeholder="مثال: جهاز 5" style="margin-bottom:14px">
+        <label style="display:block;font-size:12px;font-weight:900;color:#00FF88;margin-bottom:7px">اسم الزبون</label>
+        <input type="text" class="inp" id="new-table-customer" placeholder="اختياري" style="margin-bottom:20px">
+        <button class="btn btn-primary" style="width:100%;padding:15px" onclick="confirmAddTable()">✓ فتح</button>
+    </div>
+</div>
+
+<!-- Modal: Product Picker -->
+<div class="modal-bd" id="modal-picker">
+    <div class="modal-panel" style="max-width:700px">
+        <button class="modal-x" onclick="closeModal('modal-picker')">✕</button>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <button id="picker-back" class="btn btn-ghost" style="display:none;padding:9px 14px;font-size:12px" onclick="pickerBack()">← الأقسام</button>
+            <h3 id="picker-title" style="font-size:20px;font-weight:900">اختر القسم</h3>
+        </div>
+        <div id="picker-body" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
+    </div>
+</div>
+
+<script src="assets/js/db.js"></script>
+<script src="assets/js/guard.js"></script>
+<script>
+(function () {
+    'use strict';
+    const $ = s => document.querySelector(s);
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const fmt = n => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
+    const now = () => Date.now();
+
+    let S = { site: null, name: '', tables: [], items: [], categories: [], products: [], activeTableId: null, pickerCatId: null };
+
+    function toast(msg, type='info', dur=2500) {
+        const w = $('#toast-wrap');
+        const el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.textContent = msg;
+        w.appendChild(el);
+        setTimeout(() => el.remove(), dur);
+    }
+    function openModal(id){document.getElementById(id).classList.add('show');}
+    function closeModal(id){document.getElementById(id).classList.remove('show');}
+    function switchView(v) {
+        document.querySelectorAll('.view').forEach(x => x.style.display = 'none');
+        $('#view-' + v).style.display = 'block';
+        if (v === 'tables') renderTables();
+        if (v === 'detail') renderDetail();
+    }
+
+    async function doLogin() {
+        const site = $('#login-site').value.trim();
+        const user = $('#login-user').value.trim();
+        const pass = $('#login-pass').value.trim();
+        $('#login-err').textContent = '';
+        if (!site || !user || !pass) { $('#login-err').textContent = 'املأ كل الحقول'; return; }
+        try {
+            const s = await DB.q1('SELECT * FROM sites WHERE id = ? AND username = ? AND password = ?', [site, user, pass]);
+            if (!s) { $('#login-err').textContent = 'بيانات خاطئة'; return; }
+            if (Number(s.frozen) === 1) { $('#login-err').textContent = 'الموقع مجمد'; return; }
+            sessionStorage.setItem('captain_site', site);
+            S.site = site; S.name = s.name;
+            await loadData();
+            $('#login-screen').style.display = 'none';
+            $('#main-panel').style.display = 'block';
+            $('#captain-info').textContent = s.name + ' • ' + site.slice(0,8);
+            switchView('tables');
+        } catch (e) {
+            $('#login-err').textContent = 'خطأ: ' + e.message;
+        }
+    }
+    function logout() {
+        sessionStorage.removeItem('captain_site');
+        location.reload();
+    }
+
+    async function loadData() {
+        const [tables, items, cats, prods] = await Promise.all([
+            DB.q('SELECT * FROM tables_ WHERE site_id = ? AND status = ?', [S.site, 'open']),
+            DB.q('SELECT * FROM items WHERE site_id = ?', [S.site]),
+            DB.q('SELECT * FROM categories WHERE site_id = ? ORDER BY position', [S.site]),
+            DB.q('SELECT * FROM products WHERE site_id = ?', [S.site])
+        ]);
+        S.tables = tables; S.items = items; S.categories = cats; S.products = prods;
+    }
+
+    function itemsFor(tableId) { return S.items.filter(i => i.table_id === tableId); }
+    function itemElapsed(it) {
+        if (it.type === 'direct') return 0;
+        let e = Number(it.session_elapsed) || 0;
+        if (it.status === 'running') e += (now() - Number(it.started_at)) / 1000 - (Number(it.paused_total) || 0);
+        return Math.max(0, e);
+    }
+    function itemTotal(it) {
+        const qty = Number(it.qty) || 1, price = Number(it.price) || 0;
+        if (it.type === 'direct' || it.type === 'countdown') return price * qty;
+        if (it.type === 'open') return Math.round((itemElapsed(it) * price / 3600) * qty);
+        return 0;
+    }
+    function tableTotal(t) {
+        return itemsFor(t.id).reduce((a, i) => a + itemTotal(i), 0);
+    }
+
+    function renderTables() {
+        const grid = $('#tables-grid');
+        if (S.tables.length === 0) {
+            grid.innerHTML = '<div class="glass" style="padding:40px;text-align:center;grid-column:1/-1"><div style="font-size:50px;margin-bottom:12px">🎮</div><p style="color:#8a8a9a">لا توجد طاولات</p></div>';
+            return;
+        }
+        grid.innerHTML = S.tables.map(t => {
+            const running = itemsFor(t.id).filter(i => i.type !== 'direct' && i.status === 'running').length;
+            return `
+                <div class="card" onclick="openDetail('${t.id}')">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                        <h3 style="font-size:16px;font-weight:900">${escapeHtml(t.name)}</h3>
+                        <span class="badge badge-live">${running > 0 ? '● نشط' : '○ idle'}</span>
+                    </div>
+                    <p style="color:#8a8a9a;font-size:11px;font-family:'JetBrains Mono',monospace;margin-bottom:10px">${escapeHtml(t.customer || 'GUEST')}</p>
+                    <div style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:#00FF88">${fmt(tableTotal(t))} <span style="font-size:10px;color:#8a8a9a">IQD</span></div>
+                </div>`;
+        }).join('');
+    }
+
+    function openDetail(id) { S.activeTableId = id; switchView('detail'); }
+    function currentTable() { return S.tables.find(t => t.id === S.activeTableId); }
+
+    function renderDetail() {
+        const t = currentTable(); if (!t) { switchView('tables'); return; }
+        $('#detail-name').textContent = t.name;
+        $('#detail-customer').textContent = (t.customer || 'GUEST').toUpperCase();
+        const items = itemsFor(t.id);
+        const list = $('#detail-items');
+        if (items.length === 0) {
+            list.innerHTML = '<div class="glass" style="padding:30px;text-align:center;color:#8a8a9a">لا توجد أصناف</div>';
+        } else {
+            list.innerHTML = items.map(it => `
+                <div class="glass" style="padding:14px">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <span style="font-size:24px">${it.icon || '📦'}</span>
+                            <div>
+                                <div style="font-weight:900">${escapeHtml(it.name)}</div>
+                                <div style="font-size:11px;color:#8a8a9a;font-family:'JetBrains Mono',monospace">${it.type === 'direct' ? 'DIRECT' : it.type === 'countdown' ? (it.duration + 'MIN') : 'OPEN/H'}</div>
+                            </div>
+                        </div>
+                        <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;color:#00FF88">${fmt(itemTotal(it))}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <button class="qty-btn" onclick="changeQty('${it.id}',-1)">−</button>
+                        <span style="font-family:'Orbitron',sans-serif;font-weight:900;min-width:30px;text-align:center">${it.qty}</span>
+                        <button class="qty-btn" onclick="changeQty('${it.id}',1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        $('#detail-total').textContent = fmt(tableTotal(t)) + ' IQD';
+    }
+
+    function openAddTableModal() {
+        $('#new-table-name').value = '';
+        $('#new-table-customer').value = '';
+        openModal('modal-table');
+    }
+    async function confirmAddTable() {
+        const name = $('#new-table-name').value.trim();
+        const customer = $('#new-table-customer').value.trim();
+        if (!name) { toast('أدخل اسم الطاولة', 'error'); return; }
+        if (S.tables.some(t => t.name === name)) { toast('يوجد طاولة بنفس الاسم', 'error'); return; }
+        const id = uid();
+        const createdAt = new Date().toISOString();
+        await DB.exec('INSERT INTO tables_ (id,site_id,name,customer,discount,created_at,status) VALUES (?,?,?,?,0,?,?)', [id, S.site, name, customer, createdAt, 'open']);
+        S.tables.push({ id, site_id: S.site, name, customer, discount: 0, created_at: createdAt, status: 'open' });
+        closeModal('modal-table');
+        renderTables();
+        toast('تم فتح "' + name + '"', 'success');
+    }
+
+    function openPicker() { S.pickerCatId = null; renderPicker(); openModal('modal-picker'); }
+    function pickerBack() { S.pickerCatId = null; renderPicker(); }
+    function renderPicker() {
+        const body = $('#picker-body');
+        const title = $('#picker-title');
+        const back = $('#picker-back');
+        if (!S.pickerCatId) {
+            title.textContent = 'اختر القسم';
+            back.style.display = 'none';
+            body.innerHTML = S.categories.map(c => `
+                <div class="cat-card" onclick="pickerCat('${c.id}')">
+                    <div style="font-size:34px;margin-bottom:8px">${c.icon}</div>
+                    <div style="font-weight:900">${escapeHtml(c.name)}</div>
+                </div>
+            `).join('');
+        } else {
+            const cat = S.categories.find(c => c.id === S.pickerCatId);
+            title.textContent = cat ? cat.name : '—';
+            back.style.display = 'block';
+            const prods = S.products.filter(p => p.cat_id === S.pickerCatId);
+            if (prods.length === 0) {
+                body.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#8a8a9a">لا توجد أصناف</div>';
+                return;
+            }
+            body.innerHTML = prods.map(p => `
+                <div class="cat-card" onclick="pickerAdd('${p.id}')">
+                    <div style="font-size:30px;margin-bottom:6px">${p.icon || '📦'}</div>
+                    <div style="font-weight:900;font-size:13px">${escapeHtml(p.name)}</div>
+                    <div style="font-family:'Orbitron',sans-serif;font-weight:900;color:#00FF88;margin-top:6px">${fmt(p.price)}</div>
+                </div>
+            `).join('');
+        }
+    }
+    function pickerCat(id) { S.pickerCatId = id; renderPicker(); }
+    async function pickerAdd(pid) {
+        const p = S.products.find(x => x.id === pid); if (!p) return;
+        const t = currentTable(); if (!t) return;
+        const id = uid();
+        const item = {
+            id, site_id: S.site, table_id: t.id,
+            name: p.name, icon: p.icon, type: p.type,
+            price: Number(p.price) || 0, duration: Number(p.duration) || 0,
+            qty: 1, started_at: now(), paused_at: null, paused_total: 0,
+            session_elapsed: 0, early_paid: 0,
+            status: p.type === 'direct' ? 'done' : 'running'
+        };
+        await DB.exec('INSERT INTO items (id,site_id,table_id,name,icon,type,price,duration,qty,started_at,paused_at,paused_total,session_elapsed,early_paid,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [item.id,item.site_id,item.table_id,item.name,item.icon,item.type,item.price,item.duration,item.qty,item.started_at,item.paused_at,item.paused_total,item.session_elapsed,item.early_paid,item.status]);
+        S.items.push(item);
+        renderDetail();
+        toast('تمت إضافة "' + p.name + '"', 'success', 1200);
+        S.pickerCatId = null; renderPicker();
+    }
+    async function changeQty(id, delta) {
+        const t = currentTable(); if (!t) return;
+        const it = S.items.find(i => i.id === id); if (!it) return;
+        it.qty = Math.max(1, (Number(it.qty) || 1) + delta);
+        await DB.exec('UPDATE items SET qty=? WHERE id=?', [it.qty, id]);
+        renderDetail();
+    }
+
+    function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
+
+    setInterval(() => { if (S.activeTableId && $('#view-detail').style.display !== 'none') renderDetail(); }, 1000);
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && $('#login-screen').style.display !== 'none') doLogin();
+        if (e.key === 'Escape') document.querySelectorAll('.modal-bd').forEach(m => m.classList.remove('show'));
+    });
+
+    // Auto-login
+    const savedSite = sessionStorage.getItem('captain_site');
+    if (savedSite) {
+        $('#login-site').value = savedSite;
+    }
+
+    Object.assign(window, { doLogin, logout, switchView, openAddTableModal, confirmAddTable, openDetail, openPicker, pickerBack, pickerCat, pickerAdd, changeQty, closeModal, renderTables, renderDetail });
+})();
+</script>
+</body>
+</html>
