@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>716QX ADMIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Tajawal:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#000010;color:#fff;font-family:'Tajawal',sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:radial-gradient(circle at 15% 20%,rgba(192,38,211,.2),transparent 45%),radial-gradient(circle at 85% 80%,rgba(0,255,255,.18),transparent 45%),#000010;background-attachment:fixed}
+.glass{background:rgba(255,255,255,.04);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1.5px solid rgba(255,255,255,.1);border-radius:22px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.glass::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,255,.5),transparent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:14px;font-weight:900;font-size:14px;border:none;cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#C026D3,#00FFFF);color:#fff;box-shadow:0 4px 20px rgba(192,38,211,.5)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 35px rgba(0,255,255,.6)}
+.btn-danger{background:linear-gradient(135deg,#FF0080,#C026D3);color:#fff}
+.btn-danger:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(255,0,128,.6)}
+.btn-success{background:linear-gradient(135deg,#00FF88,#00FFFF);color:#002a17}
+.btn-success:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,255,136,.6)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1.5px solid rgba(0,255,255,.3);color:#fff}
+.btn-ghost:hover{background:rgba(0,255,255,.12);color:#00FFFF}
+.inp{width:100%;padding:14px 16px;border-radius:13px;background:rgba(0,0,0,.4);border:1.5px solid rgba(0,255,255,.25);color:#fff;font-size:14px;font-family:'Tajawal',sans-serif;font-weight:600;outline:none;transition:all .2s}
+.inp:focus{border-color:#00FFFF;box-shadow:0 0 0 3px rgba(0,255,255,.15),0 0 25px rgba(0,255,255,.3)}
+.inp::placeholder{color:#5b5b70}
+.lbl{display:block;font-size:12px;font-weight:900;color:#00FFFF;margin-bottom:7px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em}
+.modal-bd{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bd.show{display:flex}
+.modal-panel{width:100%;max-width:520px;background:rgba(15,15,35,.95);backdrop-filter:blur(40px);border:1.5px solid rgba(0,255,255,.25);border-radius:26px;padding:32px;position:relative;max-height:92vh;overflow-y:auto;animation:modalIn .3s}
+@keyframes modalIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.modal-x{position:absolute;top:16px;left:16px;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:15px}
+.modal-x:hover{background:rgba(255,0,128,.2);color:#FF0080}
+#toast-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast{padding:13px 22px;border-radius:14px;font-weight:900;font-size:13px;background:rgba(10,10,31,.95);backdrop-filter:blur(20px);border:1.5px solid;box-shadow:0 20px 50px rgba(0,0,0,.7);animation:toastIn .3s;max-width:400px}
+@keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.toast.success{color:#00FF88;border-color:rgba(0,255,136,.4)}
+.toast.error{color:#FF0080;border-color:rgba(255,0,128,.4)}
+.toast.info{color:#00FFFF;border-color:rgba(0,255,255,.4)}
+.stat{display:inline-block;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:900;font-family:'JetBrains Mono',monospace}
+.stat-on{background:rgba(0,255,136,.15);color:#00FF88;border:1px solid rgba(0,255,136,.4)}
+.stat-off{background:rgba(255,0,128,.15);color:#FF0080;border:1px solid rgba(255,0,128,.4)}
+.site-card{padding:22px;border-radius:20px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.08);transition:all .3s;border-right:4px solid #00FFFF}
+.site-card.frozen{border-right-color:#FF0080;opacity:.75}
+.site-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 40px rgba(0,255,255,.2)}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.log-row{display:flex;justify-content:space-between;padding:10px 14px;background:rgba(0,0,0,.35);border-radius:10px;border:1px solid rgba(255,255,255,.05);font-size:12px}
+.log-row:hover{background:rgba(0,255,255,.05)}
+</style>
+</head>
+<body>
+
+<div id="toast-wrap"></div>
+
+<!-- Login Screen -->
+<div id="login-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="glass" style="width:100%;max-width:420px;padding:36px">
+        <div style="text-align:center;margin-bottom:28px">
+            <div style="width:80px;height:80px;margin:0 auto 16px;border-radius:22px;background:linear-gradient(135deg,#C026D3,#00FFFF);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;box-shadow:0 0 40px rgba(0,255,255,.6)">🛡️</div>
+            <h1 style="font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;letter-spacing:.1em">ADMIN.PANEL</h1>
+            <p style="color:#8a8a9a;font-size:13px;margin-top:8px;font-family:'JetBrains Mono',monospace">NEXUS 7.1 • SECURE ACCESS</p>
+        </div>
+        <label class="lbl">USERNAME</label>
+        <input type="text" class="inp mb-4" id="login-user" placeholder="admin" style="margin-bottom:16px" autocomplete="off">
+        <label class="lbl">PASSWORD</label>
+        <input type="password" class="inp" id="login-pass" placeholder="••••••••" style="margin-bottom:24px" autocomplete="off">
+        <button class="btn btn-primary" style="width:100%;padding:16px;font-size:15px" onclick="doLogin()">🔓 دخول</button>
+        <p id="login-err" style="color:#FF0080;font-size:12px;text-align:center;margin-top:14px;min-height:18px"></p>
+    </div>
+</div>
+
+<!-- Main Panel -->
+<div id="main-panel" style="display:none;padding:20px;max-width:1400px;margin:0 auto">
+
+    <!-- Header -->
+    <div class="glass" style="padding:20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C026D3,#00FFFF);display:flex;align-items:center;justify-content:center;font-size:22px">🛡️</div>
+            <div>
+                <h1 style="font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;letter-spacing:.05em">ADMIN.PANEL</h1>
+                <p style="color:#8a8a9a;font-size:11px;font-family:'JetBrains Mono',monospace">NEXUS 7.1 • <span id="clock">--:--:--</span></p>
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="openSiteModal()">+ موقع جديد</button>
+            <button class="btn btn-ghost" onclick="showLogs()">📋 سجل الحركات</button>
+            <button class="btn btn-danger" onclick="logout()">خروج</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px">
+        <div class="glass" style="padding:20px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#00FFFF;letter-spacing:.2em;margin-bottom:8px">◆ TOTAL.SITES</div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;color:#fff" id="stat-total">0</div>
+        </div>
+        <div class="glass" style="padding:20px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#00FF88;letter-spacing:.2em;margin-bottom:8px">◆ ACTIVE.SITES</div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;color:#00FF88" id="stat-active">0</div>
+        </div>
+        <div class="glass" style="padding:20px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#FF0080;letter-spacing:.2em;margin-bottom:8px">◆ FROZEN</div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;color:#FF0080" id="stat-frozen">0</div>
+        </div>
+        <div class="glass" style="padding:20px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#FFD700;letter-spacing:.2em;margin-bottom:8px">◆ TOTAL.REVENUE</div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;color:#FFD700" id="stat-revenue">0</div>
+        </div>
+    </div>
+
+    <!-- Search -->
+    <input type="text" class="inp" id="search" placeholder="⌕ ابحث بالاسم أو اليوزر..." oninput="renderSites()" style="margin-bottom:16px">
+
+    <!-- Sites Grid -->
+    <div id="sites-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px"></div>
+</div>
+
+<!-- Modal: Site Form -->
+<div class="modal-bd" id="modal-site">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-site')">✕</button>
+        <h3 id="site-modal-title" style="font-size:22px;font-weight:900;margin-bottom:20px">موقع جديد</h3>
+        <label class="lbl">اسم الموقع / العميل</label>
+        <input type="text" class="inp" id="s-name" placeholder="مثال: زيوني" style="margin-bottom:16px">
+        <label class="lbl">USERNAME</label>
+        <input type="text" class="inp" id="s-username" placeholder="zyoni" style="margin-bottom:16px" autocomplete="off">
+        <label class="lbl">PASSWORD</label>
+        <input type="text" class="inp" id="s-password" placeholder="••••••" style="margin-bottom:16px" autocomplete="off">
+        <div style="background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,.2);border-radius:12px;padding:12px;font-size:11px;color:#8a8a9a;margin-bottom:20px;font-family:'JetBrains Mono',monospace">
+            💡 رابط الموقع: <span style="color:#00FFFF">/index.html?site=ID</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:15px" onclick="saveSite()">💾 حفظ</button>
+    </div>
+</div>
+
+<!-- Modal: Logs -->
+<div class="modal-bd" id="modal-logs">
+    <div class="modal-panel" style="max-width:700px">
+        <button class="modal-x" onclick="closeModal('modal-logs')">✕</button>
+        <h3 style="font-size:22px;font-weight:900;margin-bottom:20px">📋 سجل الحركات</h3>
+        <div id="logs-list" style="display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto" class="no-scrollbar"></div>
+    </div>
+</div>
+
+<script src="assets/js/db.js"></script>
+<script src="assets/js/guard.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    const $ = s => document.querySelector(s);
+    const fmt = n => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+    let allSites = [];
+    let editingSiteId = null;
+
+    function toast(msg, type='info', dur=2500) {
+        const w = $('#toast-wrap');
+        const el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.textContent = msg;
+        w.appendChild(el);
+        setTimeout(() => { el.style.transition='all .25s'; el.style.opacity='0'; el.style.transform='translateY(-15px)'; setTimeout(() => el.remove(), 300); }, dur);
+    }
+    function openModal(id){document.getElementById(id).classList.add('show');}
+    function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+    setInterval(() => { const c = $('#clock'); if(c) c.textContent = new Date().toLocaleTimeString('en-GB'); }, 1000);
+
+    async function doLogin() {
+        const u = $('#login-user').value.trim();
+        const p = $('#login-pass').value.trim();
+        $('#login-err').textContent = '';
+        if (!u || !p) { $('#login-err').textContent = 'أدخل اليوزر والباسورد'; return; }
+        try {
+            const admin = await DB.q1('SELECT * FROM sites WHERE username = ? AND password = ?', [u, p]);
+            if (!admin) { $('#login-err').textContent = 'بيانات خاطئة'; return; }
+            sessionStorage.setItem('admin_logged', '1');
+            $('#login-screen').style.display = 'none';
+            $('#main-panel').style.display = 'block';
+            await loadSites();
+            await DB.exec('INSERT INTO logs (id,site_id,action,details) VALUES (?,?,?,?)', [uid(), 'ADMIN', 'ADMIN_LOGIN', u]);
+        } catch (e) {
+            $('#login-err').textContent = 'خطأ: ' + e.message;
+        }
+    }
+    function logout() {
+        sessionStorage.removeItem('admin_logged');
+        location.reload();
+    }
+
+    async function loadSites() {
+        try {
+            allSites = await DB.q('SELECT * FROM sites ORDER BY created_at DESC');
+            // لكل موقع، نجيب الإيراد الشهري
+            for (const s of allSites) {
+                const rev = await DB.q1('SELECT monthly FROM revenue WHERE site_id = ?', [s.id]);
+                s._monthly = rev ? Number(rev.monthly) : 0;
+            }
+            renderStats();
+            renderSites();
+        } catch (e) { toast('فشل التحميل: ' + e.message, 'error'); }
+    }
+
+    function renderStats() {
+        $('#stat-total').textContent = allSites.length;
+        $('#stat-active').textContent = allSites.filter(s => !s.frozen).length;
+        $('#stat-frozen').textContent = allSites.filter(s => s.frozen).length;
+        const totalRev = allSites.reduce((a, s) => a + (s._monthly || 0), 0);
+        $('#stat-revenue').textContent = fmt(totalRev);
+    }
+
+    function renderSites() {
+        const grid = $('#sites-grid');
+        const q = ($('#search').value || '').toLowerCase().trim();
+        let list = allSites;
+        if (q) list = list.filter(s => (s.name||'').toLowerCase().includes(q) || (s.username||'').toLowerCase().includes(q));
+        if (list.length === 0) {
+            grid.innerHTML = '<div class="glass" style="padding:40px;text-align:center;grid-column:1/-1"><div style="font-size:56px;margin-bottom:12px">📭</div><p style="color:#8a8a9a">لا توجد مواقع</p></div>';
+            return;
+        }
+        grid.innerHTML = list.map(s => {
+            const isFrozen = Number(s.frozen) === 1;
+            const link = `/index.html?site=${encodeURIComponent(s.id)}&name=${encodeURIComponent(s.name)}`;
+            return `
+                <div class="site-card ${isFrozen ? 'frozen' : ''}">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+                        <div>
+                            <h3 style="font-size:18px;font-weight:900;color:#fff">${escapeHtml(s.name)}</h3>
+                            <p style="font-size:11px;color:#8a8a9a;font-family:'JetBrains Mono',monospace;margin-top:4px">@${escapeHtml(s.username)}</p>
+                        </div>
+                        <span class="stat ${isFrozen ? 'stat-off' : 'stat-on'}">${isFrozen ? '🔒 مجمد' : '● نشط'}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:11px;color:#8a8a9a;font-family:'JetBrains Mono',monospace;margin-bottom:14px">
+                        <span>ID: ${s.id.slice(0, 12)}...</span>
+                        <span>${(s.created_at||'').slice(0,10)}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:14px">
+                        <span style="font-size:11px;color:#8a8a9a;font-family:'JetBrains Mono',monospace">REVENUE.MONTH</span>
+                        <span style="font-family:'Orbitron',sans-serif;font-weight:900;color:#FFD700;font-size:16px">${fmt(s._monthly || 0)}</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                        <button class="btn btn-primary" style="font-size:11px;padding:9px" onclick="openSiteLink('${s.id}','${escapeHtml(s.name)}')">🔗 فتح</button>
+                        <button class="btn btn-ghost" style="font-size:11px;padding:9px" onclick="openSiteModal('${s.id}')">✎ تعديل</button>
+                        <button class="btn ${isFrozen ? 'btn-success' : 'btn-danger'}" style="font-size:11px;padding:9px" onclick="toggleFreeze('${s.id}', ${isFrozen?1:0})">${isFrozen ? '🔓 فك' : '🔒 تجميد'}</button>
+                        <button class="btn btn-danger" style="font-size:11px;padding:9px" onclick="deleteSite('${s.id}', '${escapeHtml(s.name)}')">🗑 حذف</button>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function openSiteLink(id, name) {
+        const url = `/index.html?site=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`;
+        window.open(url, '_blank');
+    }
+
+    function openSiteModal(id) {
+        editingSiteId = id || null;
+        if (id) {
+            const s = allSites.find(x => x.id === id);
+            if (!s) return;
+            $('#site-modal-title').textContent = 'تعديل: ' + s.name;
+            $('#s-name').value = s.name;
+            $('#s-username').value = s.username;
+            $('#s-password').value = s.password;
+        } else {
+            $('#site-modal-title').textContent = 'موقع جديد';
+            $('#s-name').value = '';
+            $('#s-username').value = '';
+            $('#s-password').value = 'pass' + Math.floor(Math.random() * 9000 + 1000);
+        }
+        openModal('modal-site');
+    }
+
+    async function saveSite() {
+        const name = $('#s-name').value.trim();
+        const username = $('#s-username').value.trim();
+        const password = $('#s-password').value.trim();
+        if (!name || !username || !password) { toast('املأ كل الحقول', 'error'); return; }
+        try {
+            if (editingSiteId) {
+                await DB.exec('UPDATE sites SET name=?, username=?, password=? WHERE id=?', [name, username, password, editingSiteId]);
+                toast('تم التحديث', 'success');
+            } else {
+                const id = uid();
+                await DB.exec('INSERT INTO sites (id,name,username,password,frozen) VALUES (?,?,?,?,0)', [id, name, username, password]);
+                await DB.exec('INSERT OR IGNORE INTO revenue (site_id,daily,yesterday,monthly) VALUES (?,0,0,0)', [id]);
+                toast('تم إنشاء الموقع', 'success');
+            }
+            closeModal('modal-site');
+            await loadSites();
+        } catch (e) { toast('خطأ: ' + e.message, 'error'); }
+    }
+
+    async function toggleFreeze(id, currentFrozen) {
+        const newState = currentFrozen ? 0 : 1;
+        try {
+            await DB.exec('UPDATE sites SET frozen=? WHERE id=?', [newState, id]);
+            await DB.exec('INSERT INTO logs (id,site_id,action,details) VALUES (?,?,?,?)', [uid(), id, newState ? 'FREEZE' : 'UNFREEZE', '']);
+            toast(newState ? '🔒 تم التجميد' : '🔓 تم فك التجميد', 'success');
+            await loadSites();
+        } catch (e) { toast('خطأ', 'error'); }
+    }
+
+    async function deleteSite(id, name) {
+        if (!confirm('حذف الموقع "' + name + '" وكل بياناته؟')) return;
+        try {
+            await DB.tursoBatch([
+                { sql: 'DELETE FROM items WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM tables_ WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM invoices WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM debts WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM categories WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM products WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM revenue WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM logs WHERE site_id=?', args: [id] },
+                { sql: 'DELETE FROM sites WHERE id=?', args: [id] }
+            ]);
+            toast('تم الحذف', 'warn');
+            await loadSites();
+        } catch (e) { toast('خطأ: ' + e.message, 'error'); }
+    }
+
+    async function showLogs() {
+        try {
+            const logs = await DB.q('SELECT * FROM logs ORDER BY ts DESC LIMIT 100');
+            $('#logs-list').innerHTML = logs.length === 0
+                ? '<p style="text-align:center;color:#8a8a9a;padding:20px">لا توجد حركات</p>'
+                : logs.map(l => `
+                    <div class="log-row">
+                        <div>
+                            <span style="color:#00FFFF;font-weight:900">${l.action}</span>
+                            <span style="color:#8a8a9a;margin-right:10px">${escapeHtml(l.details || '')}</span>
+                        </div>
+                        <div style="color:#6b6b80;font-family:'JetBrains Mono',monospace;font-size:10px">${(l.ts||'').slice(0,16)}</div>
+                    </div>
+                `).join('');
+            openModal('modal-logs');
+        } catch (e) { toast('خطأ', 'error'); }
+    }
+
+    function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
+    }
+
+    // Auto login if session exists
+    if (sessionStorage.getItem('admin_logged') === '1') {
+        $('#login-screen').style.display = 'none';
+        $('#main-panel').style.display = 'block';
+        loadSites();
+    }
+
+    // Enter key on login
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && $('#login-screen').style.display !== 'none') doLogin();
+        if (e.key === 'Escape') document.querySelectorAll('.modal-bd').forEach(m => m.classList.remove('show'));
+    });
+
+    Object.assign(window, { doLogin, logout, openSiteModal, saveSite, toggleFreeze, deleteSite, showLogs, openSiteLink, closeModal, renderSites });
+})();
+</script>
+</body>
+</html>
