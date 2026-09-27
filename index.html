@@ -2,34 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#030307">
-<title>716QX | NEXUS OS 4.0</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#05050e">
+<title>716QX NEXUS 5.0</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<link rel="stylesheet" href="assets/css/style.css">
-
 <script>
 tailwind.config = {
     theme: {
         extend: {
             colors: {
-                obsidian: '#030307',
-                void: '#05050c',
-                panel: '#0a0a15',
-                cardDark: 'rgba(12, 12, 24, 0.72)',
-                neonCyan: '#00F0FF',
-                neonViolet: '#B14EFF',
-                neonEmerald: '#00FF9D',
-                neonRose: '#FF2E63',
-                neonAmber: '#FFB700',
-                neonPink: '#FF2EA6',
-                gridLine: 'rgba(0, 240, 255, 0.08)'
+                bg: '#05050e',
+                panel: '#0a0a18',
+                cyan: '#00E5FF',
+                violet: '#A855F7',
+                emerald: '#00FF9D',
+                rose: '#FF2E63',
+                amber: '#FFB700'
             },
             fontFamily: {
                 ar: ['Tajawal', 'sans-serif'],
@@ -42,468 +33,2284 @@ tailwind.config = {
 }
 </script>
 
-<script>
-// حماية بسيطة (تلميع فقط - لا تعتمد عليها أمنياً)
-(function(){
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-        if (
-            e.key === 'F12' ||
-            (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) ||
-            (e.ctrlKey && ['U','u','S','s'].includes(e.key))
-        ) { e.preventDefault(); return false; }
-    });
-})();
-</script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+    background: #05050e;
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    overscroll-behavior: none;
+}
+
+/* ==================== 3D Background ==================== */
+#bg-canvas {
+    position: fixed; inset: 0;
+    width: 100vw; height: 100vh;
+    z-index: -3;
+    pointer-events: none;
+}
+
+.bg-grid {
+    position: fixed; inset: 0;
+    z-index: -2;
+    background-image:
+        linear-gradient(rgba(0,229,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(circle at center, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at center, #000 20%, transparent 75%);
+    pointer-events: none;
+    animation: gridShift 30s linear infinite;
+}
+@keyframes gridShift {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+}
+
+.bg-glow-1, .bg-glow-2, .bg-glow-3 {
+    position: fixed; border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: -2;
+    will-change: transform;
+}
+.bg-glow-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168,85,247,.4), transparent 70%);
+    top: -10%; right: -10%;
+    animation: float1 15s ease-in-out infinite alternate;
+}
+.bg-glow-2 {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(0,229,255,.35), transparent 70%);
+    bottom: -15%; left: -10%;
+    animation: float2 18s ease-in-out infinite alternate;
+}
+.bg-glow-3 {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(0,255,157,.2), transparent 70%);
+    top: 40%; left: 30%;
+    animation: float3 20s ease-in-out infinite alternate;
+}
+@keyframes float1 { to { transform: translate(-60px, 80px) scale(1.15); } }
+@keyframes float2 { to { transform: translate(70px, -60px) scale(1.1); } }
+@keyframes float3 { to { transform: translate(-40px, -50px) scale(1.2); } }
+
+.bg-vignette {
+    position: fixed; inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,.75) 100%);
+    pointer-events: none;
+}
+
+/* ==================== Glass Card ==================== */
+.glass {
+    background: rgba(10, 10, 24, 0.6);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+.glass::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20px; right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,229,255,.4), transparent);
+    pointer-events: none;
+}
+
+/* ==================== Header ==================== */
+.app-header {
+    position: sticky; top: 0;
+    z-index: 40;
+    background: rgba(5,5,14,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ==================== Buttons ==================== */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 18px;
+    border-radius: 14px;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, background .2s;
+    will-change: transform;
+    user-select: none;
+    white-space: nowrap;
+}
+.btn:active { transform: scale(.96); }
+
+.btn-primary {
+    background: linear-gradient(135deg, #A855F7 0%, #00E5FF 100%);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(168,85,247,.35);
+}
+.btn-primary:hover {
+    box-shadow: 0 8px 30px rgba(0,229,255,.5), 0 0 40px rgba(168,85,247,.35);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #00FF9D 0%, #00E5FF 100%);
+    color: #001a10;
+    box-shadow: 0 4px 20px rgba(0,255,157,.35);
+}
+.btn-success:hover {
+    box-shadow: 0 8px 30px rgba(0,255,157,.55);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #FF2E63 0%, #A855F7 100%);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(255,46,99,.35);
+}
+.btn-danger:hover {
+    box-shadow: 0 8px 30px rgba(255,46,99,.55);
+    transform: translateY(-2px);
+}
+
+.btn-ghost {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+}
+.btn-ghost:hover {
+    background: rgba(0,229,255,.1);
+    border-color: rgba(0,229,255,.4);
+    color: #00E5FF;
+}
+
+.btn-icon {
+    width: 42px; height: 42px;
+    padding: 0;
+    border-radius: 14px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+}
+.btn-icon:hover {
+    background: rgba(0,229,255,.1);
+    border-color: rgba(0,229,255,.4);
+    color: #00E5FF;
+}
+.btn-icon:active { transform: scale(.95); }
+
+/* ==================== Hamburger ==================== */
+.hamburger {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all .25s;
+}
+.hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: linear-gradient(90deg, #A855F7, #00E5FF);
+    border-radius: 2px;
+    transition: all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.hamburger:hover {
+    background: rgba(0,229,255,.08);
+    border-color: rgba(0,229,255,.4);
+    box-shadow: 0 0 25px rgba(0,229,255,.25);
+}
+.hamburger:hover span:nth-child(1) { transform: translateX(-4px); }
+.hamburger:hover span:nth-child(3) { transform: translateX(4px); }
+
+/* ==================== Drawer ==================== */
+.drawer {
+    position: fixed;
+    top: 0; right: 0;
+    width: 340px;
+    max-width: 88vw;
+    height: 100%;
+    z-index: 300;
+    background: rgba(5,5,14,0.96);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-left: 1px solid rgba(0,229,255,.15);
+    transform: translateX(100%);
+    transition: transform .35s cubic-bezier(.34,1.2,.64,1);
+    display: flex; flex-direction: column;
+    padding: 24px;
+    overflow-y: auto;
+}
+.drawer.open { transform: translateX(0); }
+.drawer::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, #00E5FF, #A855F7, transparent);
+    opacity: .6;
+}
+
+.drawer-overlay {
+    position: fixed; inset: 0;
+    z-index: 290;
+    background: rgba(0,0,0,.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s;
+}
+.drawer-overlay.show { opacity: 1; pointer-events: auto; }
+
+.drawer-nav-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 15px 16px;
+    border-radius: 16px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #9CA3AF;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: right;
+    width: 100%;
+    font-family: 'Tajawal', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+.drawer-nav-item::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,.15));
+    opacity: 0;
+    transition: opacity .25s;
+    pointer-events: none;
+}
+.drawer-nav-item:hover {
+    background: rgba(255,255,255,.03);
+    color: #fff;
+    border-color: rgba(168,85,247,.25);
+    transform: translateX(-3px);
+}
+.drawer-nav-item:hover::before { opacity: 1; }
+.drawer-nav-item.active {
+    background: linear-gradient(90deg, rgba(168,85,247,.15), rgba(0,229,255,.08));
+    color: #00E5FF;
+    border-color: rgba(168,85,247,.4);
+    box-shadow: inset 0 0 25px rgba(168,85,247,.1);
+}
+.drawer-nav-icon {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+.drawer-nav-item.active .drawer-nav-icon {
+    background: rgba(0,229,255,.15);
+    box-shadow: 0 0 15px rgba(0,229,255,.3);
+}
+
+/* ==================== Stat Card 3D ==================== */
+.stat-3d {
+    position: relative;
+    padding: 26px;
+    border-radius: 24px;
+    background: rgba(10,10,24,.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,.08);
+    transform-style: preserve-3d;
+    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s;
+    overflow: hidden;
+    cursor: default;
+}
+.stat-3d::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at top right, currentColor 0%, transparent 65%);
+    opacity: .12;
+    pointer-events: none;
+}
+.stat-3d::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    opacity: .8;
+    filter: blur(1px);
+}
+.stat-3d:hover {
+    transform: translateY(-6px) rotateX(4deg) rotateY(-4deg);
+    box-shadow: 0 25px 60px rgba(0,0,0,.6), 0 0 50px currentColor;
+}
+.stat-emerald { color: #00FF9D; }
+.stat-cyan { color: #00E5FF; }
+.stat-violet { color: #A855F7; }
+.stat-amber { color: #FFB700; }
+
+.stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .18em;
+    font-weight: 700;
+}
+.stat-value {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 30px;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -.02em;
+}
+.stat-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6B7280;
+    letter-spacing: .1em;
+}
+
+/* ==================== Quick Card 3D ==================== */
+.quick-3d {
+    display: flex; align-items: center; gap: 18px;
+    padding: 22px;
+    border-radius: 22px;
+    background: rgba(10,10,24,.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.08);
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s, border-color .25s;
+    position: relative;
+    overflow: hidden;
+}
+.quick-3d::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at right, currentColor 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+}
+.quick-3d:hover {
+    transform: translateY(-6px) translateX(-6px);
+    border-color: currentColor;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5), 0 0 40px currentColor;
+}
+.quick-3d:hover::before { opacity: .1; }
+.quick-icon-3d {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    flex-shrink: 0;
+}
+.quick-3d:hover .quick-icon-3d {
+    transform: scale(1.12) rotate(-8deg);
+    border-color: currentColor;
+    box-shadow: 0 0 25px currentColor;
+}
+.quick-arrow {
+    margin-right: auto;
+    font-size: 22px;
+    opacity: .3;
+    color: currentColor;
+    transition: all .3s;
+}
+.quick-3d:hover .quick-arrow {
+    opacity: 1;
+    transform: translateX(-6px);
+}
+
+/* ==================== Table Card ==================== */
+.table-card-3d {
+    position: relative;
+    padding: 22px;
+    border-radius: 22px;
+    background: rgba(10,10,24,.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.08);
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s;
+    overflow: hidden;
+}
+.table-card-3d.busy { color: #00FF9D; }
+.table-card-3d.idle { color: #6B7280; }
+.table-card-3d::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+}
+.table-card-3d:hover {
+    transform: translateY(-6px) rotateX(3deg);
+    border-color: currentColor;
+    box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 40px currentColor;
+}
+
+/* ==================== Modal ==================== */
+.modal-backdrop {
+    position: fixed; inset: 0;
+    z-index: 500;
+    background: rgba(0,0,0,.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+}
+.modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-panel {
+    width: 100%;
+    max-width: 520px;
+    max-height: 92vh;
+    background: linear-gradient(180deg, rgba(15,15,30,.98), rgba(8,8,18,.98));
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 26px;
+    padding: 28px;
+    position: relative;
+    overflow-y: auto;
+    transform: scale(.92);
+    opacity: 0;
+    transition: transform .25s cubic-bezier(.34,1.4,.64,1), opacity .25s;
+}
+.modal-backdrop.show .modal-panel {
+    transform: scale(1);
+    opacity: 1;
+}
+.modal-panel.wide { max-width: 780px; }
+.modal-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20px; right: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00E5FF, #A855F7, transparent);
+    border-radius: 2px;
+}
+.modal-x {
+    position: absolute;
+    top: 16px; left: 16px;
+    width: 36px; height: 36px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    font-size: 14px;
+}
+.modal-x:hover {
+    background: rgba(255,46,99,.15);
+    border-color: rgba(255,46,99,.4);
+    color: #FF2E63;
+}
+
+/* ==================== Input ==================== */
+.inp {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 13px;
+    background: rgba(0,0,0,.5);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 600;
+    transition: all .2s;
+    outline: none;
+}
+.inp:focus {
+    border-color: #00E5FF;
+    box-shadow: 0 0 0 3px rgba(0,229,255,.12), 0 0 20px rgba(0,229,255,.2);
+}
+.inp::placeholder { color: #4B5563; }
+select.inp {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300E5FF' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+    padding-left: 44px;
+}
+select.inp option { background: #0a0a18; color: #fff; }
+
+.lbl {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #9CA3AF;
+    margin-bottom: 6px;
+}
+
+/* ==================== Category Card ==================== */
+.cat-card {
+    padding: 22px 16px;
+    border-radius: 20px;
+    background: rgba(10,10,24,.7);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,.08);
+    cursor: pointer;
+    text-align: center;
+    transition: all .25s cubic-bezier(.34,1.4,.64,1);
+    position: relative;
+    overflow: hidden;
+}
+.cat-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(168,85,247,.15), rgba(0,229,255,.1));
+    opacity: 0;
+    transition: opacity .25s;
+    pointer-events: none;
+}
+.cat-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: #A855F7;
+    box-shadow: 0 20px 45px rgba(0,0,0,.5), 0 0 35px rgba(168,85,247,.35);
+}
+.cat-card:hover::before { opacity: 1; }
+.cat-card > * { position: relative; z-index: 2; }
+
+/* ==================== Item Row ==================== */
+.item-row {
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(10,10,24,.7);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,.06);
+    transition: all .2s;
+}
+.item-row:hover { border-color: rgba(0,229,255,.2); }
+
+.qty-btn {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all .15s;
+    font-family: 'JetBrains Mono', monospace;
+}
+.qty-btn:hover {
+    background: rgba(0,229,255,.15);
+    border-color: rgba(0,229,255,.4);
+    color: #00E5FF;
+}
+.qty-btn:active { transform: scale(.9); }
+
+.badge {
+    display: inline-flex;
+    align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: .05em;
+}
+.badge-live { background: rgba(0,255,157,.15); color: #00FF9D; border: 1px solid rgba(0,255,157,.3); }
+.badge-paused { background: rgba(255,183,0,.15); color: #FFB700; border: 1px solid rgba(255,183,0,.3); }
+.badge-expired { background: rgba(255,46,99,.15); color: #FF2E63; border: 1px solid rgba(255,46,99,.3); }
+.badge-direct { background: rgba(168,85,247,.15); color: #A855F7; border: 1px solid rgba(168,85,247,.3); }
+
+/* ==================== Toast ==================== */
+#toast-wrap {
+    position: fixed;
+    top: 80px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 900;
+    display: flex; flex-direction: column; gap: 10px;
+    align-items: center;
+    pointer-events: none;
+}
+.toast {
+    padding: 13px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: 'Tajawal', sans-serif;
+    background: rgba(10,10,24,.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.6);
+    animation: toastIn .3s cubic-bezier(.34,1.5,.64,1);
+    max-width: 400px;
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+}
+.toast::before {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: currentColor;
+    box-shadow: 0 0 12px currentColor;
+}
+.toast.success { color: #00FF9D; border-color: rgba(0,255,157,.3); }
+.toast.error { color: #FF2E63; border-color: rgba(255,46,99,.3); }
+.toast.info { color: #00E5FF; border-color: rgba(0,229,255,.3); }
+.toast.warn { color: #FFB700; border-color: rgba(255,183,0,.3); }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-25px) scale(.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==================== Utility ==================== */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.view { display: none; animation: fadeUp .35s cubic-bezier(.34,1.2,.64,1); }
+.view.active { display: block; }
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.grid-bg {
+    position: relative;
+}
+
+/* Debt card */
+.debt-card {
+    padding: 22px;
+    border-radius: 20px;
+    background: rgba(10,10,24,.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.08);
+    border-right: 4px solid #FF2E63;
+    transition: all .25s;
+}
+.debt-card.paid { border-right-color: #00FF9D; opacity: .7; }
+.debt-card:hover { transform: translateX(-5px); box-shadow: 0 15px 40px rgba(0,0,0,.5); }
+
+/* Pulse */
+.pulse-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+.pulse-dot::after {
+    content: '';
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    animation: pulseRing 1.8s ease-out infinite;
+}
+@keyframes pulseRing {
+    0% { transform: scale(.8); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .stat-value { font-size: 22px; }
+    .modal-panel { padding: 22px; border-radius: 20px; }
+}
+</style>
 </head>
 
-<body class="h-screen flex flex-col selection:bg-neonViolet/40 selection:text-white">
+<body>
 
-<!-- ===== طبقات الخلفية ===== -->
-<canvas id="grid-canvas"></canvas>
-<div class="scanlines"></div>
-<div class="vignette"></div>
-<div class="aurora aurora-1"></div>
-<div class="aurora aurora-2"></div>
-<div class="aurora aurora-3"></div>
-<div class="noise"></div>
+<!-- ============ Background ============ -->
+<canvas id="bg-canvas"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-glow-1"></div>
+<div class="bg-glow-2"></div>
+<div class="bg-glow-3"></div>
+<div class="bg-vignette"></div>
 
-<!-- ===== شريط علوي علوي (HUD) ===== -->
-<div class="top-hud">
-    <div class="hud-left">
-        <span class="hud-dot hud-dot-green"></span>
-        <span class="font-tech text-[10px] tracking-[0.3em] text-neonEmerald">SYSTEM ONLINE</span>
-    </div>
-    <div class="hud-center">
-        <span class="font-mono text-[10px] tracking-[0.3em] text-neonCyan">NEXUS://716QX.OS.V4.0</span>
-    </div>
-    <div class="hud-right">
-        <span id="hud-clock" class="font-mono text-[10px] tracking-[0.2em] text-neonViolet">--:--:--</span>
-    </div>
-</div>
+<!-- ============ Toast ============ -->
+<div id="toast-wrap"></div>
 
-<!-- ===== Toast ===== -->
-<div id="toast-container" class="fixed top-16 left-1/2 -translate-x-1/2 z-[400] flex flex-col gap-2 pointer-events-none items-center"></div>
-
-<!-- ===== Sidebar ===== -->
-<aside id="drawer" class="cyber-drawer fixed top-0 right-0 w-[340px] h-full z-[250] translate-x-full">
-    <div class="drawer-inner h-full flex flex-col p-8">
-        <div class="flex justify-between items-start mb-10">
-            <div class="flex items-center gap-4">
-                <div class="logo-orb">
-                    <div class="logo-inner font-display font-black text-white text-xl">R</div>
-                    <div class="logo-ring"></div>
+<!-- ============ Header ============ -->
+<header class="app-header">
+    <div class="flex items-center justify-between p-4 px-5">
+        <div class="flex items-center gap-4">
+            <button class="hamburger" onclick="openDrawer()" aria-label="menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div>
+                <h1 class="text-xl font-display font-black tracking-widest text-white leading-none">
+                    716QX<span class="text-cyan animate-pulse">.</span>
+                </h1>
+                <div class="flex items-center gap-1.5 mt-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald pulse-dot" style="color:#00FF9D"></span>
+                    <span id="live-clock" class="text-[10px] text-cyan font-mono tracking-widest">--:--:--</span>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-display font-black tracking-widest text-white">716QX</h2>
-                    <span class="text-[9px] text-neonCyan font-mono tracking-[0.35em]">NEXUS OS 4.0</span>
-                </div>
-            </div>
-            <button onclick="window.toggleDrawer()" class="close-x">✕</button>
-        </div>
-
-        <div class="data-stream mb-6">
-            <div class="data-stream-inner">
-                <span class="text-[9px] font-mono text-neonCyan">◆ FEED: <span id="feed-text">INITIALIZING CORE...</span></span>
             </div>
         </div>
 
-        <nav class="flex flex-col gap-2 flex-1">
-            <button id="nav-dashboard" onclick="window.switchView('dashboard')" class="nav-link">
-                <span class="nav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                </span>
-                <span class="flex-1 text-right">لوحة التحكم</span>
-                <span class="nav-tag">01</span>
-            </button>
-            <button id="nav-tables" onclick="window.switchView('tables')" class="nav-link">
-                <span class="nav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                </span>
-                <span class="flex-1 text-right">خريطة الطاولات</span>
-                <span class="nav-tag">02</span>
-            </button>
-            <button id="nav-debts" onclick="window.switchView('debts')" class="nav-link">
-                <span class="nav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
-                </span>
-                <span class="flex-1 text-right">الديون والتسديد</span>
-                <span class="nav-tag nav-tag-rose">03</span>
-            </button>
-            <button id="nav-invoices" onclick="window.switchView('invoices')" class="nav-link">
-                <span class="nav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/></svg>
-                </span>
-                <span class="flex-1 text-right">سجل الفواتير</span>
-                <span class="nav-tag">04</span>
-            </button>
-            <button id="nav-menu" onclick="window.switchView('menu')" class="nav-link">
-                <span class="nav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                </span>
-                <span class="flex-1 text-right">الأقسام والمنيو</span>
-                <span class="nav-tag">05</span>
-            </button>
-        </nav>
+        <button class="btn btn-primary" onclick="openAddTableModal()">
+            <span style="font-size:18px;font-weight:900;line-height:1;">+</span>
+            <span class="hidden sm:inline">طاولة جديدة</span>
+        </button>
+    </div>
+</header>
 
-        <div class="pt-6 border-t border-white/5 space-y-3">
-            <div class="sys-stats">
-                <div class="flex justify-between text-[10px] font-mono text-gray-500 mb-1">
-                    <span>CORE.LOAD</span><span id="core-load">12%</span>
-                </div>
-                <div class="load-bar"><div id="load-bar-fill" class="load-fill"></div></div>
+<!-- ============ Drawer ============ -->
+<div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+<aside id="drawer" class="drawer">
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-display font-black text-white text-xl" style="background:linear-gradient(135deg,#A855F7,#00E5FF);box-shadow:0 0 25px rgba(168,85,247,.5)">R</div>
+            <div>
+                <h2 class="text-xl font-display font-black tracking-wider text-white leading-none">716QX</h2>
+                <span class="text-[9px] text-cyan font-mono tracking-widest">NEXUS 5.0</span>
             </div>
-            <button onclick="if(confirm('إعادة ضبط المصنع للنظام وحذف كافة السجلات؟')) window.resetSystemFull()" class="danger-btn">
-                ⚠ إعادة ضبط المصنع
-            </button>
         </div>
+        <button class="modal-x" style="position:static" onclick="closeDrawer()">✕</button>
+    </div>
+
+    <nav class="flex flex-col gap-2 flex-1">
+        <button class="drawer-nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+            <span class="drawer-nav-icon">🏠</span>
+            <span class="flex-1 text-right">الرئيسية</span>
+        </button>
+        <button class="drawer-nav-item" data-view="tables" onclick="switchView('tables')">
+            <span class="drawer-nav-icon">🎮</span>
+            <span class="flex-1 text-right">الصالات والطاولات</span>
+        </button>
+        <button class="drawer-nav-item" data-view="menu" onclick="switchView('menu')">
+            <span class="drawer-nav-icon">📋</span>
+            <span class="flex-1 text-right">المنيو والأقسام</span>
+        </button>
+        <button class="drawer-nav-item" data-view="invoices" onclick="switchView('invoices')">
+            <span class="drawer-nav-icon">🧾</span>
+            <span class="flex-1 text-right">الفواتير</span>
+        </button>
+        <button class="drawer-nav-item" data-view="debts" onclick="switchView('debts')">
+            <span class="drawer-nav-icon">📒</span>
+            <span class="flex-1 text-right">الديون</span>
+        </button>
+    </nav>
+
+    <div class="mt-6 pt-6 border-t border-white/5">
+        <button class="btn btn-danger w-full" onclick="if(confirm('إعادة ضبط المصنع وحذف كل السجلات؟')) resetAll()">
+            ⚠ إعادة ضبط المصنع
+        </button>
     </div>
 </aside>
 
-<div id="drawer-overlay" onclick="window.toggleDrawer()" class="drawer-overlay"></div>
+<!-- ============ Main ============ -->
+<main class="p-5 md:p-8 max-w-7xl mx-auto">
 
-<!-- ===== Main ===== -->
-<main class="flex-1 h-full overflow-y-auto relative flex flex-col no-scrollbar">
-
-    <!-- Header -->
-    <header class="main-header sticky top-0 z-40">
-        <div class="header-glow"></div>
-        <div class="p-5 md:px-8 flex justify-between items-center relative z-10">
-            <div class="flex items-center gap-5">
-                <button onclick="window.toggleDrawer()" class="icon-btn">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
-                </button>
-                <div>
-                    <h1 class="text-xl font-display font-black tracking-widest flex items-center gap-1 text-white">
-                        716QX<span class="text-neonCyan text-2xl animate-pulse">.</span>
-                    </h1>
-                    <div class="flex items-center gap-2 mt-0.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-neonEmerald animate-pulse"></span>
-                        <span id="live-clock" class="text-[10px] text-neonCyan font-mono tracking-[0.2em]">--:--:--</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hidden md:flex items-center gap-1 bg-black/50 p-1.5 rounded-2xl border border-white/5 backdrop-blur-xl">
-                <button onclick="window.switchView('dashboard')" class="top-tab">لوحة التحكم</button>
-                <button onclick="window.switchView('tables')" class="top-tab">الجداول</button>
-                <button onclick="window.switchView('debts')" class="top-tab">الديون</button>
-                <button onclick="window.switchView('invoices')" class="top-tab">الفواتير</button>
-                <button onclick="window.switchView('menu')" class="top-tab">المنيو</button>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <button onclick="window.switchView('tables'); setTimeout(()=>document.querySelector('#search-tables')?.focus(),200)" class="icon-btn hidden lg:flex" title="بحث (Ctrl+K)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                </button>
-                <button onclick="window.openAddTableModal()" class="btn-neon">
-                    <span class="btn-neon-icon">+</span>
-                    <span class="hidden sm:inline">طاولة جديدة</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- ===== Dashboard ===== -->
-    <div id="view-dashboard" class="view p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="hud-badge">▸ MODULE 01</span>
-                    <span class="hud-badge hud-badge-cyan">REAL-TIME</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight">مركز التحكم المالي</h2>
-                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">المبيعات اليومية مستمرة، الترحيل يدوي عند الحاجة</p>
-            </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                <button onclick="if(confirm('تصفير مبيعات اليوم وترحيلها للإيراد الشهري؟')) window.resetDailyRevenue()" class="btn-ghost-success">
-                    <span>⟳</span> ترحيل اليوم ← الشهر
-                </button>
-                <button onclick="if(confirm('تصفير الإيراد الشهري بالكامل؟')) window.resetMonthlyRevenue()" class="btn-ghost-warn">
-                    <span>⌬</span> تصفير الشهر
-                </button>
-            </div>
+    <!-- ========== Dashboard ========== -->
+    <section id="view-dashboard" class="view active">
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-4xl font-black text-white">مركز التحكم</h2>
+            <p class="text-gray-400 text-sm mt-2">نظرة شاملة على الإيرادات والجلسات</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-            <div class="stat-card stat-emerald">
-                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+            <div class="stat-3d stat-emerald">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-mono text-neonEmerald tracking-widest">SALES.TODAY</span>
-                    <span class="pulse-dot pulse-green"></span>
+                    <span class="stat-label">SALES.TODAY</span>
+                    <span class="pulse-dot" style="background:#00FF9D;color:#00FF9D"></span>
                 </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 id="stat-daily" class="text-3xl font-mono font-black text-white">0</h3>
-                    <span class="text-[10px] text-neonEmerald font-mono">IQD</span>
+                <div class="stat-value mb-2" id="stat-daily">0</div>
+                <div class="flex items-center justify-between">
+                    <span class="stat-sub">IQD</span>
+                    <span class="stat-sub">LIVE</span>
                 </div>
-                <div class="stat-bar"><div class="stat-bar-fill bg-neonEmerald" style="width:65%"></div></div>
-                <span class="text-[10px] text-gray-500 font-mono mt-2 block">LIVE ● RUNNING</span>
             </div>
 
-            <div class="stat-card stat-cyan">
-                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+            <div class="stat-3d stat-cyan">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-mono text-neonCyan tracking-widest">SALES.YESTERDAY</span>
+                    <span class="stat-label">SALES.YESTERDAY</span>
                 </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 id="stat-yesterday" class="text-3xl font-mono font-black text-neonCyan">0</h3>
-                    <span class="text-[10px] text-neonCyan font-mono">IQD</span>
+                <div class="stat-value mb-2" id="stat-yesterday">0</div>
+                <div class="flex items-center justify-between">
+                    <span class="stat-sub">IQD</span>
+                    <span class="stat-sub">ARCHIVED</span>
                 </div>
-                <div class="stat-bar"><div class="stat-bar-fill bg-neonCyan" style="width:40%"></div></div>
-                <span class="text-[10px] text-gray-500 font-mono mt-2 block">ARCHIVED.LAST</span>
             </div>
 
-            <div class="stat-card stat-amber">
-                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
+            <div class="stat-3d stat-violet">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-mono text-neonAmber tracking-widest">REVENUE.MONTH</span>
+                    <span class="stat-label">REVENUE.MONTH</span>
                 </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 id="stat-monthly" class="text-3xl font-mono font-black text-neonAmber">0</h3>
-                    <span class="text-[10px] text-neonAmber font-mono">IQD</span>
+                <div class="stat-value mb-2" id="stat-monthly">0</div>
+                <div class="flex items-center justify-between">
+                    <span class="stat-sub">IQD</span>
+                    <span class="stat-sub">CUMULATIVE</span>
                 </div>
-                <div class="stat-bar"><div class="stat-bar-fill bg-neonAmber" style="width:80%"></div></div>
-                <span class="text-[10px] text-gray-500 font-mono mt-2 block">CUMULATIVE.SUM</span>
-            </div>
-
-            <div class="stat-card stat-violet">
-                <div class="stat-corners"><span></span><span></span><span></span><span></span></div>
-                <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] font-mono text-neonViolet tracking-widest">SESSIONS.ACTIVE</span>
-                    <span class="pulse-dot pulse-violet"></span>
-                </div>
-                <div class="flex items-baseline gap-2">
-                    <h3 id="stat-active" class="text-3xl font-mono font-black text-neonViolet">0</h3>
-                    <span class="text-[10px] text-neonViolet font-mono">LIVE</span>
-                </div>
-                <div class="stat-bar"><div class="stat-bar-fill bg-neonViolet" style="width:100%"></div></div>
-                <span class="text-[10px] text-gray-500 font-mono mt-2 block">STATIONS.ONLINE</span>
             </div>
         </div>
 
-        <h3 class="text-lg font-black text-white mb-4 flex items-center gap-3">
-            <span class="text-neonCyan font-mono text-xs">▶</span> اختصارات سريعة
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-            <div onclick="window.switchView('tables')" class="quick-card quick-violet">
-                <div class="quick-icon">🎮</div>
-                <div>
-                    <h4 class="font-black text-white text-base">خريطة الطاولات</h4>
-                    <p class="text-gray-400 text-xs mt-1 font-tech">مراقبة الجلسات الحية</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
-            <div onclick="window.switchView('debts')" class="quick-card quick-rose">
-                <div class="quick-icon">📒</div>
-                <div>
-                    <h4 class="font-black text-white text-base">دفتر الديون</h4>
-                    <p class="text-gray-400 text-xs mt-1 font-tech">حسابات الزبائن والآجل</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
-            <div onclick="window.switchView('menu')" class="quick-card quick-cyan">
-                <div class="quick-icon">⚙</div>
-                <div>
-                    <h4 class="font-black text-white text-base">الأقسام والمنيو</h4>
-                    <p class="text-gray-400 text-xs mt-1 font-tech">الأسعار والعدادات</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== Tables ===== -->
-    <div id="view-tables" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="hud-badge">▸ MODULE 02</span>
-                    <span class="hud-badge hud-badge-green">LIVE.GRID</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight">خريطة الطاولات المباشرة</h2>
-                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">تحديث حي فوري للوقت والحسابات</p>
-            </div>
-            <input type="text" id="search-tables" onkeyup="window.searchTables()" placeholder="⌕ ابحث برقم الطاولة أو الزبون..." class="cyber-input w-full md:w-80">
-        </div>
-        <div id="tables-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-    </div>
-
-    <!-- ===== Table Detail ===== -->
-    <div id="view-table-detail" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
-        <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-            <button onclick="window.switchView('tables')" class="btn-ghost">
-                <span>←</span> العودة للخريطة
+        <div class="flex flex-wrap gap-3 mb-8">
+            <button class="btn btn-success" onclick="transferDaily()">
+                ⟳ ترحيل اليوم ← الأمس + الشهر
             </button>
-            <div class="text-center">
-                <div class="hud-badge mb-2">▸ TABLE.SESSION</div>
-                <h2 id="detail-table-name" class="text-2xl md:text-3xl font-black text-white font-display tracking-wider">—</h2>
-                <span id="detail-customer-badge" class="text-xs text-neonCyan font-mono">GUEST</span>
-            </div>
-            <div class="w-24"></div>
+            <button class="btn btn-ghost" onclick="if(confirm('تصفير الإيراد الشهري بالكامل؟')) resetMonthly()">
+                ⌬ تصفير الشهر يدوياً
+            </button>
+            <button class="btn btn-ghost" onclick="if(confirm('تصفير إيراد اليوم؟')) resetDaily()">
+                ↻ تصفير اليوم فقط
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div class="lg:col-span-8 cyber-panel p-6 md:p-8 flex flex-col">
-                <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-                    <div>
-                        <h3 class="text-xl font-black text-white">الطلبات والوقت</h3>
-                        <p class="text-gray-400 text-xs mt-1 font-tech">عدادات حية + دفع مبكر لكل صنف</p>
-                    </div>
-                    <button onclick="window.openProductPicker()" class="btn-neon">
-                        <span>+</span> إضافة طلب
-                    </button>
+        <h3 class="text-lg font-black text-white mb-4">وصول سريع</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="quick-3d" style="color:#00FF9D" onclick="switchView('tables')">
+                <div class="quick-icon-3d">🎮</div>
+                <div class="flex-1">
+                    <h4 class="font-black text-white text-base">الصالات</h4>
+                    <p class="text-gray-400 text-xs mt-0.5">الطاولات النشطة</p>
                 </div>
-                <div id="detail-items-list" class="overflow-y-auto no-scrollbar space-y-3.5 max-h-[600px]"></div>
+                <span class="quick-arrow">←</span>
             </div>
-
-            <div class="lg:col-span-4 cyber-panel p-6 md:p-8 sticky top-24">
-                <div class="panel-header mb-6">
-                    <span class="hud-badge hud-badge-violet">▸ BALANCE.PANEL</span>
-                    <h3 class="text-lg font-black text-white mt-3">لوحة الحساب الإجمالي</h3>
+            <div class="quick-3d" style="color:#00E5FF" onclick="switchView('menu')">
+                <div class="quick-icon-3d">📋</div>
+                <div class="flex-1">
+                    <h4 class="font-black text-white text-base">المنيو</h4>
+                    <p class="text-gray-400 text-xs mt-0.5">الأقسام والأصناف</p>
                 </div>
-
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="cyber-label">اسم العميل</label>
-                        <input type="text" id="input-table-customer" onchange="window.updateCustomerName(this.value)" placeholder="مثال: أحمد VIP" class="cyber-input">
-                    </div>
-                    <div>
-                        <label class="cyber-label">خصم مباشر (IQD)</label>
-                        <input type="number" id="input-table-discount" oninput="window.updateDiscountIQD(this.value)" min="0" placeholder="0" class="cyber-input font-mono">
-                    </div>
+                <span class="quick-arrow">←</span>
+            </div>
+            <div class="quick-3d" style="color:#FF2E63" onclick="switchView('debts')">
+                <div class="quick-icon-3d">📒</div>
+                <div class="flex-1">
+                    <h4 class="font-black text-white text-base">الديون</h4>
+                    <p class="text-gray-400 text-xs mt-0.5">الحسابات الآجلة</p>
                 </div>
-
-                <div class="balance-box">
-                    <div class="balance-row">
-                        <span class="text-gray-400 text-xs">إجمالي الحساب:</span>
-                        <span id="sum-subtotal" class="font-mono font-bold text-white text-sm">0 IQD</span>
-                    </div>
-                    <div class="balance-row">
-                        <span class="text-neonEmerald text-xs">مدفوع مسبقاً:</span>
-                        <span id="sum-early-paid" class="font-mono font-bold text-neonEmerald text-sm">0 IQD</span>
-                    </div>
-                    <div class="balance-row">
-                        <span class="text-neonRose text-xs">الخصم:</span>
-                        <span id="sum-discount-val" class="font-mono font-bold text-neonRose">-0 IQD</span>
-                    </div>
-                    <div class="h-px bg-gradient-to-r from-transparent via-neonCyan/40 to-transparent my-3"></div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-white font-black">المطلوب:</span>
-                        <span class="font-mono text-3xl font-black text-neonCyan flex items-end gap-1">
-                            <span id="sum-final">0</span>
-                            <span class="text-xs text-gray-400 font-normal mb-1">IQD</span>
-                        </span>
-                    </div>
+                <span class="quick-arrow">←</span>
+            </div>
+            <div class="quick-3d" style="color:#A855F7" onclick="switchView('invoices')">
+                <div class="quick-icon-3d">🧾</div>
+                <div class="flex-1">
+                    <h4 class="font-black text-white text-base">الفواتير</h4>
+                    <p class="text-gray-400 text-xs mt-0.5">الأرشيف</p>
                 </div>
-
-                <div class="flex flex-col gap-3 mt-6">
-                    <button onclick="window.openCheckoutModal()" class="btn-neon-full">
-                        ✓ إغلاق الحساب / تحويل دين
-                    </button>
-                    <button onclick="window.openTransferModal()" class="btn-ghost">⇄ نقل أو دمج طاولة</button>
-                    <button onclick="if(confirm('حذف هذه الطاولة؟')) window.deleteTable()" class="danger-link">إلغاء الطاولة</button>
-                </div>
+                <span class="quick-arrow">←</span>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- ===== Debts ===== -->
-    <div id="view-debts" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <!-- ========== Tables ========== -->
+    <section id="view-tables" class="view">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="hud-badge hud-badge-rose">▸ MODULE 03</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight">سجل الديون</h2>
-                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">تسديد كلي أو جزئي مع تسجيل تلقائي</p>
+                <h2 class="text-3xl md:text-4xl font-black text-white">الصالات والطاولات</h2>
+                <p class="text-gray-400 text-sm mt-2">اضغط على الطاولة لإدارتها</p>
             </div>
-            <input type="text" id="search-debts" onkeyup="window.renderDebtsList()" placeholder="⌕ ابحث باسم المدين..." class="cyber-input w-full md:w-80">
+            <input type="text" class="inp md:w-72" id="search-tables" placeholder="⌕ ابحث..." oninput="renderTables()">
         </div>
-        <div id="debts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </div>
+        <div id="tables-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+    </section>
 
-    <!-- ===== Invoices ===== -->
-    <div id="view-invoices" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <!-- ========== Menu Management ========== -->
+    <section id="view-menu" class="view">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="hud-badge">▸ MODULE 04</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight">أرشيف الفواتير</h2>
-                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">عرض، طباعة، وتصدير</p>
+                <h2 class="text-3xl md:text-4xl font-black text-white">المنيو والأقسام</h2>
+                <p class="text-gray-400 text-sm mt-2">إدارة الأقسام والأصناف والأسعار</p>
             </div>
-            <div class="flex gap-3 flex-wrap">
-                <button onclick="window.exportInvoicesCSV()" class="btn-ghost-success">📊 تصدير CSV</button>
-                <button onclick="if(confirm('مسح كامل أرشيف الفواتير؟')) window.clearAllInvoices()" class="btn-ghost-danger">🗑 مسح الأرشيف</button>
+            <div class="flex gap-2 flex-wrap">
+                <button class="btn btn-ghost" onclick="openAddCategoryModal()">📁 قسم جديد</button>
+                <button class="btn btn-primary" onclick="openAddProductModal()">+ صنف جديد</button>
             </div>
         </div>
-        <div class="cyber-panel overflow-hidden">
+        <div id="menu-container" class="space-y-6"></div>
+    </section>
+
+    <!-- ========== Debts ========== -->
+    <section id="view-debts" class="view">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black text-white">الديون</h2>
+                <p class="text-gray-400 text-sm mt-2">الحسابات الآجلة والتسديد</p>
+            </div>
+            <input type="text" class="inp md:w-72" id="search-debts" placeholder="⌕ ابحث بالاسم..." oninput="renderDebts()">
+        </div>
+        <div id="debts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- ========== Invoices ========== -->
+    <section id="view-invoices" class="view">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black text-white">الفواتير</h2>
+                <p class="text-gray-400 text-sm mt-2">أرشيف الفواتير المكتملة</p>
+            </div>
+            <div class="flex gap-2">
+                <button class="btn btn-ghost" onclick="exportCSV()">📊 تصدير</button>
+                <button class="btn btn-danger" onclick="if(confirm('مسح الأرشيف؟')) clearInvoices()">🗑 مسح</button>
+            </div>
+        </div>
+        <div class="glass" style="padding:0;overflow:hidden">
             <div class="overflow-x-auto no-scrollbar">
-                <table class="w-full text-right min-w-[800px]">
-                    <thead class="bg-black/60 border-b border-white/5">
-                        <tr class="font-mono text-[10px] tracking-widest text-gray-500">
-                            <th class="p-5">INVOICE.ID</th>
-                            <th class="p-5">TABLE / CUSTOMER</th>
-                            <th class="p-5">TOTAL</th>
-                            <th class="p-5">STATUS</th>
-                            <th class="p-5">TIMESTAMP</th>
-                            <th class="p-5">ACTION</th>
+                <table class="w-full text-right min-w-[700px]">
+                    <thead style="background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.06)">
+                        <tr class="text-gray-500 text-[10px] font-mono tracking-widest">
+                            <th class="p-4">ID</th>
+                            <th class="p-4">الطاولة</th>
+                            <th class="p-4">الزبون</th>
+                            <th class="p-4">الإجمالي</th>
+                            <th class="p-4">الحالة</th>
+                            <th class="p-4">التاريخ</th>
+                            <th class="p-4">إجراء</th>
                         </tr>
                     </thead>
-                    <tbody id="invoice-list" class="divide-y divide-white/5 text-sm"></tbody>
+                    <tbody id="invoices-body" class="text-sm"></tbody>
                 </table>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- ===== Menu ===== -->
-    <div id="view-menu" class="view hidden p-6 md:p-8 flex-1 animate__animated animate__fadeIn">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="hud-badge hud-badge-cyan">▸ MODULE 05</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight">إدارة الأقسام والمنيو</h2>
-                <p class="text-gray-400 text-xs md:text-sm mt-2 font-tech">عدادات تنازلية، تصاعدية، وأصناف مباشرة</p>
-            </div>
-            <div class="flex gap-3 flex-wrap">
-                <button onclick="window.openModal('modal-add-category')" class="btn-ghost">📁 + قسم جديد</button>
-                <button onclick="window.openAddProductModal()" class="btn-neon">+ صنف جديد</button>
-            </div>
-        </div>
-
-        <div id="menu-category-nav" class="sticky top-24 z-20 mb-6 flex gap-2 overflow-x-auto no-scrollbar rounded-2xl bg-black/70 p-2 backdrop-blur-2xl border border-white/5"></div>
-        <div id="menu-categories-container" class="space-y-8"></div>
-    </div>
 </main>
 
-<!-- ===== Modals ===== -->
-<div id="modal-add-table" class="cyber-modal hidden">
-    <div class="modal-box modal-violet">
-        <button onclick="window.closeModal('modal-add-table')" class="modal-x">✕</button>
-        <div class="modal-header">
-            <span class="hud-badge">▸ INIT.SESSION</span>
+<!-- ============ MODAL: Add Table ============ -->
+<div class="modal-backdrop" id="modal-add-table">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-add-table')">✕</button>
+        <div class="mb-6">
+            <span class="badge badge-live">◆ NEW.SESSION</span>
             <h3 class="text-2xl font-black text-white mt-3">فتح طاولة جديدة</h3>
-            <p class="text-gray-400 text-xs mt-1 font-tech">أدخل اسماً أو رقماً لبدء الجلسة</p>
+            <p class="text-gray-400 text-xs mt-1">أدخل اسماً للطاولة لبدء الجلسة</p>
         </div>
-        <input type="text" id="input-new-table-name" placeholder="مثال: جهاز 5 VIP" class="cyber-input mb-4">
+        <label class="lbl">اسم الطاولة</label>
+        <input type="text" class="inp mb-4" id="new-table-name" placeholder="مثال: جهاز 5 VIP">
         <div class="flex flex-wrap gap-2 mb-6">
-            <button onclick="window.suggestTableName('PS5 - جهاز ')">🎮 صالة PS5</button>
-            <button onclick="window.suggestTableName('غرفة VIP #')">👑 غرفة VIP</button>
-            <button onclick="window.suggestTableName('طاولة كافيه ')">☕ طاولة كافيه</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('جهاز PS5 ')">🎮 جهاز</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('غرفة VIP #')">👑 VIP</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('طاولة كافيه ')">☕ كافيه</button>
         </div>
-        <button onclick="window.confirmAddTable()" class="btn-neon-full">✓ تأكيد الفتح</button>
+        <button class="btn btn-primary w-full" style="padding:15px" onclick="confirmAddTable()">✓ تأكيد الفتح</button>
     </div>
 </div>
 
-<div id="modal-product-picker" class="cyber-modal hidden">
-    <div class="modal-box modal-cyan max-w-3xl flex flex-col max-h-[85vh]">
-        <button onclick="window.closeModal('modal-product-picker')" class="modal-x">✕</button>
-        <div class="modal-header mb-4 flex items-start gap-3">
-            <button id="picker-back-btn" onclick="window.pickerShowCategories()" class="hidden btn-ghost-small">← الأقسام</button>
+<!-- ============ MODAL: Table Detail (Session) ============ -->
+<div class="modal-backdrop" id="modal-table">
+    <div class="modal-panel wide" style="max-width:820px">
+        <button class="modal-x" onclick="closeTableModal()">✕</button>
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/5">
             <div>
-                <h3 id="picker-title" class="text-xl font-black text-white">اختر القسم</h3>
-                <p id="picker-subtitle" class="text-gray-400 text-xs mt-1 font-tech">اضغط على القسم لعرض الأصناف</p>
+                <span class="badge badge-live">◆ SESSION</span>
+                <h3 id="table-modal-name" class="text-2xl md:text-3xl font-black text-white mt-2">—</h3>
+                <p id="table-modal-customer" class="text-cyan text-xs font-mono mt-1">GUEST</p>
+            </div>
+            <button class="btn btn-primary" onclick="openProductPicker()">
+                <span style="font-size:18px;font-weight:900;line-height:1;">+</span>
+                إضافة منتج
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Items -->
+            <div class="lg:col-span-2">
+                <h4 class="font-black text-white text-sm mb-3 flex items-center gap-2">
+                    <span class="text-cyan">▸</span> الطلبات
+                </h4>
+                <div id="table-items" class="space-y-3 max-h-[50vh] overflow-y-auto no-scrollbar"></div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-4">
+                <div>
+                    <label class="lbl">اسم الزبون</label>
+                    <input type="text" class="inp" id="table-customer-input" onchange="updateTableCustomer(this.value)" placeholder="زبون عام">
+                </div>
+                <div>
+                    <label class="lbl">خصم مباشر (IQD)</label>
+                    <input type="number" class="inp font-mono" id="table-discount-input" oninput="updateTableDiscount(this.value)" placeholder="0" min="0">
+                </div>
+
+                <div class="glass" style="padding:16px;background:rgba(0,0,0,.4)">
+                    <div class="space-y-2 mb-3">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">الإجمالي:</span>
+                            <span id="sum-subtotal" class="font-mono font-bold text-white">0</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-emerald">مدفوع مسبقاً:</span>
+                            <span id="sum-early" class="font-mono font-bold text-emerald">0</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-rose">خصم:</span>
+                            <span id="sum-discount" class="font-mono font-bold text-rose">0</span>
+                        </div>
+                    </div>
+                    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.4),transparent);margin:12px 0"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-black text-white text-sm">المطلوب:</span>
+                        <div>
+                            <span id="sum-final" class="font-mono font-black text-cyan text-2xl">0</span>
+                            <span class="text-[10px] text-gray-400 font-mono mr-1">IQD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-success w-full" style="padding:14px" onclick="openCheckout()">
+                    ✓ إغلاق الحساب
+                </button>
+                <button class="btn btn-ghost w-full" onclick="openTransfer()">
+                    ⇄ نقل / دمج طاولة
+                </button>
+                <button class="btn btn-ghost w-full" style="color:#FF2E63;border-color:rgba(255,46,99,.3)" onclick="if(confirm('إلغاء الطاولة وحذفها؟')) deleteCurrentTable()">
+                    🗑 إلغاء الطاولة
+                </button>
             </div>
         </div>
-        <div
+    </div>
+</div>
+
+<!-- ============ MODAL: Product Picker (Categories then Products) ============ -->
+<div class="modal-backdrop" id="modal-picker">
+    <div class="modal-panel wide">
+        <button class="modal-x" onclick="closeModal('modal-picker')">✕</button>
+
+        <div class="mb-6 pb-4 border-b border-white/5 flex items-center gap-3">
+            <button id="picker-back" class="btn btn-ghost hidden" style="padding:8px 14px;font-size:12px" onclick="pickerBack()">
+                ← الأقسام
+            </button>
+            <div>
+                <span class="badge badge-live">◆ ADD.ITEM</span>
+                <h3 id="picker-title" class="text-xl md:text-2xl font-black text-white mt-2">اختر القسم</h3>
+                <p id="picker-subtitle" class="text-gray-400 text-xs mt-1">اضغط على القسم لعرض الأصناف</p>
+            </div>
+        </div>
+
+        <div id="picker-body" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </div>
+</div>
+
+<!-- ============ MODAL: Early Payment ============ -->
+<div class="modal-backdrop" id="modal-early">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-early')">✕</button>
+        <div class="text-center mb-5">
+            <div style="font-size:40px;margin-bottom:8px">⚡</div>
+            <h3 class="text-xl font-black text-white">دفع مبكر</h3>
+            <p id="early-name" class="text-emerald text-sm font-bold mt-1 font-mono">—</p>
+        </div>
+
+        <div class="glass" style="padding:16px;background:rgba(0,0,0,.4);margin-bottom:16px">
+            <div class="flex justify-between text-sm py-1">
+                <span class="text-gray-400">الإجمالي:</span>
+                <span id="early-total" class="font-mono font-bold text-white">0</span>
+            </div>
+            <div class="flex justify-between text-sm py-1">
+                <span class="text-emerald">مدفوع:</span>
+                <span id="early-paid" class="font-mono font-bold text-emerald">0</span>
+            </div>
+            <div class="flex justify-between text-sm py-1">
+                <span class="text-cyan font-bold">المتبقي:</span>
+                <span id="early-remain" class="font-mono font-bold text-cyan">0</span>
+            </div>
+        </div>
+
+        <div class="flex gap-2 mb-4">
+            <button class="btn btn-ghost flex-1" style="font-size:11px" onclick="quickPayOne()">قطعة واحدة</button>
+            <button class="btn btn-ghost flex-1" style="font-size:11px" onclick="quickPayAll()">الكل</button>
+        </div>
+
+        <label class="lbl">المبلغ المدفوع الآن (IQD)</label>
+        <input type="number" class="inp font-mono mb-5" id="early-amount" min="1">
+        <button class="btn btn-success w-full" style="padding:14px" onclick="confirmEarly()">✓ تأكيد الدفع</button>
+    </div>
+</div>
+
+<!-- ============ MODAL: Checkout ============ -->
+<div class="modal-backdrop" id="modal-checkout">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-checkout')">✕</button>
+        <div class="mb-5">
+            <span class="badge badge-live">◆ CHECKOUT</span>
+            <h3 class="text-2xl font-black text-white mt-2">إغلاق الحساب</h3>
+        </div>
+
+        <div class="glass" style="padding:16px;background:rgba(0,0,0,.4);margin-bottom:16px">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-300 text-sm">المطلوب دفعه:</span>
+                <span id="co-total" class="font-mono font-black text-cyan text-xl">0 IQD</span>
+            </div>
+        </div>
+
+        <label class="lbl">المدفوع كاش الآن (IQD)</label>
+        <input type="number" class="inp font-mono mb-4" id="co-paid" oninput="calcSplit()">
+
+        <label class="lbl" style="color:#FF2E63">المتبقي (سيُسجل كدين)</label>
+        <input type="text" class="inp font-mono mb-6" id="co-debt" readonly style="color:#FF2E63;background:rgba(255,46,99,.05)">
+
+        <button class="btn btn-success w-full" style="padding:14px" onclick="confirmCheckout()">✓ تأكيد الدفع والأرشفة</button>
+    </div>
+</div>
+
+<!-- ============ MODAL: Transfer ============ -->
+<div class="modal-backdrop" id="modal-transfer">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-transfer')">✕</button>
+        <div class="mb-5">
+            <span class="badge badge-live">◆ TRANSFER</span>
+            <h3 class="text-2xl font-black text-white mt-2">نقل / دمج</h3>
+        </div>
+        <label class="lbl">الطاولة الهدف</label>
+        <select class="inp mb-5" id="transfer-select"></select>
+        <button class="btn btn-primary w-full" style="padding:14px" onclick="confirmTransfer()">⇄ تأكيد النقل</button>
+    </div>
+</div>
+
+<!-- ============ MODAL: Add Category ============ -->
+<div class="modal-backdrop" id="modal-add-cat">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-add-cat')">✕</button>
+        <h3 class="text-2xl font-black text-white mb-5">قسم جديد</h3>
+        <label class="lbl">اسم القسم</label>
+        <input type="text" class="inp mb-4" id="cat-name" placeholder="مثال: العصائر">
+        <label class="lbl">الأيقونة</label>
+        <input type="text" class="inp mb-6" id="cat-icon" value="📁" maxlength="4">
+        <button class="btn btn-primary w-full" style="padding:14px" onclick="confirmAddCategory()">✓ حفظ</button>
+    </div>
+</div>
+
+<!-- ============ MODAL: Add/Edit Product ============ -->
+<div class="modal-backdrop" id="modal-add-prod">
+    <div class="modal-panel">
+        <button class="modal-x" onclick="closeModal('modal-add-prod')">✕</button>
+        <h3 class="text-2xl font-black text-white mb-5" id="prod-modal-title">صنف جديد</h3>
+
+        <label class="lbl">القسم</label>
+        <select class="inp mb-4" id="prod-cat"></select>
+
+        <label class="lbl">اسم الصنف</label>
+        <input type="text" class="inp mb-4" id="prod-name" placeholder="مثال: عصير برتقال">
+
+        <label class="lbl">نوع الحساب</label>
+        <select class="inp mb-4" id="prod-type" onchange="typeChanged()">
+            <option value="direct">صنف مباشر (مشروب/أكل)</option>
+            <option value="countdown">عداد تنازلي (وقت محدد)</option>
+            <option value="open">عداد تصاعدي (سعر/ساعة)</option>
+        </select>
+
+        <div id="prod-duration-wrap" class="hidden mb-4">
+            <label class="lbl" style="color:#00E5FF">المدة بالدقائق</label>
+            <input type="number" class="inp font-mono" id="prod-duration" placeholder="30" min="1">
+        </div>
+
+        <label class="lbl" id="prod-price-lbl">السعر (IQD)</label>
+        <input type="number" class="inp font-mono mb-4" id="prod-price" placeholder="2000" min="1">
+
+        <label class="lbl">الأيقونة</label>
+        <input type="text" class="inp mb-6" id="prod-icon" value="📦" maxlength="4">
+
+        <button class="btn btn-primary w-full" style="padding:14px" onclick="confirmSaveProduct()">✓ حفظ</button>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   716QX NEXUS 5.0 — Core
+   ============================================================ */
+(function () {
+    'use strict';
+
+    const KEY = 'qx716_nexus_v5';
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const fmt = n => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
+    const now = () => Date.now();
+
+    const defaultState = () => ({
+        tables: [],
+        debts: [],
+        invoices: [],
+        categories: [
+            { id: 'c1', name: 'بليستيشن', icon: '🎮' },
+            { id: 'c2', name: 'المشروبات', icon: '🥤' },
+            { id: 'c3', name: 'المأكولات', icon: '🍕' },
+            { id: 'c4', name: 'النراكيل', icon: '💨' }
+        ],
+        products: [
+            { id: 'p1', catId: 'c1', name: 'نصف ساعة', icon: '⏱', type: 'countdown', duration: 30, price: 2000 },
+            { id: 'p2', catId: 'c1', name: 'ساعة كاملة', icon: '🕐', type: 'countdown', duration: 60, price: 4000 },
+            { id: 'p3', catId: 'c1', name: 'وقت مفتوح', icon: '♾', type: 'open', duration: 0, price: 4000 },
+            { id: 'p4', catId: 'c2', name: 'بيبسي', icon: '🥤', type: 'direct', duration: 0, price: 1000 },
+            { id: 'p5', catId: 'c2', name: 'عصير برتقال', icon: '🍊', type: 'direct', duration: 0, price: 2000 },
+            { id: 'p6', catId: 'c2', name: 'ماء', icon: '💧', type: 'direct', duration: 0, price: 500 },
+            { id: 'p7', catId: 'c3', name: 'بيتزا', icon: '🍕', type: 'direct', duration: 0, price: 5000 },
+            { id: 'p8', catId: 'c4', name: 'نركيلة تفاح', icon: '💨', type: 'direct', duration: 0, price: 5000 }
+        ],
+        revenue: { daily: 0, yesterday: 0, monthly: 0 },
+        activeView: 'dashboard',
+        activeTableId: null,
+        pickerCatId: null,
+        editingProductId: null,
+        earlyItemId: null
+    });
+
+    let S = load();
+
+    function load() {
+        try {
+            const raw = localStorage.getItem(KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                return Object.assign(defaultState(), parsed);
+            }
+        } catch (e) {}
+        return defaultState();
+    }
+    function save() {
+        try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    }
+
+    /* ============ Toast ============ */
+    function toast(msg, type = 'info', dur = 2500) {
+        const wrap = $('#toast-wrap');
+        if (!wrap) return;
+        const el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(() => {
+            el.style.transition = 'all .25s';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(-15px)';
+            setTimeout(() => el.remove(), 300);
+        }, dur);
+    }
+
+    /* ============ Time helpers ============ */
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function timeStr(sec) {
+        sec = Math.max(0, Math.floor(sec));
+        return pad(Math.floor(sec / 3600)) + ':' + pad(Math.floor((sec % 3600) / 60)) + ':' + pad(sec % 60);
+    }
+    function dateStr(iso) {
+        const d = new Date(iso);
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    /* ============ Clock ============ */
+    setInterval(() => {
+        const el = $('#live-clock');
+        if (el) el.textContent = new Date().toLocaleTimeString('en-GB');
+    }, 1000);
+
+    /* ============ Calc ============ */
+    function itemElapsed(it) {
+        if (it.type === 'direct') return 0;
+        let e = it.sessionElapsed || 0;
+        if (it.status === 'running') {
+            e += (now() - it.startedAt) / 1000 - (it.pausedTotal || 0);
+        }
+        return Math.max(0, e);
+    }
+    function itemTotal(it) {
+        if (it.type === 'direct') return it.price * it.qty;
+        if (it.type === 'countdown') return it.price * it.qty;
+        if (it.type === 'open') {
+            const e = itemElapsed(it);
+            return Math.round((e * it.price / 3600) * it.qty);
+        }
+        return 0;
+    }
+    function itemExpired(it) {
+        if (it.type !== 'countdown') return false;
+        return itemElapsed(it) >= it.duration * 60 * it.qty;
+    }
+    function tableTotals(t) {
+        let sub = 0, early = 0;
+        t.items.forEach(it => { sub += itemTotal(it); early += (it.earlyPaid || 0); });
+        const disc = Number(t.discount) || 0;
+        return { sub, early, disc, final: Math.max(0, sub - early - disc) };
+    }
+
+    /* ============ Drawer ============ */
+    function openDrawer() {
+        $('#drawer').classList.add('open');
+        $('#drawer-overlay').classList.add('show');
+    }
+    function closeDrawer() {
+        $('#drawer').classList.remove('open');
+        $('#drawer-overlay').classList.remove('show');
+    }
+
+    /* ============ Modals ============ */
+    function openModal(id) {
+        const m = document.getElementById(id);
+        if (m) { m.classList.add('show'); }
+    }
+    function closeModal(id) {
+        const m = document.getElementById(id);
+        if (m) { m.classList.remove('show'); }
+    }
+
+    /* ============ Views ============ */
+    function switchView(v) {
+        S.activeView = v;
+        save();
+        $$('.view').forEach(x => x.classList.remove('active'));
+        const target = document.getElementById('view-' + v);
+        if (target) target.classList.add('active');
+
+        $$('.drawer-nav-item').forEach(b => b.classList.remove('active'));
+        const nb = document.querySelector(`.drawer-nav-item[data-view="${v}"]`);
+        if (nb) nb.classList.add('active');
+
+        closeDrawer();
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+        if (v === 'dashboard') renderDashboard();
+        if (v === 'tables') renderTables();
+        if (v === 'menu') renderMenu();
+        if (v === 'debts') renderDebts();
+        if (v === 'invoices') renderInvoices();
+    }
+
+    /* ============ Dashboard ============ */
+    function renderDashboard() {
+        $('#stat-daily').textContent = fmt(S.revenue.daily);
+        $('#stat-yesterday').textContent = fmt(S.revenue.yesterday);
+        $('#stat-monthly').textContent = fmt(S.revenue.monthly);
+    }
+    function transferDaily() {
+        if (S.revenue.daily <= 0) { toast('لا توجد مبيعات لترحيلها', 'warn'); return; }
+        if (!confirm('ترحيل إيراد اليوم إلى الأمس وإضافته للشهر؟')) return;
+        S.revenue.monthly += S.revenue.daily;
+        S.revenue.yesterday = S.revenue.daily;
+        S.revenue.daily = 0;
+        save();
+        renderDashboard();
+        toast('تم الترحيل: ' + fmt(S.revenue.yesterday) + ' IQD', 'success');
+    }
+    function resetMonthly() {
+        S.revenue.monthly = 0;
+        save();
+        renderDashboard();
+        toast('تم تصفير الشهر', 'warn');
+    }
+    function resetDaily() {
+        S.revenue.daily = 0;
+        save();
+        renderDashboard();
+        toast('تم تصفير اليوم', 'warn');
+    }
+    function resetAll() {
+        S = defaultState();
+        save();
+        renderAll();
+        switchView('dashboard');
+        toast('تم إعادة الضبط', 'error');
+    }
+
+    /* ============ Tables ============ */
+    function renderTables() {
+        const grid = $('#tables-grid');
+        if (!grid) return;
+        const q = ($('#search-tables')?.value || '').toLowerCase().trim();
+        let list = S.tables.slice();
+        if (q) list = list.filter(t => t.name.toLowerCase().includes(q) || (t.customer || '').toLowerCase().includes(q));
+
+        if (list.length === 0) {
+            grid.innerHTML = `
+                <div class="glass p-10 text-center" style="grid-column:1/-1">
+                    <div style="font-size:56px;margin-bottom:12px;opacity:.5">🎮</div>
+                    <h3 class="text-lg font-black text-white mb-1">لا توجد طاولات</h3>
+                    <p class="text-gray-400 text-sm mb-5">ابدأ بفتح طاولة جديدة</p>
+                    <button class="btn btn-primary" onclick="openAddTableModal()">+ فتح طاولة</button>
+                </div>`;
+            return;
+        }
+
+        grid.innerHTML = list.map(t => {
+            const tot = tableTotals(t);
+            const running = t.items.filter(i => i.type !== 'direct' && i.status === 'running').length;
+            return `
+                <div class="table-card-3d ${running > 0 ? 'busy' : 'idle'}" onclick="openTableModal('${t.id}')">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-lg font-black text-white font-display tracking-wide">${escapeHtml(t.name)}</h3>
+                            <p class="text-[10px] text-gray-400 font-mono mt-1">${escapeHtml(t.customer || 'GUEST')}</p>
+                        </div>
+                        <span class="pulse-dot" style="background:${running > 0 ? '#00FF9D' : '#4B5563'};color:${running > 0 ? '#00FF9D' : '#4B5563'}"></span>
+                    </div>
+                    <div class="space-y-1.5 mb-3">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-500 font-mono">ITEMS</span>
+                            <span class="text-white font-mono font-bold">${t.items.length}</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-500 font-mono">SUBTOTAL</span>
+                            <span class="text-cyan font-mono font-bold">${fmt(tot.sub)}</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 flex justify-between items-center" style="border-top:1px solid rgba(255,255,255,.05)">
+                        <span class="text-[10px] text-gray-500 font-mono">${dateStr(t.createdAt).slice(0, 10)}</span>
+                        <span class="font-mono font-black text-violet" style="font-size:17px">${fmt(tot.final)} <span style="font-size:9px;color:#6B7280">IQD</span></span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function openAddTableModal() {
+        $('#new-table-name').value = '';
+        openModal('modal-add-table');
+        setTimeout(() => $('#new-table-name').focus(), 150);
+    }
+    function suggestTable(p) {
+        const i = $('#new-table-name');
+        i.value = p + (S.tables.length + 1);
+        i.focus();
+    }
+    function confirmAddTable() {
+        const name = $('#new-table-name').value.trim();
+        if (!name) { toast('أدخل اسم الطاولة', 'error'); return; }
+        if (S.tables.some(t => t.name === name)) { toast('يوجد طاولة بنفس الاسم', 'error'); return; }
+        S.tables.push({
+            id: uid(), name, customer: '', items: [], discount: 0,
+            createdAt: new Date().toISOString(), status: 'open'
+        });
+        save();
+        closeModal('modal-add-table');
+        renderTables();
+        toast('تم فتح "' + name + '"', 'success');
+    }
+
+    /* ============ Table Modal ============ */
+    function openTableModal(id) {
+        const t = S.tables.find(x => x.id === id);
+        if (!t) return;
+        S.activeTableId = id;
+        save();
+        $('#table-modal-name').textContent = t.name;
+        $('#table-modal-customer').textContent = (t.customer || 'GUEST').toUpperCase();
+        $('#table-customer-input').value = t.customer || '';
+        $('#table-discount-input').value = t.discount || '';
+        renderTableItems();
+        openModal('modal-table');
+    }
+    function closeTableModal() {
+        S.activeTableId = null;
+        save();
+        closeModal('modal-table');
+        renderTables();
+    }
+    function currentTable() {
+        return S.tables.find(x => x.id === S.activeTableId);
+    }
+    function renderTableItems() {
+        const t = currentTable();
+        if (!t) { closeTableModal(); return; }
+        const list = $('#table-items');
+
+        if (t.items.length === 0) {
+            list.innerHTML = `
+                <div class="text-center py-10" style="border:2px dashed rgba(255,255,255,.08);border-radius:16px">
+                    <div style="font-size:36px;margin-bottom:6px;opacity:.4">📦</div>
+                    <p class="text-gray-500 text-sm">لا توجد أصناف</p>
+                    <p class="text-gray-600 text-xs mt-1">اضغط "إضافة منتج"</p>
+                </div>`;
+        } else {
+            list.innerHTML = t.items.map(it => {
+                const total = itemTotal(it);
+                const elapsed = itemElapsed(it);
+                const rem = it.type === 'countdown' ? Math.max(0, it.duration * 60 * it.qty - elapsed) : 0;
+                const exp = itemExpired(it);
+
+                let badge = '';
+                if (it.type === 'direct') badge = `<span class="badge badge-direct">صنف مباشر</span>`;
+                else if (it.status === 'paused') badge = `<span class="badge badge-paused">⏸ موقوف</span>`;
+                else if (exp) badge = `<span class="badge badge-expired">⏰ انتهى</span>`;
+                else badge = `<span class="badge badge-live">● شغال</span>`;
+
+                return `
+                    <div class="item-row">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-3">
+                                <div style="width:44px;height:44px;border-radius:12px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);display:flex;align-items:center;justify-content:center;font-size:20px">${it.icon}</div>
+                                <div>
+                                    <h5 class="font-bold text-white text-sm">${escapeHtml(it.name)}</h5>
+                                    <div class="flex items-center gap-2 mt-1">${badge}</div>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-mono font-black text-cyan" style="font-size:16px">${fmt(total)}</div>
+                                <div class="text-[9px] text-gray-500">IQD</div>
+                            </div>
+                        </div>
+
+                        ${it.type !== 'direct' ? `
+                            <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                                <div style="background:rgba(0,0,0,.4);padding:8px;border-radius:10px">
+                                    <div class="text-[9px] text-gray-500 font-mono">ELAPSED</div>
+                                    <div class="font-mono font-bold text-white">${timeStr(elapsed)}</div>
+                                </div>
+                                ${it.type === 'countdown' ? `
+                                    <div style="background:rgba(0,0,0,.4);padding:8px;border-radius:10px">
+                                        <div class="text-[9px] text-gray-500 font-mono">REMAIN</div>
+                                        <div class="font-mono font-bold ${exp ? 'text-rose' : 'text-emerald'}">${timeStr(rem)}</div>
+                                    </div>
+                                ` : `
+                                    <div style="background:rgba(0,0,0,.4);padding:8px;border-radius:10px">
+                                        <div class="text-[9px] text-gray-500 font-mono">TYPE</div>
+                                        <div class="font-bold text-violet text-[10px]">مفتوح/ساعة</div>
+                                    </div>
+                                `}
+                            </div>
+                        ` : ''}
+
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <div class="flex items-center gap-1.5">
+                                <button class="qty-btn" onclick="changeQty('${it.id}',-1)">−</button>
+                                <span class="font-mono font-black text-white px-2" style="min-width:24px;text-align:center">${it.qty}</span>
+                                <button class="qty-btn" onclick="changeQty('${it.id}',1)">+</button>
+                            </div>
+
+                            ${it.type !== 'direct' && it.status === 'running' ? `<button class="btn btn-ghost" style="padding:7px 12px;font-size:11px" onclick="pauseItem('${it.id}')">⏸ إيقاف</button>` : ''}
+                            ${it.type !== 'direct' && it.status === 'paused' ? `<button class="btn btn-ghost" style="padding:7px 12px;font-size:11px;color:#00FF9D;border-color:rgba(0,255,157,.3)" onclick="resumeItem('${it.id}')">▶ استئناف</button>` : ''}
+
+                            <button class="btn btn-ghost" style="padding:7px 12px;font-size:11px;color:#00FF9D;border-color:rgba(0,255,157,.3)" onclick="openEarly('${it.id}')">⚡ دفع</button>
+                            <button class="btn btn-ghost" style="padding:7px 12px;font-size:11px;color:#FF2E63;border-color:rgba(255,46,99,.3);margin-right:auto" onclick="removeItem('${it.id}')">🗑</button>
+                        </div>
+
+                        ${(it.earlyPaid || 0) > 0 ? `
+                            <div class="mt-2 pt-2 flex justify-between text-xs" style="border-top:1px solid rgba(255,255,255,.05)">
+                                <span class="text-emerald">مدفوع مسبقاً:</span>
+                                <span class="font-mono font-bold text-emerald">${fmt(it.earlyPaid)} IQD</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        const tot = tableTotals(t);
+        $('#sum-subtotal').textContent = fmt(tot.sub) + ' IQD';
+        $('#sum-early').textContent = fmt(tot.early) + ' IQD';
+        $('#sum-discount').textContent = '-' + fmt(tot.disc) + ' IQD';
+        $('#sum-final').textContent = fmt(tot.final);
+    }
+    function updateTableCustomer(v) {
+        const t = currentTable(); if (!t) return;
+        t.customer = v.trim();
+        save();
+        $('#table-modal-customer').textContent = (t.customer || 'GUEST').toUpperCase();
+    }
+    function updateTableDiscount(v) {
+        const t = currentTable(); if (!t) return;
+        t.discount = Math.max(0, Number(v) || 0);
+        save();
+        renderTableItems();
+    }
+    function changeQty(id, delta) {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === id); if (!it) return;
+        it.qty = Math.max(1, (it.qty || 1) + delta);
+        save();
+        renderTableItems();
+    }
+    function pauseItem(id) {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === id); if (!it || it.status !== 'running') return;
+        it.sessionElapsed = itemElapsed(it);
+        it.status = 'paused';
+        it.pausedAt = now();
+        save();
+        renderTableItems();
+    }
+    function resumeItem(id) {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === id); if (!it || it.status !== 'paused') return;
+        it.startedAt = now();
+        it.pausedTotal = 0;
+        it.status = 'running';
+        save();
+        renderTableItems();
+    }
+    function removeItem(id) {
+        const t = currentTable(); if (!t) return;
+        if (!confirm('حذف هذا الصنف؟')) return;
+        t.items = t.items.filter(i => i.id !== id);
+        save();
+        renderTableItems();
+        toast('تم الحذف', 'warn');
+    }
+
+    /* ============ Product Picker ============ */
+    function openProductPicker() {
+        S.pickerCatId = null;
+        renderPicker();
+        openModal('modal-picker');
+    }
+    function pickerBack() {
+        S.pickerCatId = null;
+        renderPicker();
+    }
+    function pickerSelectCat(catId) {
+        S.pickerCatId = catId;
+        renderPicker();
+    }
+    function renderPicker() {
+        const body = $('#picker-body');
+        const title = $('#picker-title');
+        const sub = $('#picker-subtitle');
+        const backBtn = $('#picker-back');
+
+        if (!S.pickerCatId) {
+            title.textContent = 'اختر القسم';
+            sub.textContent = 'اضغط على القسم لعرض الأصناف';
+            backBtn.classList.add('hidden');
+            if (S.categories.length === 0) {
+                body.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#6B7280;font-size:13px">لا توجد أقسام. أضف قسماً أولاً من المنيو</div>`;
+                return;
+            }
+            body.innerHTML = S.categories.map(c => `
+                <div class="cat-card" onclick="pickerSelectCat('${c.id}')">
+                    <div style="font-size:36px;margin-bottom:8px">${c.icon}</div>
+                    <div class="font-black text-white text-sm">${escapeHtml(c.name)}</div>
+                    <div class="text-[10px] text-gray-500 mt-1 font-mono">${S.products.filter(p => p.catId === c.id).length} صنف</div>
+                </div>
+            `).join('');
+        } else {
+            const cat = S.categories.find(c => c.id === S.pickerCatId);
+            title.textContent = cat ? cat.name : 'الأصناف';
+            sub.textContent = 'اضغط على الصنف لإضافته للطاولة';
+            backBtn.classList.remove('hidden');
+            const prods = S.products.filter(p => p.catId === S.pickerCatId);
+            if (prods.length === 0) {
+                body.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#6B7280;font-size:13px">لا توجد أصناف في هذا القسم</div>`;
+                return;
+            }
+            body.innerHTML = prods.map(p => `
+                <div class="cat-card" onclick="pickerAddProduct('${p.id}')">
+                    <div style="font-size:32px;margin-bottom:8px">${p.icon}</div>
+                    <div class="font-black text-white text-xs">${escapeHtml(p.name)}</div>
+                    <div class="font-mono font-black text-cyan text-sm mt-2">${fmt(p.price)}</div>
+                    <div class="text-[9px] text-gray-500 mt-1">${p.type === 'direct' ? 'مباشر' : p.type === 'countdown' ? p.duration + ' دقيقة' : 'مفتوح/ساعة'}</div>
+                </div>
+            `).join('');
+        }
+    }
+    function pickerAddProduct(pid) {
+        const p = S.products.find(x => x.id === pid);
+        const t = currentTable();
+        if (!p || !t) return;
+        t.items.push({
+            id: uid(), productId: p.id, name: p.name, icon: p.icon,
+            type: p.type, price: p.price, duration: p.duration || 0,
+            qty: 1, startedAt: now(), pausedAt: null, pausedTotal: 0,
+            sessionElapsed: 0, earlyPaid: 0,
+            status: p.type === 'direct' ? 'done' : 'running'
+        });
+        save();
+        renderTableItems();
+        toast('تمت إضافة "' + p.name + '"', 'success', 1200);
+        // نرجع لشاشة الأقسام تلقائياً للإضافة السريعة
+        S.pickerCatId = null;
+        renderPicker();
+    }
+
+    /* ============ Early Payment ============ */
+    function openEarly(id) {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === id); if (!it) return;
+        S.earlyItemId = id;
+        const total = itemTotal(it);
+        const paid = it.earlyPaid || 0;
+        const rem = Math.max(0, total - paid);
+        $('#early-name').textContent = it.name;
+        $('#early-total').textContent = fmt(total) + ' IQD';
+        $('#early-paid').textContent = fmt(paid) + ' IQD';
+        $('#early-remain').textContent = fmt(rem) + ' IQD';
+        $('#early-amount').value = rem;
+        openModal('modal-early');
+    }
+    function quickPayOne() {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === S.earlyItemId); if (!it) return;
+        const total = itemTotal(it);
+        const paid = it.earlyPaid || 0;
+        const rem = Math.max(0, total - paid);
+        $('#early-amount').value = Math.min(it.price, rem);
+    }
+    function quickPayAll() {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === S.earlyItemId); if (!it) return;
+        const total = itemTotal(it);
+        const paid = it.earlyPaid || 0;
+        $('#early-amount').value = Math.max(0, total - paid);
+    }
+    function confirmEarly() {
+        const t = currentTable(); if (!t) return;
+        const it = t.items.find(i => i.id === S.earlyItemId); if (!it) return;
+        const amount = Math.max(0, Number($('#early-amount').value) || 0);
+        const total = itemTotal(it);
+        const paid = it.earlyPaid || 0;
+        const rem = Math.max(0, total - paid);
+        if (amount <= 0) { toast('أدخل مبلغاً صحيحاً', 'error'); return; }
+        if (amount > rem) { toast('المبلغ أكبر من المتبقي', 'error'); return; }
+        it.earlyPaid = paid + amount;
+        S.revenue.daily += amount;
+        save();
+        closeModal('modal-early');
+        renderTableItems();
+        toast('تم استلام ' + fmt(amount) + ' IQD', 'success');
+    }
+
+    /* ============ Checkout ============ */
+    function openCheckout() {
+        const t = currentTable(); if (!t) return;
+        const tot = tableTotals(t);
+        $('#co-total').textContent = fmt(tot.final) + ' IQD';
+        $('#co-paid').value = tot.final;
+        $('#co-debt').value = '0 IQD';
+        openModal('modal-checkout');
+    }
+    function calcSplit() {
+        const t = currentTable(); if (!t) return;
+        const tot = tableTotals(t);
+        const paid = Math.max(0, Number($('#co-paid').value) || 0);
+        const debt = Math.max(0, tot.final - paid);
+        $('#co-debt').value = fmt(debt) + ' IQD';
+    }
+    function confirmCheckout() {
+        const t = currentTable(); if (!t) return;
+        const tot = tableTotals(t);
+        const paid = Math.max(0, Math.min(tot.final, Number($('#co-paid').value) || 0));
+        const debt = Math.max(0, tot.final - paid);
+
+        const inv = {
+            id: 'INV-' + Date.now().toString().slice(-7),
+            tableName: t.name,
+            customer: t.customer || 'زبون عام',
+            total: tot.final,
+            paid, debt,
+            date: new Date().toISOString(),
+            items: t.items.map(i => ({ name: i.name, qty: i.qty, price: i.price, total: itemTotal(i) }))
+        };
+        S.invoices.unshift(inv);
+        S.revenue.daily += paid;
+
+        if (debt > 0) {
+            S.debts.unshift({
+                id: uid(), customer: t.customer || 'زبون عام',
+                amount: debt, paid: 0, tableName: t.name,
+                date: new Date().toISOString(), status: 'unpaid', invoiceId: inv.id
+            });
+        }
+        S.tables = S.tables.filter(x => x.id !== t.id);
+        S.activeTableId = null;
+        save();
+        closeModal('modal-checkout');
+        closeModal('modal-table');
+        switchView('invoices');
+        toast(debt > 0 ? 'دفع ' + fmt(paid) + ' + دين ' + fmt(debt) : 'تم إغلاق الحساب', 'success');
+    }
+
+    /* ============ Transfer ============ */
+    function openTransfer() {
+        const t = currentTable(); if (!t) return;
+        const others = S.tables.filter(x => x.id !== t.id);
+        const sel = $('#transfer-select');
+        if (others.length === 0) {
+            sel.innerHTML = '<option value="">لا توجد طاولات أخرى</option>';
+        } else {
+            sel.innerHTML = others.map(o => `<option value="${o.id}">${escapeHtml(o.name)}${o.customer ? ' — ' + escapeHtml(o.customer) : ''}</option>`).join('');
+        }
+        openModal('modal-transfer');
+    }
+    function confirmTransfer() {
+        const t = currentTable(); if (!t) return;
+        const tid = $('#transfer-select').value;
+        const target = S.tables.find(x => x.id === tid);
+        if (!target) { toast('اختر طاولة صحيحة', 'error'); return; }
+        target.items = target.items.concat(t.items);
+        target.discount = (target.discount || 0) + (t.discount || 0);
+        if (t.customer && !target.customer) target.customer = t.customer;
+        S.tables = S.tables.filter(x => x.id !== t.id);
+        S.activeTableId = target.id;
+        save();
+        closeModal('modal-transfer');
+        $('#table-modal-name').textContent = target.name;
+        $('#table-modal-customer').textContent = (target.customer || 'GUEST').toUpperCase();
+        renderTableItems();
+        toast('تم الدمج مع "' + target.name + '"', 'success');
+    }
+    function deleteCurrentTable() {
+        S.tables = S.tables.filter(x => x.id !== S.activeTableId);
+        S.activeTableId = null;
+        save();
+        closeModal('modal-table');
+        renderTables();
+        toast('تم إلغاء الطاولة', 'warn');
+    }
+
+    /* ============ Debts ============ */
+    function renderDebts() {
+        const grid = $('#debts-grid');
+        if (!grid) return;
+        const q = ($('#search-debts')?.value || '').toLowerCase().trim();
+        let list = S.debts.slice();
+        if (q) list = list.filter(d => (d.customer || '').toLowerCase().includes(q));
+
+        if (list.length === 0) {
+            grid.innerHTML = `
+                <div class="glass p-10 text-center" style="grid-column:1/-1">
+                    <div style="font-size:52px;margin-bottom:12px">📒</div>
+                    <h3 class="text-lg font-black text-white mb-1">لا توجد ديون</h3>
+                    <p class="text-gray-400 text-sm">كل الحسابات مسددة ✅</p>
+                </div>`;
+            return;
+        }
+        grid.innerHTML = list.map(d => {
+            const rem = Math.max(0, d.amount - (d.paid || 0));
+            const paidFull = rem <= 0;
+            return `
+                <div class="debt-card ${paidFull ? 'paid' : ''}">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-black text-white">${escapeHtml(d.customer)}</h3>
+                            <p class="text-[10px] text-gray-400 mt-1 font-mono">${escapeHtml(d.tableName)} • ${dateStr(d.date)}</p>
+                        </div>
+                        <span class="badge ${paidFull ? 'badge-live' : 'badge-expired'}">${paidFull ? 'مسدد' : 'غير مسدد'}</span>
+                    </div>
+                    <div class="space-y-1.5 mb-4 text-xs">
+                        <div class="flex justify-between"><span class="text-gray-400">الأصلي:</span><span class="font-mono font-bold text-white">${fmt(d.amount)}</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">المدفوع:</span><span class="font-mono font-bold text-emerald">${fmt(d.paid || 0)}</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">المتبقي:</span><span class="font-mono font-bold text-rose" style="font-size:15px">${fmt(rem)}</span></div>
+                    </div>
+                    ${!paidFull ? `
+                        <div class="flex gap-2">
+                            <button class="btn btn-success flex-1" style="padding:9px;font-size:12px" onclick="payDebt('${d.id}')">💵 تسديد</button>
+                            <button class="btn btn-ghost" style="padding:9px;font-size:12px" onclick="payDebtFull('${d.id}')">كامل</button>
+                        </div>
+                    ` : `<div class="text-center text-xs text-emerald font-bold py-2">✓ تم التسديد</div>`}
+                </div>`;
+        }).join('');
+    }
+    function payDebt(id) {
+        const d = S.debts.find(x => x.id === id); if (!d) return;
+        const rem = d.amount - (d.paid || 0);
+        const amt = prompt(`المتبقي: ${fmt(rem)} IQD\nأدخل المبلغ:`, rem);
+        if (amt === null) return;
+        const n = Math.max(0, Math.min(rem, Number(amt) || 0));
+        if (n <= 0) { toast('مبلغ غير صحيح', 'error'); return; }
+        d.paid = (d.paid || 0) + n;
+        if (d.paid >= d.amount) d.status = 'paid';
+        S.revenue.daily += n;
+        save();
+        renderDebts();
+        toast('تم استلام ' + fmt(n) + ' IQD', 'success');
+    }
+    function payDebtFull(id) {
+        const d = S.debts.find(x => x.id === id); if (!d) return;
+        const rem = d.amount - (d.paid || 0);
+        if (!confirm('تسديد كلي: ' + fmt(rem) + ' IQD؟')) return;
+        d.paid = d.amount; d.status = 'paid';
+        S.revenue.daily += rem;
+        save();
+        renderDebts();
+        toast('تم التسديد', 'success');
+    }
+
+    /* ============ Invoices ============ */
+    function renderInvoices() {
+        const tbody = $('#invoices-body');
+        if (!tbody) return;
+        if (S.invoices.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;text-align:center;color:#6B7280;font-size:13px">لا توجد فواتير</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = S.invoices.map(inv => `
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+                <td class="p-4 font-mono font-bold text-cyan text-xs">${inv.id}</td>
+                <td class="p-4 font-bold text-white text-sm">${escapeHtml(inv.tableName)}</td>
+                <td class="p-4 text-gray-300 text-xs">${escapeHtml(inv.customer)}</td>
+                <td class="p-4 font-mono font-black text-white">${fmt(inv.total)}</td>
+                <td class="p-4">
+                    ${inv.debt > 0
+                        ? `<span class="badge badge-expired">دين ${fmt(inv.debt)}</span>`
+                        : `<span class="badge badge-live">مسدد</span>`}
+                </td>
+                <td class="p-4 text-[11px] text-gray-400 font-mono">${dateStr(inv.date)}</td>
+                <td class="p-4">
+                    <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px" onclick="printInv('${inv.id}')">🖨</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    function printInv(id) {
+        const inv = S.invoices.find(x => x.id === id); if (!inv) return;
+        const w = window.open('', '_blank');
+        w.document.write(`<html dir="rtl"><head><title>${inv.id}</title><style>body{font-family:Tahoma;padding:30px;color:#000}h1{text-align:center;color:#8B5CF6}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #ccc;padding:10px;text-align:right}th{background:#f0f0f0}</style></head><body><h1>716QX NEXUS</h1><p><b>رقم الفاتورة:</b> ${inv.id}</p><p><b>الطاولة:</b> ${inv.tableName}</p><p><b>الزبون:</b> ${inv.customer}</p><p><b>التاريخ:</b> ${dateStr(inv.date)}</p><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>${inv.items.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>${fmt(i.price)}</td><td>${fmt(i.total)}</td></tr>`).join('')}</tbody></table><h3>الإجمالي: ${fmt(inv.total)} IQD</h3><h3>المدفوع: ${fmt(inv.paid)} IQD</h3><h3>الدين: ${fmt(inv.debt)} IQD</h3></body></html>`);
+        w.document.close();
+        setTimeout(() => w.print(), 400);
+    }
+    function exportCSV() {
+        if (S.invoices.length === 0) { toast('لا توجد فواتير', 'warn'); return; }
+        const rows = [['ID', 'Table', 'Customer', 'Total', 'Paid', 'Debt', 'Date']];
+        S.invoices.forEach(inv => rows.push([inv.id, inv.tableName, inv.customer, inv.total, inv.paid, inv.debt, dateStr(inv.date)]));
+        const csv = '\uFEFF' + rows.map(r => r.map(x => `"${x}"`).join(',')).join('\n');
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+        a.download = 'invoices_' + Date.now() + '.csv';
+        a.click();
+        toast('تم التصدير', 'success');
+    }
+    function clearInvoices() {
+        S.invoices = [];
+        save();
+        renderInvoices();
+        toast('تم المسح', 'warn');
+    }
+
+    /* ============ Menu Management ============ */
+    function renderMenu() {
+        const container = $('#menu-container');
+        if (!container) return;
+        if (S.categories.length === 0) {
+            container.innerHTML = `<div class="glass p-10 text-center"><div style="font-size:52px;margin-bottom:12px">📋</div><p class="text-gray-400">لا توجد أقسام. أضف قسماً جديداً</p></div>`;
+            return;
+        }
+        container.innerHTML = S.categories.map(c => {
+            const prods = S.products.filter(p => p.catId === c.id);
+            return `
+                <div class="glass p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <div style="font-size:28px">${c.icon}</div>
+                            <div>
+                                <h3 class="text-lg font-black text-white">${escapeHtml(c.name)}</h3>
+                                <p class="text-[10px] text-gray-500 font-mono">${prods.length} ITEMS</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-ghost" style="padding:6px 12px;font-size:11px;color:#FF2E63;border-color:rgba(255,46,99,.3)" onclick="deleteCategory('${c.id}')">🗑 حذف</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        ${prods.length === 0
+                            ? `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#6B7280;font-size:12px;border:1px dashed rgba(255,255,255,.08);border-radius:12px">لا توجد أصناف</div>`
+                            : prods.map(p => `
+                                <div class="flex items-center gap-3 p-3" style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.05);border-radius:14px">
+                                    <div style="font-size:22px">${p.icon}</div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-bold text-white text-xs truncate">${escapeHtml(p.name)}</div>
+                                        <div class="text-[9px] text-gray-500 font-mono">${p.type === 'direct' ? 'DIRECT' : p.type === 'countdown' ? p.duration + 'MIN' : 'OPEN/H'}</div>
+                                    </div>
+                                    <div class="text-left flex flex-col items-end gap-1">
+                                        <div class="font-mono font-black text-cyan text-xs">${fmt(p.price)}</div>
+                                        <div class="flex gap-1">
+                                            <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px" onclick="openEditProduct('${p.id}')">✎</button>
+                                            <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;color:#FF2E63;border-color:rgba(255,46,99,.3)" onclick="deleteProduct('${p.id}')">✕</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function openAddCategoryModal() {
+        $('#cat-name').value = '';
+        $('#cat-icon').value = '📁';
+        openModal('modal-add-cat');
+    }
+    function confirmAddCategory() {
+        const name = $('#cat-name').value.trim();
+        const icon = $('#cat-icon').value.trim() || '📁';
+        if (!name) { toast('أدخل اسم القسم', 'error'); return; }
+        S.categories.push({ id: uid(), name, icon });
+        save();
+        closeModal('modal-add-cat');
+        renderMenu();
+        toast('تمت إضافة "' + name + '"', 'success');
+    }
+    function deleteCategory(id) {
+        const prods = S.products.filter(p => p.catId === id);
+        if (prods.length > 0) {
+            if (!confirm('يوجد ' + prods.length + ' صنف في هذا القسم. سيُحذفون معه. متأكد؟')) return;
+        } else {
+            if (!confirm('حذف القسم؟')) return;
+        }
+        S.categories = S.categories.filter(c => c.id !== id);
+        S.products = S.products.filter(p => p.catId !== id);
+        save();
+        renderMenu();
+        toast('تم الحذف', 'warn');
+    }
+
+    function openAddProductModal() {
+        S.editingProductId = null;
+        $('#prod-modal-title').textContent = 'صنف جديد';
+        $('#prod-cat').innerHTML = S.categories.map(c => `<option value="${c.id}">${c.icon} ${escapeHtml(c.name)}</option>`).join('');
+        $('#prod-name').value = '';
+        $('#prod-type').value = 'direct';
+        $('#prod-duration').value = '';
+        $('#prod-price').value = '';
+        $('#prod-icon').value = '📦';
+        typeChanged();
+        openModal('modal-add-prod');
+    }
+    function openEditProduct(id) {
+        const p = S.products.find(x => x.id === id); if (!p) return;
+        S.editingProductId = id;
+        $('#prod-modal-title').textContent = 'تعديل الصنف';
+        $('#prod-cat').innerHTML = S.categories.map(c => `<option value="${c.id}" ${c.id === p.catId ? 'selected' : ''}>${c.icon} ${escapeHtml(c.name)}</option>`).join('');
+        $('#prod-name').value = p.name;
+        $('#prod-type').value = p.type;
+        $('#prod-duration').value = p.duration || '';
+        $('#prod-price').value = p.price;
+        $('#prod-icon').value = p.icon;
+        typeChanged();
+        openModal('modal-add-prod');
+    }
+    function typeChanged() {
+        const t = $('#prod-type').value;
+        const wrap = $('#prod-duration-wrap');
+        const lbl = $('#prod-price-lbl');
+        if (t === 'countdown') {
+            wrap.classList.remove('hidden');
+            lbl.textContent = 'السعر الإجمالي (IQD)';
+        } else if (t === 'open') {
+            wrap.classList.add('hidden');
+            lbl.textContent = 'سعر الساعة (IQD)';
+        } else {
+            wrap.classList.add('hidden');
+            lbl.textContent = 'السعر (IQD)';
+        }
+    }
+    function confirmSaveProduct() {
+        const catId = $('#prod-cat').value;
+        const name = $('#prod-name').value.trim();
+        const type = $('#prod-type').value;
+        const duration = Number($('#prod-duration').value) || 0;
+        const price = Number($('#prod-price').value) || 0;
+        const icon = $('#prod-icon').value.trim() || '📦';
+
+        if (!name) { toast('أدخل اسم الصنف', 'error'); return; }
+        if (price <= 0) { toast('أدخل سعراً صحيحاً', 'error'); return; }
+        if (type === 'countdown' && duration <= 0) { toast('أدخل مدة صحيحة', 'error'); return; }
+
+        if (S.editingProductId) {
+            const p = S.products.find(x => x.id === S.editingProductId);
+            if (p) {
+                p.catId = catId; p.name = name; p.icon = icon; p.type = type;
+                p.duration = type === 'countdown' ? duration : 0;
+                p.price = price;
+            }
+        } else {
+            S.products.push({
+                id: uid(), catId, name, icon, type,
+                duration: type === 'countdown' ? duration : 0,
+                price
+            });
+        }
+        save();
+        closeModal('modal-add-prod');
+        renderMenu();
+        toast('تم الحفظ', 'success');
+    }
+    function deleteProduct(id) {
+        if (!confirm('حذف هذا الصنف؟')) return;
+        S.products = S.products.filter(p => p.id !== id);
+        save();
+        renderMenu();
+        toast('تم الحذف', 'warn');
+    }
+
+    /* ============ Escape HTML ============ */
+    function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, m => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[m]);
+    }
+
+    /* ============ Render All ============ */
+    function renderAll() {
+        renderDashboard();
+        renderTables();
+        renderMenu();
+        renderDebts();
+        renderInvoices();
+    }
+
+    /* ============ Live ticker ============ */
+    setInterval(() => {
+        const m = $('#modal-table');
+        if (m && m.classList.contains('show')) {
+            renderTableItems();
+        }
+        if (S.activeView === 'tables') renderTables();
+        if (S.activeView === 'dashboard') renderDashboard();
+    }, 1000);
+
+    /* ============ Keyboard ============ */
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            ['modal-add-table', 'modal-table', 'modal-picker', 'modal-early', 'modal-checkout', 'modal-transfer', 'modal-add-cat', 'modal-add-prod'].forEach(id => closeModal(id));
+            closeDrawer();
+        }
+    });
+
+    /* ============ Close modal on backdrop click ============ */
+    document.querySelectorAll('.modal-backdrop').forEach(m => {
+        m.addEventListener('click', e => {
+            if (e.target === m) {
+                if (m.id === 'modal-table') { closeTableModal(); }
+                else { m.classList.remove('show'); }
+            }
+        });
+    });
+
+    /* ============ 3D Background Particles ============ */
+    (function () {
+        const canvas = document.getElementById('bg-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let W = 0, H = 0;
+        let particles = [];
+        const COUNT = 45;
+        let mouse = { x: -9999, y: -9999 };
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < COUNT; i++) particles.push(makeP());
+        }
+        function makeP() {
+            return {
+                x: Math.random() * W,
+                y: Math.random() * H,
+                z: Math.random() * 1 + 0.3,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                r: Math.random() * 2 + 0.8,
+                c: ['#00E5FF', '#A855F7', '#00FF9D'][Math.floor(Math.random() * 3)]
+            };
+        }
+        function loop() {
+            ctx.clearRect(0, 0, W, H);
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const d = Math.hypot(dx, dy);
+                    if (d < 150) {
+                        ctx.strokeStyle = 'rgba(0,229,255,' + (0.08 * (1 - d / 150)) + ')';
+                        ctx.lineWidth = 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            particles.forEach(p => {
+                const dx = p.x - mouse.x;
+                const dy = p.y - mouse.y;
+                const d = Math.hypot(dx, dy);
+                if (d < 120 && d > 0.1) {
+                    p.x += (dx / d) * 1.2 * p.z;
+                    p.y += (dy / d) * 1.2 * p.z;
+                }
+                p.x += p.vx * p.z;
+                p.y += p.vy * p.z;
+                if (p.x < 0 || p.x > W) p.vx *= -1;
+                if (p.y < 0 || p.y > H) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r * p.z, 0, Math.PI * 2);
+                ctx.fillStyle = p.c;
+                ctx.shadowColor = p.c;
+                ctx.shadowBlur = 12;
+                ctx.globalAlpha = 0.7;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            });
+
+            requestAnimationFrame(loop);
+        }
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+        window.addEventListener('touchmove', e => { if (e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; } }, { passive: true });
+
+        resize();
+        loop();
+    })();
+
+    /* ============ Init ============ */
+    function init() {
+        renderAll();
+        switchView(S.activeView || 'dashboard');
+        console.log('%c716QX NEXUS 5.0 ✅', 'color:#00E5FF;font-size:20px;font-weight:bold;');
+        console.log('%cAll systems ready', 'color:#A855F7;font-size:14px;');
+    }
+
+    /* ============ Expose ============ */
+    Object.assign(window, {
+        openDrawer, closeDrawer, switchView, openModal, closeModal,
+        transferDaily, resetMonthly, resetDaily, resetAll,
+        openAddTableModal, suggestTable, confirmAddTable, renderTables,
+        openTableModal, closeTableModal, renderTableItems,
+        updateTableCustomer, updateTableDiscount, changeQty, pauseItem, resumeItem, removeItem,
+        openProductPicker, pickerBack, pickerSelectCat, pickerAddProduct,
+        openEarly, quickPayOne, quickPayAll, confirmEarly,
+        openCheckout, calcSplit, confirmCheckout,
+        openTransfer, confirmTransfer, deleteCurrentTable,
+        renderDebts, payDebt, payDebtFull,
+        renderInvoices, printInv, exportCSV, clearInvoices,
+        renderMenu, openAddCategoryModal, confirmAddCategory, deleteCategory,
+        openAddProductModal, openEditProduct, typeChanged, confirmSaveProduct, deleteProduct
+    });
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+</body>
+</html>
