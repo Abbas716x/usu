@@ -3,938 +3,304 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#05050e">
-<title>716QX NEXUS 5.0</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
-
+<meta name="theme-color" content="#000010">
+<title>716QX NEXUS 7.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                bg: '#05050e',
-                panel: '#0a0a18',
-                cyan: '#00E5FF',
-                violet: '#A855F7',
-                emerald: '#00FF9D',
-                rose: '#FF2E63',
-                amber: '#FFB700'
-            },
-            fontFamily: {
-                ar: ['Tajawal', 'sans-serif'],
-                display: ['Orbitron', 'sans-serif'],
-                tech: ['Rajdhani', 'sans-serif'],
-                mono: ['JetBrains Mono', 'monospace']
-            }
-        }
-    }
-}
-</script>
 
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--c:#00FFFF;--v:#C026D3;--p:#FF0080;--e:#00FF88;--a:#FFD700;--bg:#000010}
+html,body{background:var(--bg);color:#fff;font-family:'Tajawal',sans-serif;overflow-x:hidden;min-height:100vh;overscroll-behavior:none}
 
-html, body {
-    background: #05050e;
-    color: #fff;
-    font-family: 'Tajawal', sans-serif;
-    overflow-x: hidden;
-    min-height: 100vh;
-    overscroll-behavior: none;
-}
+/* SPACE BACKGROUND */
+#space-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:-5;pointer-events:none}
+.nebula{position:fixed;inset:0;z-index:-4;pointer-events:none;overflow:hidden}
+.nebula-1,.nebula-2,.nebula-3{position:absolute;border-radius:50%;filter:blur(120px);will-change:transform;transition:transform 1.2s ease-out}
+.nebula-1{width:600px;height:600px;background:radial-gradient(circle,rgba(192,38,211,.35),transparent 70%);top:-10%;right:-12%}
+.nebula-2{width:550px;height:550px;background:radial-gradient(circle,rgba(0,255,255,.28),transparent 70%);bottom:-15%;left:-12%}
+.nebula-3{width:450px;height:450px;background:radial-gradient(circle,rgba(255,0,128,.2),transparent 70%);top:40%;left:35%}
+.space-vignette{position:fixed;inset:0;z-index:-3;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,16,.9) 100%);pointer-events:none}
+.space-glow{position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 50% 0%,rgba(0,255,255,.06),transparent 50%),radial-gradient(circle at 50% 100%,rgba(192,38,211,.06),transparent 50%);pointer-events:none}
 
-/* ==================== 3D Background ==================== */
-#bg-canvas {
-    position: fixed; inset: 0;
-    width: 100vw; height: 100vh;
-    z-index: -3;
-    pointer-events: none;
-}
+/* GLASS FULLY TRANSPARENT */
+.glass{background:rgba(255,255,255,.03);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.1);border-radius:22px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.1)}
+.glass::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);pointer-events:none}
+.glass-strong{background:rgba(255,255,255,.05);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);border:1.5px solid rgba(255,255,255,.12)}
 
-.bg-grid {
-    position: fixed; inset: 0;
-    z-index: -2;
-    background-image:
-        linear-gradient(rgba(0,229,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,255,.05) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(circle at center, #000 20%, transparent 75%);
-    -webkit-mask-image: radial-gradient(circle at center, #000 20%, transparent 75%);
-    pointer-events: none;
-    animation: gridShift 30s linear infinite;
-}
-@keyframes gridShift {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
-}
+/* HEADER */
+.app-header{position:sticky;top:0;z-index:100;background:rgba(0,0,16,.55);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-bottom:1px solid rgba(0,255,255,.15);box-shadow:0 4px 30px rgba(0,255,255,.08)}
+.header-bar{position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--c),var(--v),transparent);animation:barSlide 5s ease-in-out infinite}
+@keyframes barSlide{0%,100%{opacity:.3;transform:translateX(-15%)}50%{opacity:1;transform:translateX(15%)}}
 
-.bg-glow-1, .bg-glow-2, .bg-glow-3 {
-    position: fixed; border-radius: 50%;
-    filter: blur(100px);
-    pointer-events: none;
-    z-index: -2;
-    will-change: transform;
-}
-.bg-glow-1 {
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(168,85,247,.4), transparent 70%);
-    top: -10%; right: -10%;
-    animation: float1 15s ease-in-out infinite alternate;
-}
-.bg-glow-2 {
-    width: 450px; height: 450px;
-    background: radial-gradient(circle, rgba(0,229,255,.35), transparent 70%);
-    bottom: -15%; left: -10%;
-    animation: float2 18s ease-in-out infinite alternate;
-}
-.bg-glow-3 {
-    width: 350px; height: 350px;
-    background: radial-gradient(circle, rgba(0,255,157,.2), transparent 70%);
-    top: 40%; left: 30%;
-    animation: float3 20s ease-in-out infinite alternate;
-}
-@keyframes float1 { to { transform: translate(-60px, 80px) scale(1.15); } }
-@keyframes float2 { to { transform: translate(70px, -60px) scale(1.1); } }
-@keyframes float3 { to { transform: translate(-40px, -50px) scale(1.2); } }
+/* HAMBURGER */
+.hamburger{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.06);backdrop-filter:blur(15px);border:1.5px solid rgba(0,255,255,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .25s}
+.hamburger span{display:block;width:22px;height:2.5px;background:linear-gradient(90deg,var(--c),var(--v));border-radius:2px;transition:all .3s;box-shadow:0 0 8px var(--c)}
+.hamburger:hover{background:rgba(0,255,255,.15);box-shadow:0 0 30px rgba(0,255,255,.5);transform:scale(1.05)}
+.hamburger:active{transform:scale(.95)}
 
-.bg-vignette {
-    position: fixed; inset: 0;
-    z-index: -1;
-    background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,.75) 100%);
-    pointer-events: none;
-}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:14px;font-weight:800;font-size:14px;border:none;cursor:pointer;transition:transform .15s,box-shadow .25s;user-select:none;white-space:nowrap;position:relative;overflow:hidden;font-family:'Tajawal',sans-serif}
+.btn:active{transform:scale(.95)}
+.btn-primary{background:linear-gradient(135deg,#C026D3,#00FFFF);color:#fff;box-shadow:0 4px 22px rgba(192,38,211,.5)}
+.btn-primary:hover{box-shadow:0 8px 40px rgba(0,255,255,.6);transform:translateY(-3px)}
+.btn-success{background:linear-gradient(135deg,#00FF88,#00FFFF);color:#002a17;box-shadow:0 4px 22px rgba(0,255,136,.5)}
+.btn-success:hover{box-shadow:0 8px 40px rgba(0,255,136,.7);transform:translateY(-3px)}
+.btn-danger{background:linear-gradient(135deg,#FF0080,#C026D3);color:#fff;box-shadow:0 4px 22px rgba(255,0,128,.5)}
+.btn-danger:hover{box-shadow:0 8px 40px rgba(255,0,128,.7);transform:translateY(-3px)}
+.btn-ghost{background:rgba(255,255,255,.05);backdrop-filter:blur(15px);border:1.5px solid rgba(0,255,255,.25);color:#fff}
+.btn-ghost:hover{background:rgba(0,255,255,.12);border-color:var(--c);color:var(--c);box-shadow:0 0 25px rgba(0,255,255,.35)}
 
-/* ==================== Glass Card ==================== */
-.glass {
-    background: rgba(10, 10, 24, 0.6);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    position: relative;
-    overflow: hidden;
-}
-.glass::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 20px; right: 20px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,229,255,.4), transparent);
-    pointer-events: none;
-}
+/* DRAWER */
+.drawer{position:fixed;top:0;right:0;width:340px;max-width:88vw;height:100%;z-index:300;background:rgba(0,0,16,.85);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border-left:1px solid rgba(0,255,255,.2);transform:translateX(100%);transition:transform .4s cubic-bezier(.34,1.2,.64,1);display:flex;flex-direction:column;padding:24px;overflow-y:auto;box-shadow:-20px 0 60px rgba(0,255,255,.15)}
+.drawer.open{transform:translateX(0)}
+.drawer::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--c),var(--v),var(--p),var(--c));background-size:100% 400%;animation:drawerGrad 4s linear infinite}
+@keyframes drawerGrad{0%{background-position:0 0}100%{background-position:0 400%}}
+.drawer-overlay{position:fixed;inset:0;z-index:290;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer-overlay.show{opacity:1;pointer-events:auto}
+.nav-item{display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;background:transparent;border:1.5px solid transparent;color:#b0b0c0;font-weight:700;font-size:15px;cursor:pointer;transition:all .25s;text-align:right;width:100%;font-family:'Tajawal',sans-serif}
+.nav-item:hover{background:rgba(0,255,255,.06);color:#fff;border-color:rgba(0,255,255,.3);transform:translateX(-4px)}
+.nav-item.active{background:linear-gradient(90deg,rgba(192,38,211,.25),rgba(0,255,255,.1));color:var(--c);border-color:var(--c);box-shadow:0 0 30px rgba(0,255,255,.25)}
+.nav-icon{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.nav-item.active .nav-icon{background:linear-gradient(135deg,var(--v),var(--c));box-shadow:0 0 20px rgba(0,255,255,.5)}
 
-/* ==================== Header ==================== */
-.app-header {
-    position: sticky; top: 0;
-    z-index: 40;
-    background: rgba(5,5,14,0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-}
+/* STAT CARDS */
+.stat-card{position:relative;padding:26px 24px;border-radius:24px;background:rgba(255,255,255,.04);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1.5px solid;transition:transform .3s cubic-bezier(.34,1.4,.64,1),box-shadow .3s;overflow:hidden;will-change:transform}
+.stat-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,currentColor 0%,transparent 65%);opacity:.15;pointer-events:none}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,currentColor,transparent);box-shadow:0 0 15px currentColor}
+.stat-card:hover{transform:translateY(-8px) rotateX(5deg) rotateY(-5deg) scale(1.02);box-shadow:0 30px 70px rgba(0,0,0,.7),0 0 60px currentColor}
+.stat-emerald{color:var(--e);border-color:rgba(0,255,136,.35)}
+.stat-cyan{color:var(--c);border-color:rgba(0,255,255,.35)}
+.stat-violet{color:var(--v);border-color:rgba(192,38,211,.35)}
+.stat-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;font-weight:900;margin-bottom:12px;display:inline-block;padding:3px 10px;border-radius:6px;background:rgba(0,0,0,.3);border:1px solid currentColor}
+.stat-num{font-family:'Orbitron',monospace;font-weight:900;font-size:34px;color:#fff;line-height:1;text-shadow:0 0 30px currentColor;margin-bottom:6px}
+.stat-unit{font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b80;letter-spacing:.15em}
 
-/* ==================== Buttons ==================== */
-.btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 11px 18px;
-    border-radius: 14px;
-    font-family: 'Tajawal', sans-serif;
-    font-weight: 800;
-    font-size: 13px;
-    border: none;
-    cursor: pointer;
-    transition: transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, background .2s;
-    will-change: transform;
-    user-select: none;
-    white-space: nowrap;
-}
-.btn:active { transform: scale(.96); }
+/* QUICK CARDS */
+.quick-card{display:flex;align-items:center;gap:18px;padding:22px;border-radius:22px;background:rgba(255,255,255,.04);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1.5px solid rgba(255,255,255,.08);cursor:pointer;transition:transform .3s cubic-bezier(.34,1.4,.64,1),box-shadow .3s,border-color .3s;position:relative;overflow:hidden}
+.quick-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at right,currentColor 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.quick-card:hover{transform:translateY(-6px) translateX(-6px) scale(1.02);border-color:currentColor;box-shadow:0 22px 55px rgba(0,0,0,.6),0 0 45px currentColor}
+.quick-card:hover::before{opacity:.15}
+.quick-ico{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);transition:transform .3s;flex-shrink:0}
+.quick-card:hover .quick-ico{transform:scale(1.15) rotate(-10deg);border-color:currentColor;box-shadow:0 0 30px currentColor}
 
-.btn-primary {
-    background: linear-gradient(135deg, #A855F7 0%, #00E5FF 100%);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(168,85,247,.35);
-}
-.btn-primary:hover {
-    box-shadow: 0 8px 30px rgba(0,229,255,.5), 0 0 40px rgba(168,85,247,.35);
-    transform: translateY(-2px);
-}
+/* TABLE CARDS */
+.table-card{position:relative;padding:24px;border-radius:22px;background:rgba(255,255,255,.04);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1.5px solid;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.4,.64,1),box-shadow .3s;overflow:hidden}
+.table-card.busy{border-color:rgba(0,255,136,.5);color:var(--e)}
+.table-card.idle{border-color:rgba(255,255,255,.1);color:#6b6b80}
+.table-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,currentColor,transparent);box-shadow:0 0 15px currentColor}
+.table-card:hover{transform:translateY(-8px) rotateX(4deg) scale(1.02);box-shadow:0 25px 60px rgba(0,0,0,.7),0 0 50px currentColor}
 
-.btn-success {
-    background: linear-gradient(135deg, #00FF9D 0%, #00E5FF 100%);
-    color: #001a10;
-    box-shadow: 0 4px 20px rgba(0,255,157,.35);
-}
-.btn-success:hover {
-    box-shadow: 0 8px 30px rgba(0,255,157,.55);
-    transform: translateY(-2px);
-}
+/* VIEWS */
+.view{display:none}
+.view.active{display:block;animation:pageIn .4s cubic-bezier(.34,1.2,.64,1)}
+@keyframes pageIn{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+.back-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:14px;background:rgba(255,255,255,.05);backdrop-filter:blur(15px);border:1.5px solid rgba(0,255,255,.35);color:var(--c);font-weight:800;font-size:14px;cursor:pointer;transition:all .25s;font-family:'Tajawal',sans-serif}
+.back-btn:hover{background:rgba(0,255,255,.15);box-shadow:0 0 30px rgba(0,255,255,.5);transform:translateX(4px)}
 
-.btn-danger {
-    background: linear-gradient(135deg, #FF2E63 0%, #A855F7 100%);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(255,46,99,.35);
-}
-.btn-danger:hover {
-    box-shadow: 0 8px 30px rgba(255,46,99,.55);
-    transform: translateY(-2px);
-}
+/* ITEM BOX */
+.item-box{padding:18px;border-radius:18px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.08);transition:all .25s}
+.item-box:hover{border-color:rgba(0,255,255,.3);box-shadow:0 0 25px rgba(0,255,255,.15)}
+.qty-btn{width:36px;height:36px;border-radius:12px;background:rgba(0,255,255,.12);border:1.5px solid rgba(0,255,255,.35);color:var(--c);font-size:20px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.qty-btn:hover{background:rgba(0,255,255,.25);box-shadow:0 0 20px rgba(0,255,255,.5);color:#fff}
+.qty-btn:active{transform:scale(.9)}
 
-.btn-ghost {
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
-}
-.btn-ghost:hover {
-    background: rgba(0,229,255,.1);
-    border-color: rgba(0,229,255,.4);
-    color: #00E5FF;
-}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:8px;font-size:10px;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.badge-live{background:rgba(0,255,136,.15);color:var(--e);border:1px solid rgba(0,255,136,.4)}
+.badge-paused{background:rgba(255,215,0,.15);color:var(--a);border:1px solid rgba(255,215,0,.4)}
+.badge-expired{background:rgba(255,0,128,.15);color:var(--p);border:1px solid rgba(255,0,128,.4)}
+.badge-direct{background:rgba(192,38,211,.15);color:var(--v);border:1px solid rgba(192,38,211,.4)}
 
-.btn-icon {
-    width: 42px; height: 42px;
-    padding: 0;
-    border-radius: 14px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 18px;
-    display: inline-flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: all .2s;
-}
-.btn-icon:hover {
-    background: rgba(0,229,255,.1);
-    border-color: rgba(0,229,255,.4);
-    color: #00E5FF;
-}
-.btn-icon:active { transform: scale(.95); }
+/* CATEGORY CARDS */
+.cat-card{padding:26px 18px;border-radius:20px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.1);cursor:pointer;text-align:center;transition:all .3s cubic-bezier(.34,1.4,.64,1);position:relative;overflow:hidden}
+.cat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(192,38,211,.25),rgba(0,255,255,.15));opacity:0;transition:opacity .3s;pointer-events:none}
+.cat-card:hover{transform:translateY(-8px) scale(1.04);border-color:var(--c);box-shadow:0 25px 55px rgba(0,0,0,.6),0 0 50px rgba(0,255,255,.4)}
+.cat-card:hover::before{opacity:1}
+.cat-card>*{position:relative;z-index:2}
 
-/* ==================== Hamburger ==================== */
-.hamburger {
-    width: 46px; height: 46px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.1);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-    transition: all .25s;
-}
-.hamburger span {
-    display: block;
-    width: 22px; height: 2px;
-    background: linear-gradient(90deg, #A855F7, #00E5FF);
-    border-radius: 2px;
-    transition: all .3s cubic-bezier(.34,1.56,.64,1);
-}
-.hamburger:hover {
-    background: rgba(0,229,255,.08);
-    border-color: rgba(0,229,255,.4);
-    box-shadow: 0 0 25px rgba(0,229,255,.25);
-}
-.hamburger:hover span:nth-child(1) { transform: translateX(-4px); }
-.hamburger:hover span:nth-child(3) { transform: translateX(4px); }
+/* INPUTS */
+.inp{width:100%;padding:14px 16px;border-radius:13px;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);border:1.5px solid rgba(0,255,255,.2);color:#fff;font-size:14px;font-family:'Tajawal',sans-serif;font-weight:600;transition:all .2s;outline:none}
+.inp:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,255,255,.15),0 0 25px rgba(0,255,255,.3);background:rgba(0,255,255,.05)}
+.inp::placeholder{color:#5b5b70}
+select.inp{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300FFFF' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:left 16px center;padding-left:44px}
+select.inp option{background:#0a0a1f;color:#fff}
+.lbl{display:block;font-size:12px;font-weight:800;color:var(--c);margin-bottom:7px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em}
 
-/* ==================== Drawer ==================== */
-.drawer {
-    position: fixed;
-    top: 0; right: 0;
-    width: 340px;
-    max-width: 88vw;
-    height: 100%;
-    z-index: 300;
-    background: rgba(5,5,14,0.96);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border-left: 1px solid rgba(0,229,255,.15);
-    transform: translateX(100%);
-    transition: transform .35s cubic-bezier(.34,1.2,.64,1);
-    display: flex; flex-direction: column;
-    padding: 24px;
-    overflow-y: auto;
-}
-.drawer.open { transform: translateX(0); }
-.drawer::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, transparent, #00E5FF, #A855F7, transparent);
-    opacity: .6;
-}
+.balance-panel{padding:20px;border-radius:20px;background:rgba(0,255,255,.05);backdrop-filter:blur(20px);border:1.5px solid rgba(0,255,255,.25);position:relative;overflow:hidden}
+.balance-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top,rgba(0,255,255,.08),transparent 60%);pointer-events:none}
 
-.drawer-overlay {
-    position: fixed; inset: 0;
-    z-index: 290;
-    background: rgba(0,0,0,.7);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s;
-}
-.drawer-overlay.show { opacity: 1; pointer-events: auto; }
+/* CUSTOM MODAL / DIALOG */
+.modal-bd{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bd.show{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-panel{width:100%;max-width:480px;background:rgba(15,15,35,.92);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border:1.5px solid rgba(255,255,255,.12);border-radius:26px;padding:32px;position:relative;animation:modalIn .3s cubic-bezier(.34,1.4,.64,1);box-shadow:0 30px 80px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.1);max-height:92vh;overflow-y:auto}
+.modal-panel.wide{max-width:800px}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-panel::before{content:'';position:absolute;top:0;left:20px;right:20px;height:2px;background:linear-gradient(90deg,transparent,var(--c),var(--v),transparent);border-radius:2px}
+.modal-x{position:absolute;top:16px;left:16px;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:15px}
+.modal-x:hover{background:rgba(255,0,128,.2);border-color:rgba(255,0,128,.5);color:var(--p);transform:rotate(90deg)}
 
-.drawer-nav-item {
-    display: flex; align-items: center; gap: 14px;
-    padding: 15px 16px;
-    border-radius: 16px;
-    background: transparent;
-    border: 1px solid transparent;
-    color: #9CA3AF;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .2s;
-    text-align: right;
-    width: 100%;
-    font-family: 'Tajawal', sans-serif;
-    position: relative;
-    overflow: hidden;
-}
-.drawer-nav-item::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(168,85,247,.15));
-    opacity: 0;
-    transition: opacity .25s;
-    pointer-events: none;
-}
-.drawer-nav-item:hover {
-    background: rgba(255,255,255,.03);
-    color: #fff;
-    border-color: rgba(168,85,247,.25);
-    transform: translateX(-3px);
-}
-.drawer-nav-item:hover::before { opacity: 1; }
-.drawer-nav-item.active {
-    background: linear-gradient(90deg, rgba(168,85,247,.15), rgba(0,229,255,.08));
-    color: #00E5FF;
-    border-color: rgba(168,85,247,.4);
-    box-shadow: inset 0 0 25px rgba(168,85,247,.1);
-}
-.drawer-nav-icon {
-    width: 34px; height: 34px;
-    border-radius: 10px;
-    background: rgba(255,255,255,.04);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
-    flex-shrink: 0;
-}
-.drawer-nav-item.active .drawer-nav-icon {
-    background: rgba(0,229,255,.15);
-    box-shadow: 0 0 15px rgba(0,229,255,.3);
-}
+/* DIALOG (confirm/alert/prompt) */
+.dialog-bd{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:20px}
+.dialog-bd.show{display:flex;animation:fadeIn .2s}
+.dialog-panel{width:100%;max-width:420px;background:rgba(15,15,35,.95);backdrop-filter:blur(40px);border:1.5px solid rgba(0,255,255,.25);border-radius:22px;padding:28px;position:relative;animation:modalIn .3s;box-shadow:0 30px 80px rgba(0,0,0,.9)}
+.dialog-title{font-size:19px;font-weight:900;color:#fff;margin-bottom:12px;text-align:center}
+.dialog-msg{font-size:14px;color:#b0b0c0;line-height:1.7;text-align:center;margin-bottom:20px}
+.dialog-actions{display:flex;gap:10px}
+.dialog-actions .btn{flex:1}
 
-/* ==================== Stat Card 3D ==================== */
-.stat-3d {
-    position: relative;
-    padding: 26px;
-    border-radius: 24px;
-    background: rgba(10,10,24,.7);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255,255,255,.08);
-    transform-style: preserve-3d;
-    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s;
-    overflow: hidden;
-    cursor: default;
-}
-.stat-3d::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at top right, currentColor 0%, transparent 65%);
-    opacity: .12;
-    pointer-events: none;
-}
-.stat-3d::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, currentColor, transparent);
-    opacity: .8;
-    filter: blur(1px);
-}
-.stat-3d:hover {
-    transform: translateY(-6px) rotateX(4deg) rotateY(-4deg);
-    box-shadow: 0 25px 60px rgba(0,0,0,.6), 0 0 50px currentColor;
-}
-.stat-emerald { color: #00FF9D; }
-.stat-cyan { color: #00E5FF; }
-.stat-violet { color: #A855F7; }
-.stat-amber { color: #FFB700; }
+/* TOAST */
+#toast-wrap{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast{padding:14px 24px;border-radius:14px;font-weight:800;font-size:13px;background:rgba(10,10,31,.95);backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(0,0,0,.7);animation:toastIn .35s cubic-bezier(.34,1.5,.64,1);max-width:420px;border:1.5px solid;position:relative;overflow:hidden}
+.toast::before{content:'';position:absolute;right:0;top:0;bottom:0;width:4px;background:currentColor;box-shadow:0 0 15px currentColor}
+.toast.success{color:var(--e);border-color:rgba(0,255,136,.4)}
+.toast.error{color:var(--p);border-color:rgba(255,0,128,.4)}
+.toast.info{color:var(--c);border-color:rgba(0,255,255,.4)}
+.toast.warn{color:var(--a);border-color:rgba(255,215,0,.4)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-30px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-.stat-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: .18em;
-    font-weight: 700;
-}
-.stat-value {
-    font-family: 'Orbitron', monospace;
-    font-weight: 900;
-    font-size: 30px;
-    color: #fff;
-    line-height: 1;
-    letter-spacing: -.02em;
-}
-.stat-sub {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: #6B7280;
-    letter-spacing: .1em;
-}
+.debt-card{padding:22px;border-radius:20px;background:rgba(255,255,255,.04);backdrop-filter:blur(24px);border:1.5px solid rgba(255,255,255,.08);border-right:4px solid var(--p);transition:all .25s}
+.debt-card.paid{border-right-color:var(--e);opacity:.75}
+.debt-card:hover{transform:translateX(-6px);box-shadow:0 15px 45px rgba(0,0,0,.6),-10px 0 30px rgba(255,0,128,.25)}
 
-/* ==================== Quick Card 3D ==================== */
-.quick-3d {
-    display: flex; align-items: center; gap: 18px;
-    padding: 22px;
-    border-radius: 22px;
-    background: rgba(10,10,24,.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,.08);
-    cursor: pointer;
-    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s, border-color .25s;
-    position: relative;
-    overflow: hidden;
-}
-.quick-3d::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at right, currentColor 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity .3s;
-    pointer-events: none;
-}
-.quick-3d:hover {
-    transform: translateY(-6px) translateX(-6px);
-    border-color: currentColor;
-    box-shadow: 0 20px 50px rgba(0,0,0,.5), 0 0 40px currentColor;
-}
-.quick-3d:hover::before { opacity: .1; }
-.quick-icon-3d {
-    width: 60px; height: 60px;
-    border-radius: 18px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.08);
-    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
-    flex-shrink: 0;
-}
-.quick-3d:hover .quick-icon-3d {
-    transform: scale(1.12) rotate(-8deg);
-    border-color: currentColor;
-    box-shadow: 0 0 25px currentColor;
-}
-.quick-arrow {
-    margin-right: auto;
-    font-size: 22px;
-    opacity: .3;
-    color: currentColor;
-    transition: all .3s;
-}
-.quick-3d:hover .quick-arrow {
-    opacity: 1;
-    transform: translateX(-6px);
-}
+.pulse-dot{width:9px;height:9px;border-radius:50%;display:inline-block;position:relative;box-shadow:0 0 12px currentColor}
+.pulse-dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid currentColor;animation:pulseRing 1.8s ease-out infinite}
+@keyframes pulseRing{0%{transform:scale(.7);opacity:1}100%{transform:scale(2.2);opacity:0}}
 
-/* ==================== Table Card ==================== */
-.table-card-3d {
-    position: relative;
-    padding: 22px;
-    border-radius: 22px;
-    background: rgba(10,10,24,.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,.08);
-    cursor: pointer;
-    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s;
-    overflow: hidden;
-}
-.table-card-3d.busy { color: #00FF9D; }
-.table-card-3d.idle { color: #6B7280; }
-.table-card-3d::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, currentColor, transparent);
-}
-.table-card-3d:hover {
-    transform: translateY(-6px) rotateX(3deg);
-    border-color: currentColor;
-    box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 40px currentColor;
-}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 
-/* ==================== Modal ==================== */
-.modal-backdrop {
-    position: fixed; inset: 0;
-    z-index: 500;
-    background: rgba(0,0,0,.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 16px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s;
-}
-.modal-backdrop.show {
-    opacity: 1;
-    pointer-events: auto;
-}
-.modal-panel {
-    width: 100%;
-    max-width: 520px;
-    max-height: 92vh;
-    background: linear-gradient(180deg, rgba(15,15,30,.98), rgba(8,8,18,.98));
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 26px;
-    padding: 28px;
-    position: relative;
-    overflow-y: auto;
-    transform: scale(.92);
-    opacity: 0;
-    transition: transform .25s cubic-bezier(.34,1.4,.64,1), opacity .25s;
-}
-.modal-backdrop.show .modal-panel {
-    transform: scale(1);
-    opacity: 1;
-}
-.modal-panel.wide { max-width: 780px; }
-.modal-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 20px; right: 20px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #00E5FF, #A855F7, transparent);
-    border-radius: 2px;
-}
-.modal-x {
-    position: absolute;
-    top: 16px; left: 16px;
-    width: 36px; height: 36px;
-    border-radius: 12px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .2s;
-    font-size: 14px;
-}
-.modal-x:hover {
-    background: rgba(255,46,99,.15);
-    border-color: rgba(255,46,99,.4);
-    color: #FF2E63;
-}
+/* LOADING */
+#loading{position:fixed;inset:0;z-index:9999;background:rgba(0,0,16,.95);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s}
+#loading.hide{opacity:0;pointer-events:none}
+.loader-ring{width:70px;height:70px;border-radius:50%;border:3px solid rgba(0,255,255,.15);border-top-color:var(--c);border-right-color:var(--v);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c);letter-spacing:.3em;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.4}}
 
-/* ==================== Input ==================== */
-.inp {
-    width: 100%;
-    padding: 13px 16px;
-    border-radius: 13px;
-    background: rgba(0,0,0,.5);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 14px;
-    font-family: 'Tajawal', sans-serif;
-    font-weight: 600;
-    transition: all .2s;
-    outline: none;
-}
-.inp:focus {
-    border-color: #00E5FF;
-    box-shadow: 0 0 0 3px rgba(0,229,255,.12), 0 0 20px rgba(0,229,255,.2);
-}
-.inp::placeholder { color: #4B5563; }
-select.inp {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300E5FF' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
-    background-repeat: no-repeat;
-    background-position: left 16px center;
-    padding-left: 44px;
-}
-select.inp option { background: #0a0a18; color: #fff; }
-
-.lbl {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    color: #9CA3AF;
-    margin-bottom: 6px;
-}
-
-/* ==================== Category Card ==================== */
-.cat-card {
-    padding: 22px 16px;
-    border-radius: 20px;
-    background: rgba(10,10,24,.7);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,.08);
-    cursor: pointer;
-    text-align: center;
-    transition: all .25s cubic-bezier(.34,1.4,.64,1);
-    position: relative;
-    overflow: hidden;
-}
-.cat-card::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(168,85,247,.15), rgba(0,229,255,.1));
-    opacity: 0;
-    transition: opacity .25s;
-    pointer-events: none;
-}
-.cat-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    border-color: #A855F7;
-    box-shadow: 0 20px 45px rgba(0,0,0,.5), 0 0 35px rgba(168,85,247,.35);
-}
-.cat-card:hover::before { opacity: 1; }
-.cat-card > * { position: relative; z-index: 2; }
-
-/* ==================== Item Row ==================== */
-.item-row {
-    padding: 16px;
-    border-radius: 18px;
-    background: rgba(10,10,24,.7);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,.06);
-    transition: all .2s;
-}
-.item-row:hover { border-color: rgba(0,229,255,.2); }
-
-.qty-btn {
-    width: 32px; height: 32px;
-    border-radius: 10px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 900;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: all .15s;
-    font-family: 'JetBrains Mono', monospace;
-}
-.qty-btn:hover {
-    background: rgba(0,229,255,.15);
-    border-color: rgba(0,229,255,.4);
-    color: #00E5FF;
-}
-.qty-btn:active { transform: scale(.9); }
-
-.badge {
-    display: inline-flex;
-    align-items: center; gap: 4px;
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 800;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: .05em;
-}
-.badge-live { background: rgba(0,255,157,.15); color: #00FF9D; border: 1px solid rgba(0,255,157,.3); }
-.badge-paused { background: rgba(255,183,0,.15); color: #FFB700; border: 1px solid rgba(255,183,0,.3); }
-.badge-expired { background: rgba(255,46,99,.15); color: #FF2E63; border: 1px solid rgba(255,46,99,.3); }
-.badge-direct { background: rgba(168,85,247,.15); color: #A855F7; border: 1px solid rgba(168,85,247,.3); }
-
-/* ==================== Toast ==================== */
-#toast-wrap {
-    position: fixed;
-    top: 80px; left: 50%;
-    transform: translateX(-50%);
-    z-index: 900;
-    display: flex; flex-direction: column; gap: 10px;
-    align-items: center;
-    pointer-events: none;
-}
-.toast {
-    padding: 13px 22px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 13px;
-    font-family: 'Tajawal', sans-serif;
-    background: rgba(10,10,24,.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 20px 50px rgba(0,0,0,.6);
-    animation: toastIn .3s cubic-bezier(.34,1.5,.64,1);
-    max-width: 400px;
-    border: 1px solid;
-    position: relative;
-    overflow: hidden;
-}
-.toast::before {
-    content: '';
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: currentColor;
-    box-shadow: 0 0 12px currentColor;
-}
-.toast.success { color: #00FF9D; border-color: rgba(0,255,157,.3); }
-.toast.error { color: #FF2E63; border-color: rgba(255,46,99,.3); }
-.toast.info { color: #00E5FF; border-color: rgba(0,229,255,.3); }
-.toast.warn { color: #FFB700; border-color: rgba(255,183,0,.3); }
-@keyframes toastIn {
-    from { opacity: 0; transform: translateY(-25px) scale(.9); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* ==================== Utility ==================== */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-.view { display: none; animation: fadeUp .35s cubic-bezier(.34,1.2,.64,1); }
-.view.active { display: block; }
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.grid-bg {
-    position: relative;
-}
-
-/* Debt card */
-.debt-card {
-    padding: 22px;
-    border-radius: 20px;
-    background: rgba(10,10,24,.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,.08);
-    border-right: 4px solid #FF2E63;
-    transition: all .25s;
-}
-.debt-card.paid { border-right-color: #00FF9D; opacity: .7; }
-.debt-card:hover { transform: translateX(-5px); box-shadow: 0 15px 40px rgba(0,0,0,.5); }
-
-/* Pulse */
-.pulse-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
-}
-.pulse-dot::after {
-    content: '';
-    position: absolute; inset: -4px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    animation: pulseRing 1.8s ease-out infinite;
-}
-@keyframes pulseRing {
-    0% { transform: scale(.8); opacity: 1; }
-    100% { transform: scale(2); opacity: 0; }
-}
-
-/* Mobile */
-@media (max-width: 640px) {
-    .stat-value { font-size: 22px; }
-    .modal-panel { padding: 22px; border-radius: 20px; }
-}
+/* RESPONSIVE - fullscreen template */
+html,body{height:100%}
+body{display:flex;flex-direction:column;min-height:100vh}
+main{flex:1}
+@media(max-width:640px){.stat-num{font-size:26px}.quick-ico{width:54px;height:54px;font-size:24px}.modal-panel{padding:24px;border-radius:22px}}
 </style>
 </head>
 
 <body>
 
-<!-- ============ Background ============ -->
-<canvas id="bg-canvas"></canvas>
-<div class="bg-grid"></div>
-<div class="bg-glow-1"></div>
-<div class="bg-glow-2"></div>
-<div class="bg-glow-3"></div>
-<div class="bg-vignette"></div>
+<!-- Loading -->
+<div id="loading">
+    <div class="loader-ring"></div>
+    <div class="loader-text">CONNECTING TO NEXUS...</div>
+</div>
 
-<!-- ============ Toast ============ -->
+<!-- Space BG -->
+<canvas id="space-canvas"></canvas>
+<div class="nebula">
+    <div class="nebula-1"></div>
+    <div class="nebula-2"></div>
+    <div class="nebula-3"></div>
+</div>
+<div class="space-glow"></div>
+<div class="space-vignette"></div>
+
 <div id="toast-wrap"></div>
 
-<!-- ============ Header ============ -->
+<!-- Header -->
 <header class="app-header">
     <div class="flex items-center justify-between p-4 px-5">
         <div class="flex items-center gap-4">
-            <button class="hamburger" onclick="openDrawer()" aria-label="menu">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="hamburger" onclick="openDrawer()">
+                <span></span><span></span><span></span>
             </button>
             <div>
-                <h1 class="text-xl font-display font-black tracking-widest text-white leading-none">
-                    716QX<span class="text-cyan animate-pulse">.</span>
-                </h1>
+                <h1 class="text-xl font-black tracking-widest text-white leading-none" style="font-family:'Orbitron',sans-serif;text-shadow:0 0 20px rgba(0,255,255,.6)">716QX<span style="color:#00FFFF">.</span></h1>
                 <div class="flex items-center gap-1.5 mt-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald pulse-dot" style="color:#00FF9D"></span>
-                    <span id="live-clock" class="text-[10px] text-cyan font-mono tracking-widest">--:--:--</span>
+                    <span class="pulse-dot" style="background:#00FF88;color:#00FF88"></span>
+                    <span id="live-clock" class="text-[10px] font-mono tracking-widest" style="color:#00FFFF">--:--:--</span>
                 </div>
             </div>
         </div>
-
         <button class="btn btn-primary" onclick="openAddTableModal()">
-            <span style="font-size:18px;font-weight:900;line-height:1;">+</span>
+            <span style="font-size:20px;font-weight:900;line-height:1">+</span>
             <span class="hidden sm:inline">طاولة جديدة</span>
         </button>
     </div>
+    <div class="header-bar"></div>
 </header>
 
-<!-- ============ Drawer ============ -->
+<!-- Drawer -->
 <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
 <aside id="drawer" class="drawer">
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-display font-black text-white text-xl" style="background:linear-gradient(135deg,#A855F7,#00E5FF);box-shadow:0 0 25px rgba(168,85,247,.5)">R</div>
+            <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#C026D3,#00FFFF);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;box-shadow:0 0 30px rgba(0,255,255,.6)">R</div>
             <div>
-                <h2 class="text-xl font-display font-black tracking-wider text-white leading-none">716QX</h2>
-                <span class="text-[9px] text-cyan font-mono tracking-widest">NEXUS 5.0</span>
+                <h2 class="text-xl font-black tracking-wider text-white leading-none" style="font-family:'Orbitron',sans-serif">716QX</h2>
+                <span class="text-[9px] font-mono tracking-widest" style="color:#00FFFF">NEXUS 7.0</span>
             </div>
         </div>
-        <button class="modal-x" style="position:static" onclick="closeDrawer()">✕</button>
+        <button onclick="closeDrawer()" style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:15px">✕</button>
     </div>
-
     <nav class="flex flex-col gap-2 flex-1">
-        <button class="drawer-nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
-            <span class="drawer-nav-icon">🏠</span>
-            <span class="flex-1 text-right">الرئيسية</span>
-        </button>
-        <button class="drawer-nav-item" data-view="tables" onclick="switchView('tables')">
-            <span class="drawer-nav-icon">🎮</span>
-            <span class="flex-1 text-right">الصالات والطاولات</span>
-        </button>
-        <button class="drawer-nav-item" data-view="menu" onclick="switchView('menu')">
-            <span class="drawer-nav-icon">📋</span>
-            <span class="flex-1 text-right">المنيو والأقسام</span>
-        </button>
-        <button class="drawer-nav-item" data-view="invoices" onclick="switchView('invoices')">
-            <span class="drawer-nav-icon">🧾</span>
-            <span class="flex-1 text-right">الفواتير</span>
-        </button>
-        <button class="drawer-nav-item" data-view="debts" onclick="switchView('debts')">
-            <span class="drawer-nav-icon">📒</span>
-            <span class="flex-1 text-right">الديون</span>
-        </button>
+        <button class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')"><span class="nav-icon">🏠</span><span class="flex-1 text-right">الرئيسية</span></button>
+        <button class="nav-item" data-view="tables" onclick="switchView('tables')"><span class="nav-icon">🎮</span><span class="flex-1 text-right">الصالات والطاولات</span></button>
+        <button class="nav-item" data-view="menu" onclick="switchView('menu')"><span class="nav-icon">📋</span><span class="flex-1 text-right">المنيو والأقسام</span></button>
+        <button class="nav-item" data-view="invoices" onclick="switchView('invoices')"><span class="nav-icon">🧾</span><span class="flex-1 text-right">الفواتير</span></button>
+        <button class="nav-item" data-view="debts" onclick="switchView('debts')"><span class="nav-icon">📒</span><span class="flex-1 text-right">الديون</span></button>
     </nav>
-
-    <div class="mt-6 pt-6 border-t border-white/5">
-        <button class="btn btn-danger w-full" onclick="if(confirm('إعادة ضبط المصنع وحذف كل السجلات؟')) resetAll()">
-            ⚠ إعادة ضبط المصنع
-        </button>
+    <div class="mt-6 pt-6" style="border-top:1px solid rgba(255,255,255,.06)">
+        <button class="btn btn-danger w-full" onclick="dialogConfirm('إعادة ضبط المصنع وحذف كل السجلات؟',()=>resetAll())">⚠ إعادة ضبط المصنع</button>
     </div>
 </aside>
 
-<!-- ============ Main ============ -->
-<main class="p-5 md:p-8 max-w-7xl mx-auto">
+<!-- Main -->
+<main class="p-5 md:p-8 max-w-7xl mx-auto w-full">
 
-    <!-- ========== Dashboard ========== -->
+    <!-- Dashboard -->
     <section id="view-dashboard" class="view active">
         <div class="mb-8">
-            <h2 class="text-3xl md:text-4xl font-black text-white">مركز التحكم</h2>
+            <span class="stat-tag" style="color:#00FFFF;border-color:#00FFFF">◆ MODULE.01</span>
+            <h2 class="text-3xl md:text-5xl font-black text-white mt-3" style="text-shadow:0 0 30px rgba(0,255,255,.3)">مركز التحكم</h2>
             <p class="text-gray-400 text-sm mt-2">نظرة شاملة على الإيرادات والجلسات</p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-            <div class="stat-3d stat-emerald">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="stat-label">SALES.TODAY</span>
-                    <span class="pulse-dot" style="background:#00FF9D;color:#00FF9D"></span>
-                </div>
-                <div class="stat-value mb-2" id="stat-daily">0</div>
-                <div class="flex items-center justify-between">
-                    <span class="stat-sub">IQD</span>
-                    <span class="stat-sub">LIVE</span>
-                </div>
+            <div class="stat-card stat-emerald">
+                <span class="stat-tag">SALES.TODAY</span>
+                <div class="stat-num" id="stat-daily">0</div>
+                <div class="flex items-center justify-between mt-3"><span class="stat-unit">IQD</span><span class="stat-unit" style="color:#00FF88">● LIVE</span></div>
             </div>
-
-            <div class="stat-3d stat-cyan">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="stat-label">SALES.YESTERDAY</span>
-                </div>
-                <div class="stat-value mb-2" id="stat-yesterday">0</div>
-                <div class="flex items-center justify-between">
-                    <span class="stat-sub">IQD</span>
-                    <span class="stat-sub">ARCHIVED</span>
-                </div>
+            <div class="stat-card stat-cyan">
+                <span class="stat-tag">SALES.YESTERDAY</span>
+                <div class="stat-num" id="stat-yesterday">0</div>
+                <div class="flex items-center justify-between mt-3"><span class="stat-unit">IQD</span><span class="stat-unit">ARCHIVED</span></div>
             </div>
-
-            <div class="stat-3d stat-violet">
-                <div class="flex justify-between items-start mb-3">
-                    <span class="stat-label">REVENUE.MONTH</span>
-                </div>
-                <div class="stat-value mb-2" id="stat-monthly">0</div>
-                <div class="flex items-center justify-between">
-                    <span class="stat-sub">IQD</span>
-                    <span class="stat-sub">CUMULATIVE</span>
-                </div>
+            <div class="stat-card stat-violet">
+                <span class="stat-tag">REVENUE.MONTH</span>
+                <div class="stat-num" id="stat-monthly">0</div>
+                <div class="flex items-center justify-between mt-3"><span class="stat-unit">IQD</span><span class="stat-unit">CUMULATIVE</span></div>
             </div>
         </div>
-
         <div class="flex flex-wrap gap-3 mb-8">
-            <button class="btn btn-success" onclick="transferDaily()">
-                ⟳ ترحيل اليوم ← الأمس + الشهر
-            </button>
-            <button class="btn btn-ghost" onclick="if(confirm('تصفير الإيراد الشهري بالكامل؟')) resetMonthly()">
-                ⌬ تصفير الشهر يدوياً
-            </button>
-            <button class="btn btn-ghost" onclick="if(confirm('تصفير إيراد اليوم؟')) resetDaily()">
-                ↻ تصفير اليوم فقط
-            </button>
+            <button class="btn btn-success" onclick="transferDaily()">⟳ ترحيل اليوم ← الأمس + الشهر</button>
+            <button class="btn btn-ghost" onclick="dialogConfirm('تصفير الإيراد الشهري؟',()=>resetMonthly())">⌬ تصفير الشهر</button>
+            <button class="btn btn-ghost" onclick="dialogConfirm('تصفير إيراد اليوم؟',()=>resetDaily())">↻ تصفير اليوم</button>
         </div>
-
         <h3 class="text-lg font-black text-white mb-4">وصول سريع</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="quick-3d" style="color:#00FF9D" onclick="switchView('tables')">
-                <div class="quick-icon-3d">🎮</div>
-                <div class="flex-1">
-                    <h4 class="font-black text-white text-base">الصالات</h4>
-                    <p class="text-gray-400 text-xs mt-0.5">الطاولات النشطة</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
-            <div class="quick-3d" style="color:#00E5FF" onclick="switchView('menu')">
-                <div class="quick-icon-3d">📋</div>
-                <div class="flex-1">
-                    <h4 class="font-black text-white text-base">المنيو</h4>
-                    <p class="text-gray-400 text-xs mt-0.5">الأقسام والأصناف</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
-            <div class="quick-3d" style="color:#FF2E63" onclick="switchView('debts')">
-                <div class="quick-icon-3d">📒</div>
-                <div class="flex-1">
-                    <h4 class="font-black text-white text-base">الديون</h4>
-                    <p class="text-gray-400 text-xs mt-0.5">الحسابات الآجلة</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
-            <div class="quick-3d" style="color:#A855F7" onclick="switchView('invoices')">
-                <div class="quick-icon-3d">🧾</div>
-                <div class="flex-1">
-                    <h4 class="font-black text-white text-base">الفواتير</h4>
-                    <p class="text-gray-400 text-xs mt-0.5">الأرشيف</p>
-                </div>
-                <span class="quick-arrow">←</span>
-            </div>
+            <div class="quick-card" style="color:#00FF88" onclick="switchView('tables')"><div class="quick-ico">🎮</div><div class="flex-1"><h4 class="font-black text-white text-base">الصالات</h4><p class="text-gray-400 text-xs mt-0.5">الطاولات النشطة</p></div></div>
+            <div class="quick-card" style="color:#00FFFF" onclick="switchView('menu')"><div class="quick-ico">📋</div><div class="flex-1"><h4 class="font-black text-white text-base">المنيو</h4><p class="text-gray-400 text-xs mt-0.5">الأقسام والأصناف</p></div></div>
+            <div class="quick-card" style="color:#FF0080" onclick="switchView('debts')"><div class="quick-ico">📒</div><div class="flex-1"><h4 class="font-black text-white text-base">الديون</h4><p class="text-gray-400 text-xs mt-0.5">الحسابات الآجلة</p></div></div>
+            <div class="quick-card" style="color:#C026D3" onclick="switchView('invoices')"><div class="quick-ico">🧾</div><div class="flex-1"><h4 class="font-black text-white text-base">الفواتير</h4><p class="text-gray-400 text-xs mt-0.5">الأرشيف</p></div></div>
         </div>
     </section>
 
-    <!-- ========== Tables ========== -->
+    <!-- Tables -->
     <section id="view-tables" class="view">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <h2 class="text-3xl md:text-4xl font-black text-white">الصالات والطاولات</h2>
+                <span class="stat-tag" style="color:#00FF88;border-color:#00FF88">◆ MODULE.02</span>
+                <h2 class="text-3xl md:text-4xl font-black text-white mt-3">الصالات والطاولات</h2>
                 <p class="text-gray-400 text-sm mt-2">اضغط على الطاولة لإدارتها</p>
             </div>
             <input type="text" class="inp md:w-72" id="search-tables" placeholder="⌕ ابحث..." oninput="renderTables()">
@@ -942,12 +308,54 @@ select.inp option { background: #0a0a18; color: #fff; }
         <div id="tables-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
     </section>
 
-    <!-- ========== Menu Management ========== -->
+    <!-- Table Detail -->
+    <section id="view-table-detail" class="view">
+        <button class="back-btn mb-6" onclick="switchView('tables')"><span style="font-size:18px">→</span> رجوع للطاولات</button>
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 pb-6" style="border-bottom:1.5px solid rgba(0,255,255,.15)">
+            <div>
+                <span class="stat-tag" style="color:#00FF88;border-color:#00FF88">◆ SESSION</span>
+                <h2 id="detail-table-name" class="text-3xl md:text-5xl font-black text-white mt-3" style="text-shadow:0 0 30px rgba(0,255,255,.4)">—</h2>
+                <p id="detail-table-customer" class="text-xs font-mono mt-2" style="color:#00FFFF">GUEST</p>
+            </div>
+            <button class="btn btn-primary" style="padding:14px 24px;font-size:15px" onclick="openProductPicker()"><span style="font-size:20px;font-weight:900;line-height:1">+</span> إضافة منتج</button>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2">
+                <h4 class="font-black text-white text-sm mb-4 flex items-center gap-2"><span style="color:#00FFFF">▸</span> الطلبات</h4>
+                <div id="detail-items" class="space-y-3 max-h-[70vh] overflow-y-auto no-scrollbar"></div>
+            </div>
+            <div class="space-y-4">
+                <div class="glass" style="padding:22px">
+                    <label class="lbl">اسم الزبون</label>
+                    <input type="text" class="inp mb-4" id="detail-customer-input" onchange="updateTableCustomer(this.value)" onblur="updateTableCustomer(this.value)" placeholder="زبون عام">
+                    <label class="lbl">خصم مباشر (IQD)</label>
+                    <input type="number" class="inp font-mono" id="detail-discount-input" oninput="updateTableDiscount(this.value)" placeholder="0" min="0">
+                </div>
+                <div class="balance-panel">
+                    <div class="space-y-3 mb-4" style="position:relative;z-index:1">
+                        <div class="flex justify-between text-xs"><span class="text-gray-300">الإجمالي:</span><span id="d-sum-sub" class="font-mono font-bold text-white">0 IQD</span></div>
+                        <div class="flex justify-between text-xs"><span style="color:#00FF88">مدفوع مسبقاً:</span><span id="d-sum-early" class="font-mono font-bold" style="color:#00FF88">0 IQD</span></div>
+                        <div class="flex justify-between text-xs"><span style="color:#FF0080">خصم:</span><span id="d-sum-disc" class="font-mono font-bold" style="color:#FF0080">0 IQD</span></div>
+                    </div>
+                    <div style="height:1.5px;background:linear-gradient(90deg,transparent,#00FFFF,transparent);margin:14px 0;position:relative;z-index:1"></div>
+                    <div class="flex justify-between items-center" style="position:relative;z-index:1">
+                        <span class="font-black text-white">المطلوب:</span>
+                        <div><span id="d-sum-final" class="font-mono font-black" style="color:#00FFFF;font-size:28px;text-shadow:0 0 25px #00FFFF">0</span><span class="text-[10px] font-mono mr-1" style="color:#6b6b80">IQD</span></div>
+                    </div>
+                </div>
+                <button class="btn btn-success w-full" style="padding:16px;font-size:15px" onclick="openCheckout()">✓ إغلاق الحساب</button>
+                <button class="btn btn-ghost w-full" onclick="openTransfer()">⇄ نقل / دمج طاولة</button>
+                <button class="btn btn-ghost w-full" style="color:#FF0080;border-color:rgba(255,0,128,.4)" onclick="dialogConfirm('إلغاء الطاولة وحذفها؟',()=>deleteCurrentTable())">🗑 إلغاء الطاولة</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu -->
     <section id="view-menu" class="view">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <h2 class="text-3xl md:text-4xl font-black text-white">المنيو والأقسام</h2>
-                <p class="text-gray-400 text-sm mt-2">إدارة الأقسام والأصناف والأسعار</p>
+                <span class="stat-tag" style="color:#C026D3;border-color:#C026D3">◆ MODULE.03</span>
+                <h2 class="text-3xl md:text-4xl font-black text-white mt-3">المنيو والأقسام</h2>
             </div>
             <div class="flex gap-2 flex-wrap">
                 <button class="btn btn-ghost" onclick="openAddCategoryModal()">📁 قسم جديد</button>
@@ -957,42 +365,37 @@ select.inp option { background: #0a0a18; color: #fff; }
         <div id="menu-container" class="space-y-6"></div>
     </section>
 
-    <!-- ========== Debts ========== -->
+    <!-- Debts -->
     <section id="view-debts" class="view">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <h2 class="text-3xl md:text-4xl font-black text-white">الديون</h2>
-                <p class="text-gray-400 text-sm mt-2">الحسابات الآجلة والتسديد</p>
+                <span class="stat-tag" style="color:#FF0080;border-color:#FF0080">◆ MODULE.04</span>
+                <h2 class="text-3xl md:text-4xl font-black text-white mt-3">الديون</h2>
             </div>
             <input type="text" class="inp md:w-72" id="search-debts" placeholder="⌕ ابحث بالاسم..." oninput="renderDebts()">
         </div>
         <div id="debts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
-    <!-- ========== Invoices ========== -->
+    <!-- Invoices -->
     <section id="view-invoices" class="view">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-                <h2 class="text-3xl md:text-4xl font-black text-white">الفواتير</h2>
-                <p class="text-gray-400 text-sm mt-2">أرشيف الفواتير المكتملة</p>
+                <span class="stat-tag" style="color:#C026D3;border-color:#C026D3">◆ MODULE.05</span>
+                <h2 class="text-3xl md:text-4xl font-black text-white mt-3">الفواتير</h2>
             </div>
             <div class="flex gap-2">
                 <button class="btn btn-ghost" onclick="exportCSV()">📊 تصدير</button>
-                <button class="btn btn-danger" onclick="if(confirm('مسح الأرشيف؟')) clearInvoices()">🗑 مسح</button>
+                <button class="btn btn-danger" onclick="dialogConfirm('مسح الأرشيف؟',()=>clearInvoices())">🗑 مسح</button>
             </div>
         </div>
         <div class="glass" style="padding:0;overflow:hidden">
             <div class="overflow-x-auto no-scrollbar">
                 <table class="w-full text-right min-w-[700px]">
-                    <thead style="background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.06)">
-                        <tr class="text-gray-500 text-[10px] font-mono tracking-widest">
-                            <th class="p-4">ID</th>
-                            <th class="p-4">الطاولة</th>
-                            <th class="p-4">الزبون</th>
-                            <th class="p-4">الإجمالي</th>
-                            <th class="p-4">الحالة</th>
-                            <th class="p-4">التاريخ</th>
-                            <th class="p-4">إجراء</th>
+                    <thead style="background:rgba(0,0,0,.4);border-bottom:1.5px solid rgba(0,255,255,.15)">
+                        <tr class="text-[10px] font-mono tracking-widest" style="color:#00FFFF">
+                            <th class="p-4">ID</th><th class="p-4">الطاولة</th><th class="p-4">الزبون</th>
+                            <th class="p-4">الإجمالي</th><th class="p-4">الحالة</th><th class="p-4">التاريخ</th><th class="p-4">إجراء</th>
                         </tr>
                     </thead>
                     <tbody id="invoices-body" class="text-sm"></tbody>
@@ -1003,199 +406,83 @@ select.inp option { background: #0a0a18; color: #fff; }
 
 </main>
 
-<!-- ============ MODAL: Add Table ============ -->
-<div class="modal-backdrop" id="modal-add-table">
+<!-- Modal: Add Table -->
+<div class="modal-bd" id="modal-add-table">
     <div class="modal-panel">
         <button class="modal-x" onclick="closeModal('modal-add-table')">✕</button>
-        <div class="mb-6">
-            <span class="badge badge-live">◆ NEW.SESSION</span>
-            <h3 class="text-2xl font-black text-white mt-3">فتح طاولة جديدة</h3>
-            <p class="text-gray-400 text-xs mt-1">أدخل اسماً للطاولة لبدء الجلسة</p>
-        </div>
+        <div class="mb-6"><span class="badge badge-live">◆ NEW.SESSION</span><h3 class="text-2xl font-black text-white mt-3">فتح طاولة جديدة</h3><p class="text-gray-400 text-xs mt-1">أدخل اسماً للطاولة لبدء الجلسة</p></div>
         <label class="lbl">اسم الطاولة</label>
-        <input type="text" class="inp mb-4" id="new-table-name" placeholder="مثال: جهاز 5 VIP">
+        <input type="text" class="inp mb-4" id="new-table-name" placeholder="مثال: سجاد، جهاز 5 VIP">
         <div class="flex flex-wrap gap-2 mb-6">
-            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('جهاز PS5 ')">🎮 جهاز</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('جهاز ')">🎮 جهاز</button>
             <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('غرفة VIP #')">👑 VIP</button>
-            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('طاولة كافيه ')">☕ كافيه</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:7px 12px" onclick="suggestTable('طاولة ')">☕ طاولة</button>
         </div>
-        <button class="btn btn-primary w-full" style="padding:15px" onclick="confirmAddTable()">✓ تأكيد الفتح</button>
+        <button class="btn btn-primary w-full" style="padding:16px" onclick="confirmAddTable()">✓ تأكيد الفتح</button>
     </div>
 </div>
 
-<!-- ============ MODAL: Table Detail (Session) ============ -->
-<div class="modal-backdrop" id="modal-table">
-    <div class="modal-panel wide" style="max-width:820px">
-        <button class="modal-x" onclick="closeTableModal()">✕</button>
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-6 border-b border-white/5">
-            <div>
-                <span class="badge badge-live">◆ SESSION</span>
-                <h3 id="table-modal-name" class="text-2xl md:text-3xl font-black text-white mt-2">—</h3>
-                <p id="table-modal-customer" class="text-cyan text-xs font-mono mt-1">GUEST</p>
-            </div>
-            <button class="btn btn-primary" onclick="openProductPicker()">
-                <span style="font-size:18px;font-weight:900;line-height:1;">+</span>
-                إضافة منتج
-            </button>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Items -->
-            <div class="lg:col-span-2">
-                <h4 class="font-black text-white text-sm mb-3 flex items-center gap-2">
-                    <span class="text-cyan">▸</span> الطلبات
-                </h4>
-                <div id="table-items" class="space-y-3 max-h-[50vh] overflow-y-auto no-scrollbar"></div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="space-y-4">
-                <div>
-                    <label class="lbl">اسم الزبون</label>
-                    <input type="text" class="inp" id="table-customer-input" onchange="updateTableCustomer(this.value)" placeholder="زبون عام">
-                </div>
-                <div>
-                    <label class="lbl">خصم مباشر (IQD)</label>
-                    <input type="number" class="inp font-mono" id="table-discount-input" oninput="updateTableDiscount(this.value)" placeholder="0" min="0">
-                </div>
-
-                <div class="glass" style="padding:16px;background:rgba(0,0,0,.4)">
-                    <div class="space-y-2 mb-3">
-                        <div class="flex justify-between text-xs">
-                            <span class="text-gray-400">الإجمالي:</span>
-                            <span id="sum-subtotal" class="font-mono font-bold text-white">0</span>
-                        </div>
-                        <div class="flex justify-between text-xs">
-                            <span class="text-emerald">مدفوع مسبقاً:</span>
-                            <span id="sum-early" class="font-mono font-bold text-emerald">0</span>
-                        </div>
-                        <div class="flex justify-between text-xs">
-                            <span class="text-rose">خصم:</span>
-                            <span id="sum-discount" class="font-mono font-bold text-rose">0</span>
-                        </div>
-                    </div>
-                    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.4),transparent);margin:12px 0"></div>
-                    <div class="flex justify-between items-center">
-                        <span class="font-black text-white text-sm">المطلوب:</span>
-                        <div>
-                            <span id="sum-final" class="font-mono font-black text-cyan text-2xl">0</span>
-                            <span class="text-[10px] text-gray-400 font-mono mr-1">IQD</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-success w-full" style="padding:14px" onclick="openCheckout()">
-                    ✓ إغلاق الحساب
-                </button>
-                <button class="btn btn-ghost w-full" onclick="openTransfer()">
-                    ⇄ نقل / دمج طاولة
-                </button>
-                <button class="btn btn-ghost w-full" style="color:#FF2E63;border-color:rgba(255,46,99,.3)" onclick="if(confirm('إلغاء الطاولة وحذفها؟')) deleteCurrentTable()">
-                    🗑 إلغاء الطاولة
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============ MODAL: Product Picker (Categories then Products) ============ -->
-<div class="modal-backdrop" id="modal-picker">
+<!-- Modal: Product Picker -->
+<div class="modal-bd" id="modal-picker">
     <div class="modal-panel wide">
         <button class="modal-x" onclick="closeModal('modal-picker')">✕</button>
-
-        <div class="mb-6 pb-4 border-b border-white/5 flex items-center gap-3">
-            <button id="picker-back" class="btn btn-ghost hidden" style="padding:8px 14px;font-size:12px" onclick="pickerBack()">
-                ← الأقسام
-            </button>
-            <div>
-                <span class="badge badge-live">◆ ADD.ITEM</span>
-                <h3 id="picker-title" class="text-xl md:text-2xl font-black text-white mt-2">اختر القسم</h3>
-                <p id="picker-subtitle" class="text-gray-400 text-xs mt-1">اضغط على القسم لعرض الأصناف</p>
-            </div>
+        <div class="mb-6 pb-4 flex items-center gap-3" style="border-bottom:1.5px solid rgba(0,255,255,.15)">
+            <button id="picker-back" class="btn btn-ghost hidden" style="padding:9px 16px;font-size:12px" onclick="pickerBack()">← الأقسام</button>
+            <div><span class="badge badge-live">◆ ADD.ITEM</span><h3 id="picker-title" class="text-2xl font-black text-white mt-2">اختر القسم</h3><p id="picker-subtitle" class="text-gray-400 text-xs mt-1">اضغط على القسم لعرض الأصناف</p></div>
         </div>
-
         <div id="picker-body" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
     </div>
 </div>
 
-<!-- ============ MODAL: Early Payment ============ -->
-<div class="modal-backdrop" id="modal-early">
+<!-- Modal: Early Pay -->
+<div class="modal-bd" id="modal-early">
     <div class="modal-panel">
         <button class="modal-x" onclick="closeModal('modal-early')">✕</button>
-        <div class="text-center mb-5">
-            <div style="font-size:40px;margin-bottom:8px">⚡</div>
-            <h3 class="text-xl font-black text-white">دفع مبكر</h3>
-            <p id="early-name" class="text-emerald text-sm font-bold mt-1 font-mono">—</p>
+        <div class="text-center mb-5"><div style="font-size:44px;margin-bottom:8px">⚡</div><h3 class="text-2xl font-black text-white">دفع مبكر</h3><p id="early-name" class="text-sm font-bold mt-1 font-mono" style="color:#00FF88">—</p></div>
+        <div class="balance-panel mb-5">
+            <div class="flex justify-between text-sm py-1.5"><span class="text-gray-300">الإجمالي:</span><span id="early-total" class="font-mono font-bold text-white">0</span></div>
+            <div class="flex justify-between text-sm py-1.5"><span style="color:#00FF88">مدفوع:</span><span id="early-paid" class="font-mono font-bold" style="color:#00FF88">0</span></div>
+            <div class="flex justify-between text-sm py-1.5"><span style="color:#00FFFF" class="font-bold">المتبقي:</span><span id="early-remain" class="font-mono font-bold" style="color:#00FFFF">0</span></div>
         </div>
-
-        <div class="glass" style="padding:16px;background:rgba(0,0,0,.4);margin-bottom:16px">
-            <div class="flex justify-between text-sm py-1">
-                <span class="text-gray-400">الإجمالي:</span>
-                <span id="early-total" class="font-mono font-bold text-white">0</span>
-            </div>
-            <div class="flex justify-between text-sm py-1">
-                <span class="text-emerald">مدفوع:</span>
-                <span id="early-paid" class="font-mono font-bold text-emerald">0</span>
-            </div>
-            <div class="flex justify-between text-sm py-1">
-                <span class="text-cyan font-bold">المتبقي:</span>
-                <span id="early-remain" class="font-mono font-bold text-cyan">0</span>
-            </div>
-        </div>
-
         <div class="flex gap-2 mb-4">
             <button class="btn btn-ghost flex-1" style="font-size:11px" onclick="quickPayOne()">قطعة واحدة</button>
             <button class="btn btn-ghost flex-1" style="font-size:11px" onclick="quickPayAll()">الكل</button>
         </div>
-
         <label class="lbl">المبلغ المدفوع الآن (IQD)</label>
         <input type="number" class="inp font-mono mb-5" id="early-amount" min="1">
-        <button class="btn btn-success w-full" style="padding:14px" onclick="confirmEarly()">✓ تأكيد الدفع</button>
+        <button class="btn btn-success w-full" style="padding:15px" onclick="confirmEarly()">✓ تأكيد الدفع</button>
     </div>
 </div>
 
-<!-- ============ MODAL: Checkout ============ -->
-<div class="modal-backdrop" id="modal-checkout">
+<!-- Modal: Checkout -->
+<div class="modal-bd" id="modal-checkout">
     <div class="modal-panel">
         <button class="modal-x" onclick="closeModal('modal-checkout')">✕</button>
-        <div class="mb-5">
-            <span class="badge badge-live">◆ CHECKOUT</span>
-            <h3 class="text-2xl font-black text-white mt-2">إغلاق الحساب</h3>
+        <div class="mb-5"><span class="badge badge-live">◆ CHECKOUT</span><h3 class="text-2xl font-black text-white mt-2">إغلاق الحساب</h3></div>
+        <div class="balance-panel mb-5">
+            <div class="flex justify-between items-center"><span class="text-gray-200 text-sm font-bold">المطلوب دفعه:</span><span id="co-total" class="font-mono font-black" style="color:#00FFFF;font-size:22px;text-shadow:0 0 20px #00FFFF">0 IQD</span></div>
         </div>
-
-        <div class="glass" style="padding:16px;background:rgba(0,0,0,.4);margin-bottom:16px">
-            <div class="flex justify-between items-center">
-                <span class="text-gray-300 text-sm">المطلوب دفعه:</span>
-                <span id="co-total" class="font-mono font-black text-cyan text-xl">0 IQD</span>
-            </div>
-        </div>
-
         <label class="lbl">المدفوع كاش الآن (IQD)</label>
         <input type="number" class="inp font-mono mb-4" id="co-paid" oninput="calcSplit()">
-
-        <label class="lbl" style="color:#FF2E63">المتبقي (سيُسجل كدين)</label>
-        <input type="text" class="inp font-mono mb-6" id="co-debt" readonly style="color:#FF2E63;background:rgba(255,46,99,.05)">
-
-        <button class="btn btn-success w-full" style="padding:14px" onclick="confirmCheckout()">✓ تأكيد الدفع والأرشفة</button>
+        <label class="lbl" style="color:#FF0080">المتبقي (سيُسجل كدين)</label>
+        <input type="text" class="inp font-mono mb-6" id="co-debt" readonly style="color:#FF0080;background:rgba(255,0,128,.05)">
+        <button class="btn btn-success w-full" style="padding:16px" onclick="confirmCheckout()">✓ تأكيد الدفع والأرشفة</button>
     </div>
 </div>
 
-<!-- ============ MODAL: Transfer ============ -->
-<div class="modal-backdrop" id="modal-transfer">
+<!-- Modal: Transfer -->
+<div class="modal-bd" id="modal-transfer">
     <div class="modal-panel">
         <button class="modal-x" onclick="closeModal('modal-transfer')">✕</button>
-        <div class="mb-5">
-            <span class="badge badge-live">◆ TRANSFER</span>
-            <h3 class="text-2xl font-black text-white mt-2">نقل / دمج</h3>
-        </div>
+        <div class="mb-5"><span class="badge badge-live">◆ TRANSFER</span><h3 class="text-2xl font-black text-white mt-2">نقل / دمج</h3></div>
         <label class="lbl">الطاولة الهدف</label>
         <select class="inp mb-5" id="transfer-select"></select>
-        <button class="btn btn-primary w-full" style="padding:14px" onclick="confirmTransfer()">⇄ تأكيد النقل</button>
+        <button class="btn btn-primary w-full" style="padding:15px" onclick="confirmTransfer()">⇄ تأكيد النقل</button>
     </div>
 </div>
 
-<!-- ============ MODAL: Add Category ============ -->
-<div class="modal-backdrop" id="modal-add-cat">
+<!-- Modal: Add Category -->
+<div class="modal-bd" id="modal-add-cat">
     <div class="modal-panel">
         <button class="modal-x" onclick="closeModal('modal-add-cat')">✕</button>
         <h3 class="text-2xl font-black text-white mb-5">قسم جديد</h3>
@@ -1203,101 +490,143 @@ select.inp option { background: #0a0a18; color: #fff; }
         <input type="text" class="inp mb-4" id="cat-name" placeholder="مثال: العصائر">
         <label class="lbl">الأيقونة</label>
         <input type="text" class="inp mb-6" id="cat-icon" value="📁" maxlength="4">
-        <button class="btn btn-primary w-full" style="padding:14px" onclick="confirmAddCategory()">✓ حفظ</button>
+        <button class="btn btn-primary w-full" style="padding:15px" onclick="confirmAddCategory()">✓ حفظ</button>
     </div>
 </div>
 
-<!-- ============ MODAL: Add/Edit Product ============ -->
-<div class="modal-backdrop" id="modal-add-prod">
+<!-- Modal: Add Product -->
+<div class="modal-bd" id="modal-add-prod">
     <div class="modal-panel">
         <button class="modal-x" onclick="closeModal('modal-add-prod')">✕</button>
         <h3 class="text-2xl font-black text-white mb-5" id="prod-modal-title">صنف جديد</h3>
-
         <label class="lbl">القسم</label>
         <select class="inp mb-4" id="prod-cat"></select>
-
         <label class="lbl">اسم الصنف</label>
         <input type="text" class="inp mb-4" id="prod-name" placeholder="مثال: عصير برتقال">
-
         <label class="lbl">نوع الحساب</label>
         <select class="inp mb-4" id="prod-type" onchange="typeChanged()">
             <option value="direct">صنف مباشر (مشروب/أكل)</option>
             <option value="countdown">عداد تنازلي (وقت محدد)</option>
             <option value="open">عداد تصاعدي (سعر/ساعة)</option>
         </select>
-
         <div id="prod-duration-wrap" class="hidden mb-4">
-            <label class="lbl" style="color:#00E5FF">المدة بالدقائق</label>
+            <label class="lbl">المدة بالدقائق</label>
             <input type="number" class="inp font-mono" id="prod-duration" placeholder="30" min="1">
         </div>
-
         <label class="lbl" id="prod-price-lbl">السعر (IQD)</label>
         <input type="number" class="inp font-mono mb-4" id="prod-price" placeholder="2000" min="1">
-
         <label class="lbl">الأيقونة</label>
         <input type="text" class="inp mb-6" id="prod-icon" value="📦" maxlength="4">
-
-        <button class="btn btn-primary w-full" style="padding:14px" onclick="confirmSaveProduct()">✓ حفظ</button>
+        <button class="btn btn-primary w-full" style="padding:15px" onclick="confirmSaveProduct()">✓ حفظ</button>
     </div>
 </div>
 
+<!-- Modal: Invoice Detail -->
+<div class="modal-bd" id="modal-invoice">
+    <div class="modal-panel wide">
+        <button class="modal-x" onclick="closeModal('modal-invoice')">✕</button>
+        <div class="mb-5"><span class="badge badge-live">◆ INVOICE.DETAIL</span><h3 class="text-2xl font-black text-white mt-2" id="inv-modal-id">—</h3></div>
+        <div class="glass" style="padding:16px;margin-bottom:16px">
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div><span class="text-gray-400 text-xs">الطاولة:</span><div class="font-bold text-white mt-1" id="inv-modal-table">—</div></div>
+                <div><span class="text-gray-400 text-xs">الزبون:</span><div class="font-bold text-white mt-1" id="inv-modal-customer">—</div></div>
+                <div><span class="text-gray-400 text-xs">التاريخ:</span><div class="font-mono text-xs text-white mt-1" id="inv-modal-date">—</div></div>
+                <div><span class="text-gray-400 text-xs">الحالة:</span><div class="mt-1" id="inv-modal-status">—</div></div>
+            </div>
+        </div>
+        <h4 class="font-black text-white mb-3">الأصناف:</h4>
+        <div id="inv-modal-items" class="space-y-2 mb-5 max-h-60 overflow-y-auto no-scrollbar"></div>
+        <div class="balance-panel">
+            <div class="space-y-2" style="position:relative;z-index:1">
+                <div class="flex justify-between text-sm"><span class="text-gray-300">الإجمالي:</span><span class="font-mono font-black text-white" id="inv-modal-total">0</span></div>
+                <div class="flex justify-between text-sm"><span style="color:#00FF88">المدفوع:</span><span class="font-mono font-bold" style="color:#00FF88" id="inv-modal-paid">0</span></div>
+                <div class="flex justify-between text-sm"><span style="color:#FF0080">الدين:</span><span class="font-mono font-bold" style="color:#FF0080" id="inv-modal-debt">0</span></div>
+            </div>
+        </div>
+        <button class="btn btn-primary w-full mt-4" style="padding:14px" onclick="printInvFromModal()">🖨 طباعة</button>
+    </div>
+</div>
+
+<!-- Dialog (confirm/alert/prompt) -->
+<div class="dialog-bd" id="dialog-bd">
+    <div class="dialog-panel">
+        <div class="dialog-title" id="dialog-title">تأكيد</div>
+        <div class="dialog-msg" id="dialog-msg">—</div>
+        <input type="text" class="inp mb-4 hidden" id="dialog-input">
+        <div class="dialog-actions">
+            <button class="btn btn-ghost" onclick="dialogCancel()" id="dialog-cancel">إلغاء</button>
+            <button class="btn btn-primary" onclick="dialogOk()" id="dialog-ok">موافق</button>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/db.js"></script>
+<script src="assets/js/guard.js"></script>
 <script>
-/* ============================================================
-   716QX NEXUS 5.0 — Core
-   ============================================================ */
+/* ==================================================================
+   716QX NEXUS 7.0 — Main App (Turso-backed)
+   ================================================================== */
 (function () {
     'use strict';
 
-    const KEY = 'qx716_nexus_v5';
     const $ = s => document.querySelector(s);
     const $$ = s => document.querySelectorAll(s);
     const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     const fmt = n => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
     const now = () => Date.now();
 
-    const defaultState = () => ({
+    // Site ID — كل موقع له ID منفصل (يأتي من URL أو default)
+    const URL_PARAMS = new URLSearchParams(location.search);
+    const SITE_ID = URL_PARAMS.get('site') || 'demo_site_716';
+    const SITE_NAME = URL_PARAMS.get('name') || '716QX';
+
+    let S = {
         tables: [],
         debts: [],
         invoices: [],
-        categories: [
-            { id: 'c1', name: 'بليستيشن', icon: '🎮' },
-            { id: 'c2', name: 'المشروبات', icon: '🥤' },
-            { id: 'c3', name: 'المأكولات', icon: '🍕' },
-            { id: 'c4', name: 'النراكيل', icon: '💨' }
-        ],
-        products: [
-            { id: 'p1', catId: 'c1', name: 'نصف ساعة', icon: '⏱', type: 'countdown', duration: 30, price: 2000 },
-            { id: 'p2', catId: 'c1', name: 'ساعة كاملة', icon: '🕐', type: 'countdown', duration: 60, price: 4000 },
-            { id: 'p3', catId: 'c1', name: 'وقت مفتوح', icon: '♾', type: 'open', duration: 0, price: 4000 },
-            { id: 'p4', catId: 'c2', name: 'بيبسي', icon: '🥤', type: 'direct', duration: 0, price: 1000 },
-            { id: 'p5', catId: 'c2', name: 'عصير برتقال', icon: '🍊', type: 'direct', duration: 0, price: 2000 },
-            { id: 'p6', catId: 'c2', name: 'ماء', icon: '💧', type: 'direct', duration: 0, price: 500 },
-            { id: 'p7', catId: 'c3', name: 'بيتزا', icon: '🍕', type: 'direct', duration: 0, price: 5000 },
-            { id: 'p8', catId: 'c4', name: 'نركيلة تفاح', icon: '💨', type: 'direct', duration: 0, price: 5000 }
-        ],
+        categories: [],
+        products: [],
         revenue: { daily: 0, yesterday: 0, monthly: 0 },
         activeView: 'dashboard',
         activeTableId: null,
         pickerCatId: null,
         editingProductId: null,
-        earlyItemId: null
-    });
+        earlyItemId: null,
+        frozen: false
+    };
 
-    let S = load();
-
-    function load() {
-        try {
-            const raw = localStorage.getItem(KEY);
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                return Object.assign(defaultState(), parsed);
-            }
-        } catch (e) {}
-        return defaultState();
+    /* ============ Dialog System ============ */
+    let dialogCb = null, dialogType = 'confirm';
+    function dialogOpen(title, msg, type, cb, defaultValue) {
+        dialogType = type; dialogCb = cb;
+        $('#dialog-title').textContent = title;
+        $('#dialog-msg').textContent = msg;
+        const inp = $('#dialog-input');
+        if (type === 'prompt') {
+            inp.classList.remove('hidden');
+            inp.value = defaultValue || '';
+            setTimeout(() => inp.focus(), 100);
+        } else {
+            inp.classList.add('hidden');
+        }
+        $('#dialog-ok').textContent = type === 'alert' ? 'موافق' : (type === 'prompt' ? 'تأكيد' : 'موافق');
+        $('#dialog-cancel').style.display = type === 'alert' ? 'none' : 'block';
+        $('#dialog-bd').classList.add('show');
     }
-    function save() {
-        try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    function dialogOk() {
+        const inp = $('#dialog-input');
+        const val = dialogType === 'prompt' ? inp.value : true;
+        $('#dialog-bd').classList.remove('show');
+        const cb = dialogCb; dialogCb = null;
+        if (cb) cb(val);
     }
+    function dialogCancel() {
+        $('#dialog-bd').classList.remove('show');
+        dialogCb = null;
+    }
+    function dialogConfirm(msg, cb) { dialogOpen('تأكيد', msg, 'confirm', cb); }
+    function dialogAlert(msg, cb) { dialogOpen('تنبيه', msg, 'alert', cb); }
+    function dialogPrompt(title, msg, def, cb) { dialogOpen(title, msg, 'prompt', cb, def); }
 
     /* ============ Toast ============ */
     function toast(msg, type = 'info', dur = 2500) {
@@ -1315,13 +644,14 @@ select.inp option { background: #0a0a18; color: #fff; }
         }, dur);
     }
 
-    /* ============ Time helpers ============ */
+    /* ============ Time Helpers ============ */
     function pad(n) { return String(n).padStart(2, '0'); }
     function timeStr(sec) {
         sec = Math.max(0, Math.floor(sec));
         return pad(Math.floor(sec / 3600)) + ':' + pad(Math.floor((sec % 3600) / 60)) + ':' + pad(sec % 60);
     }
     function dateStr(iso) {
+        if (!iso) return '';
         const d = new Date(iso);
         return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
@@ -1335,69 +665,150 @@ select.inp option { background: #0a0a18; color: #fff; }
     /* ============ Calc ============ */
     function itemElapsed(it) {
         if (it.type === 'direct') return 0;
-        let e = it.sessionElapsed || 0;
+        let e = Number(it.session_elapsed) || 0;
         if (it.status === 'running') {
-            e += (now() - it.startedAt) / 1000 - (it.pausedTotal || 0);
+            e += (now() - Number(it.started_at)) / 1000 - (Number(it.paused_total) || 0);
         }
         return Math.max(0, e);
     }
     function itemTotal(it) {
-        if (it.type === 'direct') return it.price * it.qty;
-        if (it.type === 'countdown') return it.price * it.qty;
+        const qty = Number(it.qty) || 1;
+        const price = Number(it.price) || 0;
+        if (it.type === 'direct') return price * qty;
+        if (it.type === 'countdown') return price * qty;
         if (it.type === 'open') {
             const e = itemElapsed(it);
-            return Math.round((e * it.price / 3600) * it.qty);
+            return Math.round((e * price / 3600) * qty);
         }
         return 0;
     }
     function itemExpired(it) {
         if (it.type !== 'countdown') return false;
-        return itemElapsed(it) >= it.duration * 60 * it.qty;
+        const dur = Number(it.duration) || 0;
+        const qty = Number(it.qty) || 1;
+        return itemElapsed(it) >= dur * 60 * qty;
     }
     function tableTotals(t) {
         let sub = 0, early = 0;
-        t.items.forEach(it => { sub += itemTotal(it); early += (it.earlyPaid || 0); });
+        const items = itemsForTable(t.id);
+        items.forEach(it => { sub += itemTotal(it); early += (Number(it.early_paid) || 0); });
         const disc = Number(t.discount) || 0;
         return { sub, early, disc, final: Math.max(0, sub - early - disc) };
     }
 
-    /* ============ Drawer ============ */
-    function openDrawer() {
-        $('#drawer').classList.add('open');
-        $('#drawer-overlay').classList.add('show');
+    /* ============ Local Cache ============ */
+    function itemsForTable(tableId) {
+        return (S._items || []).filter(i => i.table_id === tableId);
     }
-    function closeDrawer() {
-        $('#drawer').classList.remove('open');
-        $('#drawer-overlay').classList.remove('show');
+    function setItemsForTable(tableId, items) {
+        S._items = (S._items || []).filter(i => i.table_id !== tableId).concat(items.map(i => ({ ...i, table_id: tableId })));
     }
 
+    /* ============ DB Load ============ */
+    async function loadAll() {
+        try {
+            // Check frozen
+            const site = await DB.q1('SELECT * FROM sites WHERE id = ?', [SITE_ID]);
+            if (site && site.frozen) {
+                S.frozen = true;
+                $('#loading').innerHTML = '<div style="text-align:center;padding:40px"><div style="font-size:80px">🔒</div><h1 style="color:#FF0080;font-size:28px;font-weight:900;margin-top:20px">الموقع مجمّد</h1><p style="color:#999;margin-top:10px">يرجى التواصل مع الإدارة</p></div>';
+                return;
+            }
+
+            const [tables, items, cats, prods, invs, debts, rev] = await Promise.all([
+                DB.q('SELECT * FROM tables_ WHERE site_id = ? AND status = ?', [SITE_ID, 'open']),
+                DB.q('SELECT * FROM items WHERE site_id = ?', [SITE_ID]),
+                DB.q('SELECT * FROM categories WHERE site_id = ? ORDER BY position', [SITE_ID]),
+                DB.q('SELECT * FROM products WHERE site_id = ?', [SITE_ID]),
+                DB.q('SELECT * FROM invoices WHERE site_id = ? ORDER BY date DESC LIMIT 200', [SITE_ID]),
+                DB.q('SELECT * FROM debts WHERE site_id = ? ORDER BY date DESC', [SITE_ID]),
+                DB.q1('SELECT * FROM revenue WHERE site_id = ?', [SITE_ID])
+            ]);
+
+            S.tables = tables || [];
+            S._items = items || [];
+            S.categories = cats && cats.length ? cats : defaultCats();
+            S.products = prods && prods.length ? prods : [];
+            S.invoices = (invs || []).map(i => ({ ...i, items: safeJson(i.items_json) }));
+            S.debts = debts || [];
+            S.revenue = rev ? { daily: Number(rev.daily) || 0, yesterday: Number(rev.yesterday) || 0, monthly: Number(rev.monthly) || 0 } : { daily: 0, yesterday: 0, monthly: 0 };
+
+            // Seed defaults if empty
+            if (!cats || cats.length === 0) {
+                await seedDefaults();
+            }
+        } catch (e) {
+            console.error('Load error:', e);
+            toast('فشل الاتصال بقاعدة البيانات', 'error', 5000);
+        }
+    }
+
+    function defaultCats() {
+        return [
+            { id: 'c1', name: 'بليستيشن', icon: '🎮', position: 1 },
+            { id: 'c2', name: 'المشروبات', icon: '🥤', position: 2 },
+            { id: 'c3', name: 'المأكولات', icon: '🍕', position: 3 },
+            { id: 'c4', name: 'النراكيل', icon: '💨', position: 4 }
+        ];
+    }
+    async function seedDefaults() {
+        const stmts = [];
+        const cats = [
+            { id: uid(), name: 'بليستيشن', icon: '🎮', position: 1 },
+            { id: uid(), name: 'المشروبات', icon: '🥤', position: 2 },
+            { id: uid(), name: 'المأكولات', icon: '🍕', position: 3 },
+            { id: uid(), name: 'النراكيل', icon: '💨', position: 4 }
+        ];
+        cats.forEach(c => stmts.push({ sql: 'INSERT INTO categories (id,site_id,name,icon,position) VALUES (?,?,?,?,?)', args: [c.id, SITE_ID, c.name, c.icon, c.position] }));
+        const prods = [
+            { cat: cats[0].id, name: 'نصف ساعة', icon: '⏱', type: 'countdown', duration: 30, price: 2000 },
+            { cat: cats[0].id, name: 'ساعة كاملة', icon: '🕐', type: 'countdown', duration: 60, price: 4000 },
+            { cat: cats[0].id, name: 'وقت مفتوح', icon: '♾', type: 'open', duration: 0, price: 4000 },
+            { cat: cats[1].id, name: 'بيبسي', icon: '🥤', type: 'direct', duration: 0, price: 1000 },
+            { cat: cats[1].id, name: 'عصير برتقال', icon: '🍊', type: 'direct', duration: 0, price: 2000 },
+            { cat: cats[1].id, name: 'ماء', icon: '💧', type: 'direct', duration: 0, price: 500 },
+            { cat: cats[2].id, name: 'بيتزا', icon: '🍕', type: 'direct', duration: 0, price: 5000 },
+            { cat: cats[3].id, name: 'نركيلة تفاح', icon: '💨', type: 'direct', duration: 0, price: 5000 }
+        ];
+        prods.forEach(p => stmts.push({ sql: 'INSERT INTO products (id,site_id,cat_id,name,icon,type,duration,price) VALUES (?,?,?,?,?,?,?,?)', args: [uid(), SITE_ID, p.cat, p.name, p.icon, p.type, p.duration, p.price] }));
+        stmts.push({ sql: 'INSERT OR IGNORE INTO revenue (site_id,daily,yesterday,monthly) VALUES (?,0,0,0)', args: [SITE_ID] });
+        await DB.tursoBatch(stmts);
+        // Reload
+        S.categories = await DB.q('SELECT * FROM categories WHERE site_id = ? ORDER BY position', [SITE_ID]);
+        S.products = await DB.q('SELECT * FROM products WHERE site_id = ?', [SITE_ID]);
+    }
+
+    function safeJson(s) { try { return JSON.parse(s); } catch (e) { return []; } }
+
+    /* ============ Log Activity ============ */
+    async function log(action, details) {
+        try {
+            await DB.exec('INSERT INTO logs (id,site_id,action,details) VALUES (?,?,?,?)', [uid(), SITE_ID, action, details || '']);
+        } catch (e) {}
+    }
+
+    /* ============ Drawer ============ */
+    function openDrawer() { $('#drawer').classList.add('open'); $('#drawer-overlay').classList.add('show'); }
+    function closeDrawer() { $('#drawer').classList.remove('open'); $('#drawer-overlay').classList.remove('show'); }
+
     /* ============ Modals ============ */
-    function openModal(id) {
-        const m = document.getElementById(id);
-        if (m) { m.classList.add('show'); }
-    }
-    function closeModal(id) {
-        const m = document.getElementById(id);
-        if (m) { m.classList.remove('show'); }
-    }
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
     /* ============ Views ============ */
     function switchView(v) {
         S.activeView = v;
-        save();
         $$('.view').forEach(x => x.classList.remove('active'));
         const target = document.getElementById('view-' + v);
         if (target) target.classList.add('active');
-
-        $$('.drawer-nav-item').forEach(b => b.classList.remove('active'));
-        const nb = document.querySelector(`.drawer-nav-item[data-view="${v}"]`);
+        $$('.nav-item').forEach(b => b.classList.remove('active'));
+        const nb = document.querySelector(`.nav-item[data-view="${v}"]`);
         if (nb) nb.classList.add('active');
-
         closeDrawer();
         window.scrollTo({ top: 0, behavior: 'instant' });
-
         if (v === 'dashboard') renderDashboard();
         if (v === 'tables') renderTables();
+        if (v === 'table-detail') renderTableDetail();
         if (v === 'menu') renderMenu();
         if (v === 'debts') renderDebts();
         if (v === 'invoices') renderInvoices();
@@ -1409,33 +820,39 @@ select.inp option { background: #0a0a18; color: #fff; }
         $('#stat-yesterday').textContent = fmt(S.revenue.yesterday);
         $('#stat-monthly').textContent = fmt(S.revenue.monthly);
     }
-    function transferDaily() {
-        if (S.revenue.daily <= 0) { toast('لا توجد مبيعات لترحيلها', 'warn'); return; }
-        if (!confirm('ترحيل إيراد اليوم إلى الأمس وإضافته للشهر؟')) return;
-        S.revenue.monthly += S.revenue.daily;
-        S.revenue.yesterday = S.revenue.daily;
-        S.revenue.daily = 0;
-        save();
-        renderDashboard();
-        toast('تم الترحيل: ' + fmt(S.revenue.yesterday) + ' IQD', 'success');
+    async function saveRevenue() {
+        await DB.exec('UPDATE revenue SET daily=?, yesterday=?, monthly=? WHERE site_id=?',
+            [S.revenue.daily, S.revenue.yesterday, S.revenue.monthly, SITE_ID]);
     }
-    function resetMonthly() {
-        S.revenue.monthly = 0;
-        save();
-        renderDashboard();
-        toast('تم تصفير الشهر', 'warn');
+    async function transferDaily() {
+        if (S.revenue.daily <= 0) { toast('لا توجد مبيعات', 'warn'); return; }
+        dialogConfirm('ترحيل إيراد اليوم إلى الأمس والشهر؟', async () => {
+            S.revenue.monthly += S.revenue.daily;
+            S.revenue.yesterday = S.revenue.daily;
+            S.revenue.daily = 0;
+            await saveRevenue();
+            await log('TRANSFER_DAILY', `+${S.revenue.yesterday}`);
+            renderDashboard();
+            toast('تم الترحيل: ' + fmt(S.revenue.yesterday) + ' IQD', 'success');
+        });
     }
-    function resetDaily() {
-        S.revenue.daily = 0;
-        save();
-        renderDashboard();
-        toast('تم تصفير اليوم', 'warn');
+    async function resetMonthly() {
+        S.revenue.monthly = 0; await saveRevenue(); renderDashboard(); toast('تم تصفير الشهر', 'warn');
     }
-    function resetAll() {
-        S = defaultState();
-        save();
+    async function resetDaily() {
+        S.revenue.daily = 0; await saveRevenue(); renderDashboard(); toast('تم تصفير اليوم', 'warn');
+    }
+    async function resetAll() {
+        await DB.tursoBatch([
+            { sql: 'DELETE FROM tables_ WHERE site_id=?', args: [SITE_ID] },
+            { sql: 'DELETE FROM items WHERE site_id=?', args: [SITE_ID] },
+            { sql: 'DELETE FROM invoices WHERE site_id=?', args: [SITE_ID] },
+            { sql: 'DELETE FROM debts WHERE site_id=?', args: [SITE_ID] },
+            { sql: 'UPDATE revenue SET daily=0, yesterday=0, monthly=0 WHERE site_id=?', args: [SITE_ID] }
+        ]);
+        S.tables = []; S._items = []; S.invoices = []; S.debts = [];
+        S.revenue = { daily: 0, yesterday: 0, monthly: 0 };
         renderAll();
-        switchView('dashboard');
         toast('تم إعادة الضبط', 'error');
     }
 
@@ -1445,44 +862,32 @@ select.inp option { background: #0a0a18; color: #fff; }
         if (!grid) return;
         const q = ($('#search-tables')?.value || '').toLowerCase().trim();
         let list = S.tables.slice();
-        if (q) list = list.filter(t => t.name.toLowerCase().includes(q) || (t.customer || '').toLowerCase().includes(q));
+        if (q) list = list.filter(t => (t.name || '').toLowerCase().includes(q) || (t.customer || '').toLowerCase().includes(q));
 
         if (list.length === 0) {
-            grid.innerHTML = `
-                <div class="glass p-10 text-center" style="grid-column:1/-1">
-                    <div style="font-size:56px;margin-bottom:12px;opacity:.5">🎮</div>
-                    <h3 class="text-lg font-black text-white mb-1">لا توجد طاولات</h3>
-                    <p class="text-gray-400 text-sm mb-5">ابدأ بفتح طاولة جديدة</p>
-                    <button class="btn btn-primary" onclick="openAddTableModal()">+ فتح طاولة</button>
-                </div>`;
+            grid.innerHTML = `<div class="glass p-10 text-center" style="grid-column:1/-1"><div style="font-size:60px;margin-bottom:14px;opacity:.5">🎮</div><h3 class="text-xl font-black text-white mb-2">لا توجد طاولات</h3><p class="text-gray-400 text-sm mb-5">ابدأ بفتح طاولة جديدة</p><button class="btn btn-primary" onclick="openAddTableModal()">+ فتح طاولة</button></div>`;
             return;
         }
-
         grid.innerHTML = list.map(t => {
             const tot = tableTotals(t);
-            const running = t.items.filter(i => i.type !== 'direct' && i.status === 'running').length;
+            const items = itemsForTable(t.id);
+            const running = items.filter(i => i.type !== 'direct' && i.status === 'running').length;
             return `
-                <div class="table-card-3d ${running > 0 ? 'busy' : 'idle'}" onclick="openTableModal('${t.id}')">
+                <div class="table-card ${running > 0 ? 'busy' : 'idle'}" onclick="openTableDetail('${t.id}')">
                     <div class="flex justify-between items-start mb-3">
                         <div>
-                            <h3 class="text-lg font-black text-white font-display tracking-wide">${escapeHtml(t.name)}</h3>
+                            <h3 class="text-lg font-black text-white" style="font-family:'Orbitron',sans-serif;letter-spacing:.05em">${escapeHtml(t.name)}</h3>
                             <p class="text-[10px] text-gray-400 font-mono mt-1">${escapeHtml(t.customer || 'GUEST')}</p>
                         </div>
-                        <span class="pulse-dot" style="background:${running > 0 ? '#00FF9D' : '#4B5563'};color:${running > 0 ? '#00FF9D' : '#4B5563'}"></span>
+                        <span class="pulse-dot" style="background:${running > 0 ? '#00FF88' : '#4B5563'};color:${running > 0 ? '#00FF88' : '#4B5563'}"></span>
                     </div>
-                    <div class="space-y-1.5 mb-3">
-                        <div class="flex justify-between text-xs">
-                            <span class="text-gray-500 font-mono">ITEMS</span>
-                            <span class="text-white font-mono font-bold">${t.items.length}</span>
-                        </div>
-                        <div class="flex justify-between text-xs">
-                            <span class="text-gray-500 font-mono">SUBTOTAL</span>
-                            <span class="text-cyan font-mono font-bold">${fmt(tot.sub)}</span>
-                        </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-xs"><span class="text-gray-500 font-mono">ITEMS</span><span class="text-white font-mono font-bold">${items.length}</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-gray-500 font-mono">SUBTOTAL</span><span class="font-mono font-bold" style="color:#00FFFF">${fmt(tot.sub)}</span></div>
                     </div>
-                    <div class="pt-3 flex justify-between items-center" style="border-top:1px solid rgba(255,255,255,.05)">
-                        <span class="text-[10px] text-gray-500 font-mono">${dateStr(t.createdAt).slice(0, 10)}</span>
-                        <span class="font-mono font-black text-violet" style="font-size:17px">${fmt(tot.final)} <span style="font-size:9px;color:#6B7280">IQD</span></span>
+                    <div class="pt-3 flex justify-between items-center" style="border-top:1.5px solid rgba(255,255,255,.06)">
+                        <span class="text-[10px] text-gray-500 font-mono">${dateStr(t.created_at).slice(0, 10)}</span>
+                        <span class="font-mono font-black" style="color:#C026D3;font-size:17px;text-shadow:0 0 15px #C026D3">${fmt(tot.final)} <span style="font-size:9px;color:#6b6b80">IQD</span></span>
                     </div>
                 </div>`;
         }).join('');
@@ -1498,61 +903,52 @@ select.inp option { background: #0a0a18; color: #fff; }
         i.value = p + (S.tables.length + 1);
         i.focus();
     }
-    function confirmAddTable() {
+    async function confirmAddTable() {
         const name = $('#new-table-name').value.trim();
         if (!name) { toast('أدخل اسم الطاولة', 'error'); return; }
         if (S.tables.some(t => t.name === name)) { toast('يوجد طاولة بنفس الاسم', 'error'); return; }
-        S.tables.push({
-            id: uid(), name, customer: '', items: [], discount: 0,
-            createdAt: new Date().toISOString(), status: 'open'
-        });
-        save();
+        const id = uid();
+        const createdAt = new Date().toISOString();
+        await DB.exec('INSERT INTO tables_ (id,site_id,name,customer,discount,created_at,status) VALUES (?,?,?,?,?,?,?)',
+            [id, SITE_ID, name, '', 0, createdAt, 'open']);
+        S.tables.push({ id, site_id: SITE_ID, name, customer: '', discount: 0, created_at: createdAt, status: 'open' });
         closeModal('modal-add-table');
+        await log('TABLE_OPEN', name);
         renderTables();
         toast('تم فتح "' + name + '"', 'success');
     }
 
-    /* ============ Table Modal ============ */
-    function openTableModal(id) {
+    /* ============ Table Detail ============ */
+    async function openTableDetail(id) {
         const t = S.tables.find(x => x.id === id);
         if (!t) return;
         S.activeTableId = id;
-        save();
-        $('#table-modal-name').textContent = t.name;
-        $('#table-modal-customer').textContent = (t.customer || 'GUEST').toUpperCase();
-        $('#table-customer-input').value = t.customer || '';
-        $('#table-discount-input').value = t.discount || '';
-        renderTableItems();
-        openModal('modal-table');
+        switchView('table-detail');
     }
-    function closeTableModal() {
-        S.activeTableId = null;
-        save();
-        closeModal('modal-table');
-        renderTables();
-    }
-    function currentTable() {
-        return S.tables.find(x => x.id === S.activeTableId);
-    }
-    function renderTableItems() {
-        const t = currentTable();
-        if (!t) { closeTableModal(); return; }
-        const list = $('#table-items');
+    function currentTable() { return S.tables.find(x => x.id === S.activeTableId); }
 
-        if (t.items.length === 0) {
-            list.innerHTML = `
-                <div class="text-center py-10" style="border:2px dashed rgba(255,255,255,.08);border-radius:16px">
-                    <div style="font-size:36px;margin-bottom:6px;opacity:.4">📦</div>
-                    <p class="text-gray-500 text-sm">لا توجد أصناف</p>
-                    <p class="text-gray-600 text-xs mt-1">اضغط "إضافة منتج"</p>
-                </div>`;
+    function renderTableDetail() {
+        const t = currentTable();
+        if (!t) { switchView('tables'); return; }
+        $('#detail-table-name').textContent = t.name;
+        $('#detail-table-customer').textContent = (t.customer || 'GUEST').toUpperCase();
+        // فقط نضبط القيمة إذا الحقل مو مركز
+        const custInp = $('#detail-customer-input');
+        if (document.activeElement !== custInp) custInp.value = t.customer || '';
+        const discInp = $('#detail-discount-input');
+        if (document.activeElement !== discInp) discInp.value = t.discount || '';
+
+        const items = itemsForTable(t.id);
+        const list = $('#detail-items');
+        if (items.length === 0) {
+            list.innerHTML = `<div class="text-center py-16" style="border:2px dashed rgba(0,255,255,.15);border-radius:18px"><div style="font-size:44px;margin-bottom:8px;opacity:.4">📦</div><p class="text-gray-500 text-sm">لا توجد أصناف</p></div>`;
         } else {
-            list.innerHTML = t.items.map(it => {
+            list.innerHTML = items.map(it => {
                 const total = itemTotal(it);
                 const elapsed = itemElapsed(it);
-                const rem = it.type === 'countdown' ? Math.max(0, it.duration * 60 * it.qty - elapsed) : 0;
+                const qty = Number(it.qty) || 1;
+                const rem = it.type === 'countdown' ? Math.max(0, (Number(it.duration) || 0) * 60 * qty - elapsed) : 0;
                 const exp = itemExpired(it);
-
                 let badge = '';
                 if (it.type === 'direct') badge = `<span class="badge badge-direct">صنف مباشر</span>`;
                 else if (it.status === 'paused') badge = `<span class="badge badge-paused">⏸ موقوف</span>`;
@@ -1560,116 +956,99 @@ select.inp option { background: #0a0a18; color: #fff; }
                 else badge = `<span class="badge badge-live">● شغال</span>`;
 
                 return `
-                    <div class="item-row">
+                    <div class="item-box">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex items-center gap-3">
-                                <div style="width:44px;height:44px;border-radius:12px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);display:flex;align-items:center;justify-content:center;font-size:20px">${it.icon}</div>
+                                <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(0,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:22px">${it.icon || '📦'}</div>
                                 <div>
-                                    <h5 class="font-bold text-white text-sm">${escapeHtml(it.name)}</h5>
+                                    <h5 class="font-bold text-white">${escapeHtml(it.name)}</h5>
                                     <div class="flex items-center gap-2 mt-1">${badge}</div>
                                 </div>
                             </div>
                             <div class="text-left">
-                                <div class="font-mono font-black text-cyan" style="font-size:16px">${fmt(total)}</div>
-                                <div class="text-[9px] text-gray-500">IQD</div>
+                                <div class="font-mono font-black" style="color:#00FFFF;font-size:18px;text-shadow:0 0 15px rgba(0,255,255,.5)">${fmt(total)}</div>
+                                <div class="text-[9px] font-mono" style="color:#6b6b80">IQD</div>
                             </div>
                         </div>
-
                         ${it.type !== 'direct' ? `
                             <div class="grid grid-cols-2 gap-2 text-xs mb-3">
-                                <div style="background:rgba(0,0,0,.4);padding:8px;border-radius:10px">
-                                    <div class="text-[9px] text-gray-500 font-mono">ELAPSED</div>
-                                    <div class="font-mono font-bold text-white">${timeStr(elapsed)}</div>
-                                </div>
-                                ${it.type === 'countdown' ? `
-                                    <div style="background:rgba(0,0,0,.4);padding:8px;border-radius:10px">
-                                        <div class="text-[9px] text-gray-500 font-mono">REMAIN</div>
-                                        <div class="font-mono font-bold ${exp ? 'text-rose' : 'text-emerald'}">${timeStr(rem)}</div>
-                                    </div>
-                                ` : `
-                                    <div style="background:rgba(0,0,0,.4);padding:8px;border-radius:10px">
-                                        <div class="text-[9px] text-gray-500 font-mono">TYPE</div>
-                                        <div class="font-bold text-violet text-[10px]">مفتوح/ساعة</div>
-                                    </div>
-                                `}
+                                <div style="background:rgba(0,0,0,.4);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.05)"><div class="text-[9px] font-mono mb-1" style="color:#6b6b80">ELAPSED</div><div class="font-mono font-bold text-white">${timeStr(elapsed)}</div></div>
+                                ${it.type === 'countdown' ? `<div style="background:rgba(0,0,0,.4);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.05)"><div class="text-[9px] font-mono mb-1" style="color:#6b6b80">REMAIN</div><div class="font-mono font-bold" style="color:${exp ? '#FF0080' : '#00FF88'}">${timeStr(rem)}</div></div>` : `<div style="background:rgba(0,0,0,.4);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.05)"><div class="text-[9px] font-mono mb-1" style="color:#6b6b80">TYPE</div><div class="font-bold text-[10px]" style="color:#C026D3">مفتوح/ساعة</div></div>`}
                             </div>
                         ` : ''}
-
                         <div class="flex items-center gap-2 flex-wrap">
-                            <div class="flex items-center gap-1.5">
+                            <div class="flex items-center gap-2">
                                 <button class="qty-btn" onclick="changeQty('${it.id}',-1)">−</button>
-                                <span class="font-mono font-black text-white px-2" style="min-width:24px;text-align:center">${it.qty}</span>
+                                <span class="font-mono font-black text-white" style="min-width:30px;text-align:center;font-size:16px">${qty}</span>
                                 <button class="qty-btn" onclick="changeQty('${it.id}',1)">+</button>
                             </div>
-
-                            ${it.type !== 'direct' && it.status === 'running' ? `<button class="btn btn-ghost" style="padding:7px 12px;font-size:11px" onclick="pauseItem('${it.id}')">⏸ إيقاف</button>` : ''}
-                            ${it.type !== 'direct' && it.status === 'paused' ? `<button class="btn btn-ghost" style="padding:7px 12px;font-size:11px;color:#00FF9D;border-color:rgba(0,255,157,.3)" onclick="resumeItem('${it.id}')">▶ استئناف</button>` : ''}
-
-                            <button class="btn btn-ghost" style="padding:7px 12px;font-size:11px;color:#00FF9D;border-color:rgba(0,255,157,.3)" onclick="openEarly('${it.id}')">⚡ دفع</button>
-                            <button class="btn btn-ghost" style="padding:7px 12px;font-size:11px;color:#FF2E63;border-color:rgba(255,46,99,.3);margin-right:auto" onclick="removeItem('${it.id}')">🗑</button>
+                            ${it.type !== 'direct' && it.status === 'running' ? `<button class="btn btn-ghost" style="padding:8px 14px;font-size:11px" onclick="pauseItem('${it.id}')">⏸ إيقاف</button>` : ''}
+                            ${it.type !== 'direct' && it.status === 'paused' ? `<button class="btn btn-ghost" style="padding:8px 14px;font-size:11px;color:#00FF88;border-color:rgba(0,255,136,.4)" onclick="resumeItem('${it.id}')">▶ استئناف</button>` : ''}
+                            <button class="btn btn-ghost" style="padding:8px 14px;font-size:11px;color:#00FF88;border-color:rgba(0,255,136,.4)" onclick="openEarly('${it.id}')">⚡ دفع</button>
+                            <button class="btn btn-ghost" style="padding:8px 12px;font-size:11px;color:#FF0080;border-color:rgba(255,0,128,.4);margin-right:auto" onclick="removeItem('${it.id}')">🗑</button>
                         </div>
-
-                        ${(it.earlyPaid || 0) > 0 ? `
-                            <div class="mt-2 pt-2 flex justify-between text-xs" style="border-top:1px solid rgba(255,255,255,.05)">
-                                <span class="text-emerald">مدفوع مسبقاً:</span>
-                                <span class="font-mono font-bold text-emerald">${fmt(it.earlyPaid)} IQD</span>
-                            </div>
-                        ` : ''}
+                        ${(Number(it.early_paid) || 0) > 0 ? `<div class="mt-3 pt-3 flex justify-between text-xs" style="border-top:1px solid rgba(255,255,255,.05)"><span style="color:#00FF88">مدفوع مسبقاً:</span><span class="font-mono font-bold" style="color:#00FF88">${fmt(it.early_paid)} IQD</span></div>` : ''}
                     </div>
                 `;
             }).join('');
         }
-
         const tot = tableTotals(t);
-        $('#sum-subtotal').textContent = fmt(tot.sub) + ' IQD';
-        $('#sum-early').textContent = fmt(tot.early) + ' IQD';
-        $('#sum-discount').textContent = '-' + fmt(tot.disc) + ' IQD';
-        $('#sum-final').textContent = fmt(tot.final);
+        $('#d-sum-sub').textContent = fmt(tot.sub) + ' IQD';
+        $('#d-sum-early').textContent = fmt(tot.early) + ' IQD';
+        $('#d-sum-disc').textContent = '-' + fmt(tot.disc) + ' IQD';
+        $('#d-sum-final').textContent = fmt(tot.final);
     }
-    function updateTableCustomer(v) {
+
+    async function updateTableCustomer(v) {
         const t = currentTable(); if (!t) return;
-        t.customer = v.trim();
-        save();
-        $('#table-modal-customer').textContent = (t.customer || 'GUEST').toUpperCase();
+        v = v.trim();
+        if (v === (t.customer || '')) return;
+        t.customer = v;
+        await DB.exec('UPDATE tables_ SET customer=? WHERE id=?', [v, t.id]);
+        $('#detail-table-customer').textContent = (v || 'GUEST').toUpperCase();
     }
-    function updateTableDiscount(v) {
+    async function updateTableDiscount(v) {
         const t = currentTable(); if (!t) return;
         t.discount = Math.max(0, Number(v) || 0);
-        save();
-        renderTableItems();
+        await DB.exec('UPDATE tables_ SET discount=? WHERE id=?', [t.discount, t.id]);
+        renderTableDetail();
     }
-    function changeQty(id, delta) {
+    async function changeQty(id, delta) {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === id); if (!it) return;
-        it.qty = Math.max(1, (it.qty || 1) + delta);
-        save();
-        renderTableItems();
+        const items = itemsForTable(t.id);
+        const it = items.find(i => i.id === id); if (!it) return;
+        it.qty = Math.max(1, (Number(it.qty) || 1) + delta);
+        await DB.exec('UPDATE items SET qty=? WHERE id=?', [it.qty, it.id]);
+        renderTableDetail();
     }
-    function pauseItem(id) {
+    async function pauseItem(id) {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === id); if (!it || it.status !== 'running') return;
-        it.sessionElapsed = itemElapsed(it);
+        const items = itemsForTable(t.id);
+        const it = items.find(i => i.id === id); if (!it || it.status !== 'running') return;
+        it.session_elapsed = itemElapsed(it);
         it.status = 'paused';
-        it.pausedAt = now();
-        save();
-        renderTableItems();
+        it.paused_at = now();
+        await DB.exec('UPDATE items SET session_elapsed=?, status=?, paused_at=? WHERE id=?', [it.session_elapsed, 'paused', it.paused_at, it.id]);
+        renderTableDetail();
     }
-    function resumeItem(id) {
+    async function resumeItem(id) {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === id); if (!it || it.status !== 'paused') return;
-        it.startedAt = now();
-        it.pausedTotal = 0;
+        const items = itemsForTable(t.id);
+        const it = items.find(i => i.id === id); if (!it || it.status !== 'paused') return;
+        it.started_at = now();
+        it.paused_total = 0;
         it.status = 'running';
-        save();
-        renderTableItems();
+        await DB.exec('UPDATE items SET started_at=?, paused_total=0, status=? WHERE id=?', [it.started_at, 'running', it.id]);
+        renderTableDetail();
     }
-    function removeItem(id) {
+    async function removeItem(id) {
         const t = currentTable(); if (!t) return;
-        if (!confirm('حذف هذا الصنف؟')) return;
-        t.items = t.items.filter(i => i.id !== id);
-        save();
-        renderTableItems();
-        toast('تم الحذف', 'warn');
+        dialogConfirm('حذف هذا الصنف؟', async () => {
+            await DB.exec('DELETE FROM items WHERE id=?', [id]);
+            S._items = S._items.filter(i => i.id !== id);
+            renderTableDetail();
+            toast('تم الحذف', 'warn');
+        });
     }
 
     /* ============ Product Picker ============ */
@@ -1678,70 +1057,48 @@ select.inp option { background: #0a0a18; color: #fff; }
         renderPicker();
         openModal('modal-picker');
     }
-    function pickerBack() {
-        S.pickerCatId = null;
-        renderPicker();
-    }
-    function pickerSelectCat(catId) {
-        S.pickerCatId = catId;
-        renderPicker();
-    }
+    function pickerBack() { S.pickerCatId = null; renderPicker(); }
+    function pickerSelectCat(catId) { S.pickerCatId = catId; renderPicker(); }
     function renderPicker() {
         const body = $('#picker-body');
         const title = $('#picker-title');
         const sub = $('#picker-subtitle');
         const backBtn = $('#picker-back');
-
         if (!S.pickerCatId) {
             title.textContent = 'اختر القسم';
             sub.textContent = 'اضغط على القسم لعرض الأصناف';
             backBtn.classList.add('hidden');
-            if (S.categories.length === 0) {
-                body.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#6B7280;font-size:13px">لا توجد أقسام. أضف قسماً أولاً من المنيو</div>`;
-                return;
-            }
-            body.innerHTML = S.categories.map(c => `
-                <div class="cat-card" onclick="pickerSelectCat('${c.id}')">
-                    <div style="font-size:36px;margin-bottom:8px">${c.icon}</div>
-                    <div class="font-black text-white text-sm">${escapeHtml(c.name)}</div>
-                    <div class="text-[10px] text-gray-500 mt-1 font-mono">${S.products.filter(p => p.catId === c.id).length} صنف</div>
-                </div>
-            `).join('');
+            if (S.categories.length === 0) { body.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#6b6b80">لا توجد أقسام</div>`; return; }
+            body.innerHTML = S.categories.map(c => `<div class="cat-card" onclick="pickerSelectCat('${c.id}')"><div style="font-size:40px;margin-bottom:10px">${c.icon}</div><div class="font-black text-white">${escapeHtml(c.name)}</div><div class="text-[10px] mt-1 font-mono" style="color:#6b6b80">${S.products.filter(p => p.cat_id === c.id).length} صنف</div></div>`).join('');
         } else {
             const cat = S.categories.find(c => c.id === S.pickerCatId);
             title.textContent = cat ? cat.name : 'الأصناف';
-            sub.textContent = 'اضغط على الصنف لإضافته للطاولة';
+            sub.textContent = 'اضغط على الصنف لإضافته';
             backBtn.classList.remove('hidden');
-            const prods = S.products.filter(p => p.catId === S.pickerCatId);
-            if (prods.length === 0) {
-                body.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#6B7280;font-size:13px">لا توجد أصناف في هذا القسم</div>`;
-                return;
-            }
-            body.innerHTML = prods.map(p => `
-                <div class="cat-card" onclick="pickerAddProduct('${p.id}')">
-                    <div style="font-size:32px;margin-bottom:8px">${p.icon}</div>
-                    <div class="font-black text-white text-xs">${escapeHtml(p.name)}</div>
-                    <div class="font-mono font-black text-cyan text-sm mt-2">${fmt(p.price)}</div>
-                    <div class="text-[9px] text-gray-500 mt-1">${p.type === 'direct' ? 'مباشر' : p.type === 'countdown' ? p.duration + ' دقيقة' : 'مفتوح/ساعة'}</div>
-                </div>
-            `).join('');
+            const prods = S.products.filter(p => p.cat_id === S.pickerCatId);
+            if (prods.length === 0) { body.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#6b6b80">لا توجد أصناف</div>`; return; }
+            body.innerHTML = prods.map(p => `<div class="cat-card" onclick="pickerAddProduct('${p.id}')"><div style="font-size:36px;margin-bottom:8px">${p.icon || '📦'}</div><div class="font-black text-white text-xs">${escapeHtml(p.name)}</div><div class="font-mono font-black text-sm mt-2" style="color:#00FFFF;text-shadow:0 0 12px rgba(0,255,255,.5)">${fmt(p.price)}</div><div class="text-[9px] mt-1" style="color:#6b6b80">${p.type === 'direct' ? 'مباشر' : p.type === 'countdown' ? p.duration + ' دقيقة' : 'مفتوح/ساعة'}</div></div>`).join('');
         }
     }
-    function pickerAddProduct(pid) {
+    async function pickerAddProduct(pid) {
         const p = S.products.find(x => x.id === pid);
         const t = currentTable();
         if (!p || !t) return;
-        t.items.push({
-            id: uid(), productId: p.id, name: p.name, icon: p.icon,
-            type: p.type, price: p.price, duration: p.duration || 0,
-            qty: 1, startedAt: now(), pausedAt: null, pausedTotal: 0,
-            sessionElapsed: 0, earlyPaid: 0,
+        const itId = uid();
+        const item = {
+            id: itId, site_id: SITE_ID, table_id: t.id,
+            name: p.name, icon: p.icon, type: p.type,
+            price: Number(p.price) || 0,
+            duration: Number(p.duration) || 0,
+            qty: 1, started_at: now(), paused_at: null, paused_total: 0,
+            session_elapsed: 0, early_paid: 0,
             status: p.type === 'direct' ? 'done' : 'running'
-        });
-        save();
-        renderTableItems();
+        };
+        await DB.exec('INSERT INTO items (id,site_id,table_id,name,icon,type,price,duration,qty,started_at,paused_at,paused_total,session_elapsed,early_paid,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [item.id, item.site_id, item.table_id, item.name, item.icon, item.type, item.price, item.duration, item.qty, item.started_at, item.paused_at, item.paused_total, item.session_elapsed, item.early_paid, item.status]);
+        (S._items = S._items || []).push(item);
+        renderTableDetail();
         toast('تمت إضافة "' + p.name + '"', 'success', 1200);
-        // نرجع لشاشة الأقسام تلقائياً للإضافة السريعة
         S.pickerCatId = null;
         renderPicker();
     }
@@ -1749,10 +1106,10 @@ select.inp option { background: #0a0a18; color: #fff; }
     /* ============ Early Payment ============ */
     function openEarly(id) {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === id); if (!it) return;
+        const it = itemsForTable(t.id).find(i => i.id === id); if (!it) return;
         S.earlyItemId = id;
         const total = itemTotal(it);
-        const paid = it.earlyPaid || 0;
+        const paid = Number(it.early_paid) || 0;
         const rem = Math.max(0, total - paid);
         $('#early-name').textContent = it.name;
         $('#early-total').textContent = fmt(total) + ' IQD';
@@ -1763,37 +1120,41 @@ select.inp option { background: #0a0a18; color: #fff; }
     }
     function quickPayOne() {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === S.earlyItemId); if (!it) return;
+        const it = itemsForTable(t.id).find(i => i.id === S.earlyItemId); if (!it) return;
         const total = itemTotal(it);
-        const paid = it.earlyPaid || 0;
+        const paid = Number(it.early_paid) || 0;
         const rem = Math.max(0, total - paid);
-        $('#early-amount').value = Math.min(it.price, rem);
+        $('#early-amount').value = Math.min(Number(it.price) || 0, rem);
     }
     function quickPayAll() {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === S.earlyItemId); if (!it) return;
+        const it = itemsForTable(t.id).find(i => i.id === S.earlyItemId); if (!it) return;
         const total = itemTotal(it);
-        const paid = it.earlyPaid || 0;
+        const paid = Number(it.early_paid) || 0;
         $('#early-amount').value = Math.max(0, total - paid);
     }
-    function confirmEarly() {
+    async function confirmEarly() {
         const t = currentTable(); if (!t) return;
-        const it = t.items.find(i => i.id === S.earlyItemId); if (!it) return;
+        const it = itemsForTable(t.id).find(i => i.id === S.earlyItemId); if (!it) return;
         const amount = Math.max(0, Number($('#early-amount').value) || 0);
         const total = itemTotal(it);
-        const paid = it.earlyPaid || 0;
+        const paid = Number(it.early_paid) || 0;
         const rem = Math.max(0, total - paid);
-        if (amount <= 0) { toast('أدخل مبلغاً صحيحاً', 'error'); return; }
+        if (amount <= 0) { toast('أدخل مبلغاً', 'error'); return; }
         if (amount > rem) { toast('المبلغ أكبر من المتبقي', 'error'); return; }
-        it.earlyPaid = paid + amount;
+        it.early_paid = paid + amount;
         S.revenue.daily += amount;
-        save();
+        await DB.tursoBatch([
+            { sql: 'UPDATE items SET early_paid=? WHERE id=?', args: [it.early_paid, it.id] },
+            { sql: 'UPDATE revenue SET daily=? WHERE site_id=?', args: [S.revenue.daily, SITE_ID] }
+        ]);
+        await log('EARLY_PAY', `${it.name} +${amount}`);
         closeModal('modal-early');
-        renderTableItems();
+        renderTableDetail();
         toast('تم استلام ' + fmt(amount) + ' IQD', 'success');
     }
 
-    /* ============ Checkout ============ */
+    /* ============ Checkout (with auto-debt naming) ============ */
     function openCheckout() {
         const t = currentTable(); if (!t) return;
         const tot = tableTotals(t);
@@ -1809,38 +1170,47 @@ select.inp option { background: #0a0a18; color: #fff; }
         const debt = Math.max(0, tot.final - paid);
         $('#co-debt').value = fmt(debt) + ' IQD';
     }
-    function confirmCheckout() {
+    async function confirmCheckout() {
         const t = currentTable(); if (!t) return;
         const tot = tableTotals(t);
         const paid = Math.max(0, Math.min(tot.final, Number($('#co-paid').value) || 0));
         const debt = Math.max(0, tot.final - paid);
 
-        const inv = {
-            id: 'INV-' + Date.now().toString().slice(-7),
-            tableName: t.name,
-            customer: t.customer || 'زبون عام',
-            total: tot.final,
-            paid, debt,
-            date: new Date().toISOString(),
-            items: t.items.map(i => ({ name: i.name, qty: i.qty, price: i.price, total: itemTotal(i) }))
-        };
-        S.invoices.unshift(inv);
-        S.revenue.daily += paid;
+        // ✅ اسم الدين تلقائياً من اسم الزبون (أو اسم الطاولة إذا ماكو زبون)
+        const debtCustomer = (t.customer || '').trim() || t.name;
 
+        const items = itemsForTable(t.id);
+        const invId = 'INV-' + Date.now().toString().slice(-7);
+        const date = new Date().toISOString();
+
+        const invItems = items.map(i => ({ name: i.name, qty: i.qty, price: i.price, total: itemTotal(i) }));
+
+        const stmts = [
+            { sql: 'INSERT INTO invoices (id,site_id,table_name,customer,total,paid,debt,date,items_json) VALUES (?,?,?,?,?,?,?,?,?)',
+              args: [invId, SITE_ID, t.name, t.customer || 'زبون عام', tot.final, paid, debt, date, JSON.stringify(invItems)] },
+            { sql: 'DELETE FROM items WHERE table_id=?', args: [t.id] },
+            { sql: 'DELETE FROM tables_ WHERE id=?', args: [t.id] },
+            { sql: 'UPDATE revenue SET daily=? WHERE site_id=?', args: [S.revenue.daily + paid, SITE_ID] }
+        ];
         if (debt > 0) {
-            S.debts.unshift({
-                id: uid(), customer: t.customer || 'زبون عام',
-                amount: debt, paid: 0, tableName: t.name,
-                date: new Date().toISOString(), status: 'unpaid', invoiceId: inv.id
+            stmts.push({
+                sql: 'INSERT INTO debts (id,site_id,customer,amount,paid,table_name,date,status) VALUES (?,?,?,?,?,?,?,?)',
+                args: [uid(), SITE_ID, debtCustomer, debt, 0, t.name, date, 'unpaid']
             });
         }
+        await DB.tursoBatch(stmts);
+
+        S.revenue.daily += paid;
+        S._items = S._items.filter(i => i.table_id !== t.id);
         S.tables = S.tables.filter(x => x.id !== t.id);
+        S.invoices.unshift({ id: invId, site_id: SITE_ID, table_name: t.name, customer: t.customer || 'زبون عام', total: tot.final, paid, debt, date, items: invItems });
+        if (debt > 0) S.debts.unshift({ id: uid(), site_id: SITE_ID, customer: debtCustomer, amount: debt, paid: 0, table_name: t.name, date, status: 'unpaid' });
+
+        await log('CHECKOUT', `${t.name} - paid ${paid} debt ${debt} (${debtCustomer})`);
         S.activeTableId = null;
-        save();
         closeModal('modal-checkout');
-        closeModal('modal-table');
         switchView('invoices');
-        toast(debt > 0 ? 'دفع ' + fmt(paid) + ' + دين ' + fmt(debt) : 'تم إغلاق الحساب', 'success');
+        toast(debt > 0 ? `دفع ${fmt(paid)} + دين على "${debtCustomer}" ${fmt(debt)}` : 'تم إغلاق الحساب', 'success', 3500);
     }
 
     /* ============ Transfer ============ */
@@ -1848,37 +1218,41 @@ select.inp option { background: #0a0a18; color: #fff; }
         const t = currentTable(); if (!t) return;
         const others = S.tables.filter(x => x.id !== t.id);
         const sel = $('#transfer-select');
-        if (others.length === 0) {
-            sel.innerHTML = '<option value="">لا توجد طاولات أخرى</option>';
-        } else {
-            sel.innerHTML = others.map(o => `<option value="${o.id}">${escapeHtml(o.name)}${o.customer ? ' — ' + escapeHtml(o.customer) : ''}</option>`).join('');
-        }
+        if (others.length === 0) sel.innerHTML = '<option value="">لا توجد طاولات أخرى</option>';
+        else sel.innerHTML = others.map(o => `<option value="${o.id}">${escapeHtml(o.name)}${o.customer ? ' — ' + escapeHtml(o.customer) : ''}</option>`).join('');
         openModal('modal-transfer');
     }
-    function confirmTransfer() {
+    async function confirmTransfer() {
         const t = currentTable(); if (!t) return;
         const tid = $('#transfer-select').value;
         const target = S.tables.find(x => x.id === tid);
         if (!target) { toast('اختر طاولة صحيحة', 'error'); return; }
-        target.items = target.items.concat(t.items);
+        await DB.exec('UPDATE items SET table_id=? WHERE table_id=?', [target.id, t.id]);
+        await DB.tursoBatch([
+            { sql: 'UPDATE tables_ SET discount=discount+? WHERE id=?', args: [t.discount || 0, target.id] },
+            { sql: 'DELETE FROM tables_ WHERE id=?', args: [t.id] }
+        ]);
+        S._items.forEach(i => { if (i.table_id === t.id) i.table_id = target.id; });
         target.discount = (target.discount || 0) + (t.discount || 0);
         if (t.customer && !target.customer) target.customer = t.customer;
         S.tables = S.tables.filter(x => x.id !== t.id);
         S.activeTableId = target.id;
-        save();
         closeModal('modal-transfer');
-        $('#table-modal-name').textContent = target.name;
-        $('#table-modal-customer').textContent = (target.customer || 'GUEST').toUpperCase();
-        renderTableItems();
+        renderTableDetail();
         toast('تم الدمج مع "' + target.name + '"', 'success');
     }
     function deleteCurrentTable() {
-        S.tables = S.tables.filter(x => x.id !== S.activeTableId);
-        S.activeTableId = null;
-        save();
-        closeModal('modal-table');
-        renderTables();
-        toast('تم إلغاء الطاولة', 'warn');
+        dialogConfirm('إلغاء الطاولة وحذفها؟', async () => {
+            await DB.tursoBatch([
+                { sql: 'DELETE FROM items WHERE table_id=?', args: [S.activeTableId] },
+                { sql: 'DELETE FROM tables_ WHERE id=?', args: [S.activeTableId] }
+            ]);
+            S._items = S._items.filter(i => i.table_id !== S.activeTableId);
+            S.tables = S.tables.filter(x => x.id !== S.activeTableId);
+            S.activeTableId = null;
+            switchView('tables');
+            toast('تم إلغاء الطاولة', 'warn');
+        });
     }
 
     /* ============ Debts ============ */
@@ -1888,65 +1262,60 @@ select.inp option { background: #0a0a18; color: #fff; }
         const q = ($('#search-debts')?.value || '').toLowerCase().trim();
         let list = S.debts.slice();
         if (q) list = list.filter(d => (d.customer || '').toLowerCase().includes(q));
-
         if (list.length === 0) {
-            grid.innerHTML = `
-                <div class="glass p-10 text-center" style="grid-column:1/-1">
-                    <div style="font-size:52px;margin-bottom:12px">📒</div>
-                    <h3 class="text-lg font-black text-white mb-1">لا توجد ديون</h3>
-                    <p class="text-gray-400 text-sm">كل الحسابات مسددة ✅</p>
-                </div>`;
+            grid.innerHTML = `<div class="glass p-10 text-center" style="grid-column:1/-1"><div style="font-size:56px;margin-bottom:14px">📒</div><h3 class="text-xl font-black text-white mb-1">لا توجد ديون</h3><p class="text-gray-400 text-sm">كل الحسابات مسددة ✅</p></div>`;
             return;
         }
         grid.innerHTML = list.map(d => {
-            const rem = Math.max(0, d.amount - (d.paid || 0));
+            const rem = Math.max(0, Number(d.amount) - (Number(d.paid) || 0));
             const paidFull = rem <= 0;
             return `
                 <div class="debt-card ${paidFull ? 'paid' : ''}">
                     <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h3 class="font-black text-white">${escapeHtml(d.customer)}</h3>
-                            <p class="text-[10px] text-gray-400 mt-1 font-mono">${escapeHtml(d.tableName)} • ${dateStr(d.date)}</p>
-                        </div>
+                        <div><h3 class="font-black text-white text-base">${escapeHtml(d.customer)}</h3><p class="text-[10px] text-gray-400 mt-1 font-mono">${escapeHtml(d.table_name || '')} • ${dateStr(d.date)}</p></div>
                         <span class="badge ${paidFull ? 'badge-live' : 'badge-expired'}">${paidFull ? 'مسدد' : 'غير مسدد'}</span>
                     </div>
-                    <div class="space-y-1.5 mb-4 text-xs">
+                    <div class="space-y-2 mb-4 text-xs">
                         <div class="flex justify-between"><span class="text-gray-400">الأصلي:</span><span class="font-mono font-bold text-white">${fmt(d.amount)}</span></div>
-                        <div class="flex justify-between"><span class="text-gray-400">المدفوع:</span><span class="font-mono font-bold text-emerald">${fmt(d.paid || 0)}</span></div>
-                        <div class="flex justify-between"><span class="text-gray-400">المتبقي:</span><span class="font-mono font-bold text-rose" style="font-size:15px">${fmt(rem)}</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">المدفوع:</span><span class="font-mono font-bold" style="color:#00FF88">${fmt(d.paid || 0)}</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">المتبقي:</span><span class="font-mono font-bold" style="color:#FF0080;font-size:15px">${fmt(rem)}</span></div>
                     </div>
-                    ${!paidFull ? `
-                        <div class="flex gap-2">
-                            <button class="btn btn-success flex-1" style="padding:9px;font-size:12px" onclick="payDebt('${d.id}')">💵 تسديد</button>
-                            <button class="btn btn-ghost" style="padding:9px;font-size:12px" onclick="payDebtFull('${d.id}')">كامل</button>
-                        </div>
-                    ` : `<div class="text-center text-xs text-emerald font-bold py-2">✓ تم التسديد</div>`}
+                    ${!paidFull ? `<div class="flex gap-2"><button class="btn btn-success flex-1" style="padding:10px;font-size:12px" onclick="payDebt('${d.id}')">💵 تسديد</button><button class="btn btn-ghost" style="padding:10px;font-size:12px" onclick="payDebtFull('${d.id}')">كامل</button></div>` : `<div class="text-center text-xs font-bold py-2" style="color:#00FF88">✓ تم التسديد</div>`}
                 </div>`;
         }).join('');
     }
     function payDebt(id) {
         const d = S.debts.find(x => x.id === id); if (!d) return;
-        const rem = d.amount - (d.paid || 0);
-        const amt = prompt(`المتبقي: ${fmt(rem)} IQD\nأدخل المبلغ:`, rem);
-        if (amt === null) return;
-        const n = Math.max(0, Math.min(rem, Number(amt) || 0));
-        if (n <= 0) { toast('مبلغ غير صحيح', 'error'); return; }
-        d.paid = (d.paid || 0) + n;
-        if (d.paid >= d.amount) d.status = 'paid';
-        S.revenue.daily += n;
-        save();
-        renderDebts();
-        toast('تم استلام ' + fmt(n) + ' IQD', 'success');
+        const rem = Number(d.amount) - (Number(d.paid) || 0);
+        dialogPrompt('تسديد جزئي', `المتبقي: ${fmt(rem)} IQD`, rem, async (val) => {
+            const n = Math.max(0, Math.min(rem, Number(val) || 0));
+            if (n <= 0) { toast('مبلغ غير صحيح', 'error'); return; }
+            d.paid = (Number(d.paid) || 0) + n;
+            if (d.paid >= d.amount) d.status = 'paid';
+            S.revenue.daily += n;
+            await DB.tursoBatch([
+                { sql: 'UPDATE debts SET paid=?, status=? WHERE id=?', args: [d.paid, d.status, d.id] },
+                { sql: 'UPDATE revenue SET daily=? WHERE site_id=?', args: [S.revenue.daily, SITE_ID] }
+            ]);
+            await log('DEBT_PAY', `${d.customer} +${n}`);
+            renderDebts();
+            toast('تم استلام ' + fmt(n) + ' IQD', 'success');
+        });
     }
     function payDebtFull(id) {
         const d = S.debts.find(x => x.id === id); if (!d) return;
-        const rem = d.amount - (d.paid || 0);
-        if (!confirm('تسديد كلي: ' + fmt(rem) + ' IQD؟')) return;
-        d.paid = d.amount; d.status = 'paid';
-        S.revenue.daily += rem;
-        save();
-        renderDebts();
-        toast('تم التسديد', 'success');
+        const rem = Number(d.amount) - (Number(d.paid) || 0);
+        dialogConfirm('تسديد كلي: ' + fmt(rem) + ' IQD؟', async () => {
+            d.paid = d.amount; d.status = 'paid';
+            S.revenue.daily += rem;
+            await DB.tursoBatch([
+                { sql: 'UPDATE debts SET paid=?, status=? WHERE id=?', args: [d.paid, d.status, d.id] },
+                { sql: 'UPDATE revenue SET daily=? WHERE site_id=?', args: [S.revenue.daily, SITE_ID] }
+            ]);
+            await log('DEBT_PAY_FULL', `${d.customer} +${rem}`);
+            renderDebts();
+            toast('تم التسديد', 'success');
+        });
     }
 
     /* ============ Invoices ============ */
@@ -1954,38 +1323,55 @@ select.inp option { background: #0a0a18; color: #fff; }
         const tbody = $('#invoices-body');
         if (!tbody) return;
         if (S.invoices.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;text-align:center;color:#6B7280;font-size:13px">لا توجد فواتير</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;text-align:center;color:#6b6b80;font-size:13px">لا توجد فواتير</td></tr>`;
             return;
         }
         tbody.innerHTML = S.invoices.map(inv => `
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
-                <td class="p-4 font-mono font-bold text-cyan text-xs">${inv.id}</td>
-                <td class="p-4 font-bold text-white text-sm">${escapeHtml(inv.tableName)}</td>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer" onclick="openInvoice('${inv.id}')">
+                <td class="p-4 font-mono font-bold text-xs" style="color:#00FFFF">${inv.id}</td>
+                <td class="p-4 font-bold text-white text-sm">${escapeHtml(inv.table_name)}</td>
                 <td class="p-4 text-gray-300 text-xs">${escapeHtml(inv.customer)}</td>
                 <td class="p-4 font-mono font-black text-white">${fmt(inv.total)}</td>
-                <td class="p-4">
-                    ${inv.debt > 0
-                        ? `<span class="badge badge-expired">دين ${fmt(inv.debt)}</span>`
-                        : `<span class="badge badge-live">مسدد</span>`}
-                </td>
+                <td class="p-4">${inv.debt > 0 ? `<span class="badge badge-expired">دين ${fmt(inv.debt)}</span>` : `<span class="badge badge-live">مسدد</span>`}</td>
                 <td class="p-4 text-[11px] text-gray-400 font-mono">${dateStr(inv.date)}</td>
-                <td class="p-4">
-                    <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px" onclick="printInv('${inv.id}')">🖨</button>
-                </td>
+                <td class="p-4"><button class="btn btn-ghost" style="padding:6px 12px;font-size:11px" onclick="event.stopPropagation();printInv('${inv.id}')">🖨</button></td>
             </tr>
         `).join('');
     }
+    let invModalId = null;
+    function openInvoice(id) {
+        const inv = S.invoices.find(x => x.id === id); if (!inv) return;
+        invModalId = id;
+        $('#inv-modal-id').textContent = inv.id;
+        $('#inv-modal-table').textContent = inv.table_name || '—';
+        $('#inv-modal-customer').textContent = inv.customer || '—';
+        $('#inv-modal-date').textContent = dateStr(inv.date);
+        $('#inv-modal-status').innerHTML = inv.debt > 0 ? `<span class="badge badge-expired">دين ${fmt(inv.debt)}</span>` : `<span class="badge badge-live">مسدد</span>`;
+        const items = inv.items || [];
+        $('#inv-modal-items').innerHTML = items.length === 0 ? '<div class="text-center text-gray-500 text-sm py-4">لا توجد تفاصيل</div>' : items.map(i => `
+            <div class="flex justify-between items-center p-3" style="background:rgba(0,0,0,.3);border-radius:12px;border:1px solid rgba(255,255,255,.05)">
+                <div><div class="font-bold text-white text-sm">${escapeHtml(i.name)}</div><div class="text-[10px] text-gray-500 font-mono">${i.qty} × ${fmt(i.price)}</div></div>
+                <div class="font-mono font-bold" style="color:#00FFFF">${fmt(i.total)}</div>
+            </div>
+        `).join('');
+        $('#inv-modal-total').textContent = fmt(inv.total) + ' IQD';
+        $('#inv-modal-paid').textContent = fmt(inv.paid) + ' IQD';
+        $('#inv-modal-debt').textContent = fmt(inv.debt) + ' IQD';
+        openModal('modal-invoice');
+    }
+    function printInvFromModal() { if (invModalId) printInv(invModalId); }
     function printInv(id) {
         const inv = S.invoices.find(x => x.id === id); if (!inv) return;
+        const items = inv.items || [];
         const w = window.open('', '_blank');
-        w.document.write(`<html dir="rtl"><head><title>${inv.id}</title><style>body{font-family:Tahoma;padding:30px;color:#000}h1{text-align:center;color:#8B5CF6}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #ccc;padding:10px;text-align:right}th{background:#f0f0f0}</style></head><body><h1>716QX NEXUS</h1><p><b>رقم الفاتورة:</b> ${inv.id}</p><p><b>الطاولة:</b> ${inv.tableName}</p><p><b>الزبون:</b> ${inv.customer}</p><p><b>التاريخ:</b> ${dateStr(inv.date)}</p><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>${inv.items.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td><td>${fmt(i.price)}</td><td>${fmt(i.total)}</td></tr>`).join('')}</tbody></table><h3>الإجمالي: ${fmt(inv.total)} IQD</h3><h3>المدفوع: ${fmt(inv.paid)} IQD</h3><h3>الدين: ${fmt(inv.debt)} IQD</h3></body></html>`);
+        w.document.write(`<html dir="rtl"><head><title>${inv.id}</title><style>body{font-family:Tahoma;padding:30px;color:#000}h1{text-align:center;color:#8B5CF6}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #ccc;padding:10px;text-align:right}th{background:#f0f0f0}</style></head><body><h1>${escapeHtml(SITE_NAME)}</h1><p><b>رقم الفاتورة:</b> ${inv.id}</p><p><b>الطاولة:</b> ${escapeHtml(inv.table_name)}</p><p><b>الزبون:</b> ${escapeHtml(inv.customer)}</p><p><b>التاريخ:</b> ${dateStr(inv.date)}</p><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>${items.map(i => `<tr><td>${escapeHtml(i.name)}</td><td>${i.qty}</td><td>${fmt(i.price)}</td><td>${fmt(i.total)}</td></tr>`).join('')}</tbody></table><h3>الإجمالي: ${fmt(inv.total)} IQD</h3><h3>المدفوع: ${fmt(inv.paid)} IQD</h3><h3>الدين: ${fmt(inv.debt)} IQD</h3></body></html>`);
         w.document.close();
         setTimeout(() => w.print(), 400);
     }
     function exportCSV() {
         if (S.invoices.length === 0) { toast('لا توجد فواتير', 'warn'); return; }
         const rows = [['ID', 'Table', 'Customer', 'Total', 'Paid', 'Debt', 'Date']];
-        S.invoices.forEach(inv => rows.push([inv.id, inv.tableName, inv.customer, inv.total, inv.paid, inv.debt, dateStr(inv.date)]));
+        S.invoices.forEach(inv => rows.push([inv.id, inv.table_name, inv.customer, inv.total, inv.paid, inv.debt, dateStr(inv.date)]));
         const csv = '\uFEFF' + rows.map(r => r.map(x => `"${x}"`).join(',')).join('\n');
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
@@ -1993,88 +1379,80 @@ select.inp option { background: #0a0a18; color: #fff; }
         a.click();
         toast('تم التصدير', 'success');
     }
-    function clearInvoices() {
+    async function clearInvoices() {
+        await DB.exec('DELETE FROM invoices WHERE site_id=?', [SITE_ID]);
         S.invoices = [];
-        save();
         renderInvoices();
         toast('تم المسح', 'warn');
     }
 
-    /* ============ Menu Management ============ */
+    /* ============ Menu ============ */
     function renderMenu() {
         const container = $('#menu-container');
         if (!container) return;
         if (S.categories.length === 0) {
-            container.innerHTML = `<div class="glass p-10 text-center"><div style="font-size:52px;margin-bottom:12px">📋</div><p class="text-gray-400">لا توجد أقسام. أضف قسماً جديداً</p></div>`;
+            container.innerHTML = `<div class="glass p-10 text-center"><div style="font-size:56px;margin-bottom:14px">📋</div><p class="text-gray-400">لا توجد أقسام</p></div>`;
             return;
         }
         container.innerHTML = S.categories.map(c => {
-            const prods = S.products.filter(p => p.catId === c.id);
+            const prods = S.products.filter(p => p.cat_id === c.id);
             return `
-                <div class="glass p-5">
+                <div class="glass" style="padding:22px">
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-3">
-                            <div style="font-size:28px">${c.icon}</div>
-                            <div>
-                                <h3 class="text-lg font-black text-white">${escapeHtml(c.name)}</h3>
-                                <p class="text-[10px] text-gray-500 font-mono">${prods.length} ITEMS</p>
-                            </div>
+                            <div style="font-size:30px">${c.icon}</div>
+                            <div><h3 class="text-lg font-black text-white">${escapeHtml(c.name)}</h3><p class="text-[10px] font-mono" style="color:#6b6b80">${prods.length} ITEMS</p></div>
                         </div>
-                        <button class="btn btn-ghost" style="padding:6px 12px;font-size:11px;color:#FF2E63;border-color:rgba(255,46,99,.3)" onclick="deleteCategory('${c.id}')">🗑 حذف</button>
+                        <button class="btn btn-ghost" style="padding:7px 14px;font-size:11px;color:#FF0080;border-color:rgba(255,0,128,.3)" onclick="deleteCategory('${c.id}')">🗑 حذف</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        ${prods.length === 0
-                            ? `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#6B7280;font-size:12px;border:1px dashed rgba(255,255,255,.08);border-radius:12px">لا توجد أصناف</div>`
-                            : prods.map(p => `
-                                <div class="flex items-center gap-3 p-3" style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.05);border-radius:14px">
-                                    <div style="font-size:22px">${p.icon}</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="font-bold text-white text-xs truncate">${escapeHtml(p.name)}</div>
-                                        <div class="text-[9px] text-gray-500 font-mono">${p.type === 'direct' ? 'DIRECT' : p.type === 'countdown' ? p.duration + 'MIN' : 'OPEN/H'}</div>
-                                    </div>
-                                    <div class="text-left flex flex-col items-end gap-1">
-                                        <div class="font-mono font-black text-cyan text-xs">${fmt(p.price)}</div>
-                                        <div class="flex gap-1">
-                                            <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px" onclick="openEditProduct('${p.id}')">✎</button>
-                                            <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;color:#FF2E63;border-color:rgba(255,46,99,.3)" onclick="deleteProduct('${p.id}')">✕</button>
-                                        </div>
+                        ${prods.length === 0 ? `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#6b6b80;font-size:12px;border:1px dashed rgba(255,255,255,.08);border-radius:12px">لا توجد أصناف</div>` : prods.map(p => `
+                            <div class="flex items-center gap-3 p-3" style="background:rgba(0,0,0,.35);border:1.5px solid rgba(255,255,255,.06);border-radius:14px">
+                                <div style="font-size:24px">${p.icon || '📦'}</div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-bold text-white text-xs truncate">${escapeHtml(p.name)}</div>
+                                    <div class="text-[9px] font-mono" style="color:#6b6b80">${p.type === 'direct' ? 'DIRECT' : p.type === 'countdown' ? p.duration + 'MIN' : 'OPEN/H'}</div>
+                                </div>
+                                <div class="text-left flex flex-col items-end gap-1">
+                                    <div class="font-mono font-black text-xs" style="color:#00FFFF">${fmt(p.price)}</div>
+                                    <div class="flex gap-1">
+                                        <button class="btn btn-ghost" style="padding:4px 10px;font-size:10px" onclick="openEditProduct('${p.id}')">✎</button>
+                                        <button class="btn btn-ghost" style="padding:4px 10px;font-size:10px;color:#FF0080;border-color:rgba(255,0,128,.3)" onclick="deleteProduct('${p.id}')">✕</button>
                                     </div>
                                 </div>
-                            `).join('')}
+                            </div>
+                        `).join('')}
                     </div>
                 </div>`;
         }).join('');
     }
 
-    function openAddCategoryModal() {
-        $('#cat-name').value = '';
-        $('#cat-icon').value = '📁';
-        openModal('modal-add-cat');
-    }
-    function confirmAddCategory() {
+    function openAddCategoryModal() { $('#cat-name').value = ''; $('#cat-icon').value = '📁'; openModal('modal-add-cat'); }
+    async function confirmAddCategory() {
         const name = $('#cat-name').value.trim();
         const icon = $('#cat-icon').value.trim() || '📁';
         if (!name) { toast('أدخل اسم القسم', 'error'); return; }
-        S.categories.push({ id: uid(), name, icon });
-        save();
+        const id = uid();
+        const pos = S.categories.length + 1;
+        await DB.exec('INSERT INTO categories (id,site_id,name,icon,position) VALUES (?,?,?,?,?)', [id, SITE_ID, name, icon, pos]);
+        S.categories.push({ id, site_id: SITE_ID, name, icon, position: pos });
         closeModal('modal-add-cat');
         renderMenu();
         toast('تمت إضافة "' + name + '"', 'success');
     }
     function deleteCategory(id) {
-        const prods = S.products.filter(p => p.catId === id);
-        if (prods.length > 0) {
-            if (!confirm('يوجد ' + prods.length + ' صنف في هذا القسم. سيُحذفون معه. متأكد؟')) return;
-        } else {
-            if (!confirm('حذف القسم؟')) return;
-        }
-        S.categories = S.categories.filter(c => c.id !== id);
-        S.products = S.products.filter(p => p.catId !== id);
-        save();
-        renderMenu();
-        toast('تم الحذف', 'warn');
+        const prods = S.products.filter(p => p.cat_id === id);
+        dialogConfirm(prods.length > 0 ? `يوجد ${prods.length} صنف سيُحذفون معه. متأكد؟` : 'حذف القسم؟', async () => {
+            await DB.tursoBatch([
+                { sql: 'DELETE FROM products WHERE cat_id=?', args: [id] },
+                { sql: 'DELETE FROM categories WHERE id=?', args: [id] }
+            ]);
+            S.categories = S.categories.filter(c => c.id !== id);
+            S.products = S.products.filter(p => p.cat_id !== id);
+            renderMenu();
+            toast('تم الحذف', 'warn');
+        });
     }
-
     function openAddProductModal() {
         S.editingProductId = null;
         $('#prod-modal-title').textContent = 'صنف جديد';
@@ -2091,12 +1469,12 @@ select.inp option { background: #0a0a18; color: #fff; }
         const p = S.products.find(x => x.id === id); if (!p) return;
         S.editingProductId = id;
         $('#prod-modal-title').textContent = 'تعديل الصنف';
-        $('#prod-cat').innerHTML = S.categories.map(c => `<option value="${c.id}" ${c.id === p.catId ? 'selected' : ''}>${c.icon} ${escapeHtml(c.name)}</option>`).join('');
+        $('#prod-cat').innerHTML = S.categories.map(c => `<option value="${c.id}" ${c.id === p.cat_id ? 'selected' : ''}>${c.icon} ${escapeHtml(c.name)}</option>`).join('');
         $('#prod-name').value = p.name;
         $('#prod-type').value = p.type;
         $('#prod-duration').value = p.duration || '';
         $('#prod-price').value = p.price;
-        $('#prod-icon').value = p.icon;
+        $('#prod-icon').value = p.icon || '📦';
         typeChanged();
         openModal('modal-add-prod');
     }
@@ -2104,64 +1482,49 @@ select.inp option { background: #0a0a18; color: #fff; }
         const t = $('#prod-type').value;
         const wrap = $('#prod-duration-wrap');
         const lbl = $('#prod-price-lbl');
-        if (t === 'countdown') {
-            wrap.classList.remove('hidden');
-            lbl.textContent = 'السعر الإجمالي (IQD)';
-        } else if (t === 'open') {
-            wrap.classList.add('hidden');
-            lbl.textContent = 'سعر الساعة (IQD)';
-        } else {
-            wrap.classList.add('hidden');
-            lbl.textContent = 'السعر (IQD)';
-        }
+        if (t === 'countdown') { wrap.classList.remove('hidden'); lbl.textContent = 'السعر الإجمالي (IQD)'; }
+        else if (t === 'open') { wrap.classList.add('hidden'); lbl.textContent = 'سعر الساعة (IQD)'; }
+        else { wrap.classList.add('hidden'); lbl.textContent = 'السعر (IQD)'; }
     }
-    function confirmSaveProduct() {
-        const catId = $('#prod-cat').value;
+    async function confirmSaveProduct() {
+        const cat_id = $('#prod-cat').value;
         const name = $('#prod-name').value.trim();
         const type = $('#prod-type').value;
         const duration = Number($('#prod-duration').value) || 0;
         const price = Number($('#prod-price').value) || 0;
         const icon = $('#prod-icon').value.trim() || '📦';
-
         if (!name) { toast('أدخل اسم الصنف', 'error'); return; }
         if (price <= 0) { toast('أدخل سعراً صحيحاً', 'error'); return; }
         if (type === 'countdown' && duration <= 0) { toast('أدخل مدة صحيحة', 'error'); return; }
 
         if (S.editingProductId) {
             const p = S.products.find(x => x.id === S.editingProductId);
-            if (p) {
-                p.catId = catId; p.name = name; p.icon = icon; p.type = type;
-                p.duration = type === 'countdown' ? duration : 0;
-                p.price = price;
-            }
+            await DB.exec('UPDATE products SET cat_id=?, name=?, icon=?, type=?, duration=?, price=? WHERE id=?',
+                [cat_id, name, icon, type, type === 'countdown' ? duration : 0, price, S.editingProductId]);
+            Object.assign(p, { cat_id, name, icon, type, duration: type === 'countdown' ? duration : 0, price });
         } else {
-            S.products.push({
-                id: uid(), catId, name, icon, type,
-                duration: type === 'countdown' ? duration : 0,
-                price
-            });
+            const id = uid();
+            await DB.exec('INSERT INTO products (id,site_id,cat_id,name,icon,type,duration,price) VALUES (?,?,?,?,?,?,?,?)',
+                [id, SITE_ID, cat_id, name, icon, type, type === 'countdown' ? duration : 0, price]);
+            S.products.push({ id, site_id: SITE_ID, cat_id, name, icon, type, duration: type === 'countdown' ? duration : 0, price });
         }
-        save();
         closeModal('modal-add-prod');
         renderMenu();
         toast('تم الحفظ', 'success');
     }
     function deleteProduct(id) {
-        if (!confirm('حذف هذا الصنف؟')) return;
-        S.products = S.products.filter(p => p.id !== id);
-        save();
-        renderMenu();
-        toast('تم الحذف', 'warn');
+        dialogConfirm('حذف هذا الصنف؟', async () => {
+            await DB.exec('DELETE FROM products WHERE id=?', [id]);
+            S.products = S.products.filter(p => p.id !== id);
+            renderMenu();
+            toast('تم الحذف', 'warn');
+        });
     }
 
-    /* ============ Escape HTML ============ */
     function escapeHtml(s) {
-        return String(s || '').replace(/[&<>"']/g, m => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        })[m]);
+        return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
     }
 
-    /* ============ Render All ============ */
     function renderAll() {
         renderDashboard();
         renderTables();
@@ -2170,12 +1533,9 @@ select.inp option { background: #0a0a18; color: #fff; }
         renderInvoices();
     }
 
-    /* ============ Live ticker ============ */
+    /* ============ Ticker ============ */
     setInterval(() => {
-        const m = $('#modal-table');
-        if (m && m.classList.contains('show')) {
-            renderTableItems();
-        }
+        if (S.activeView === 'table-detail' && S.activeTableId) renderTableDetail();
         if (S.activeView === 'tables') renderTables();
         if (S.activeView === 'dashboard') renderDashboard();
     }, 1000);
@@ -2183,123 +1543,175 @@ select.inp option { background: #0a0a18; color: #fff; }
     /* ============ Keyboard ============ */
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            ['modal-add-table', 'modal-table', 'modal-picker', 'modal-early', 'modal-checkout', 'modal-transfer', 'modal-add-cat', 'modal-add-prod'].forEach(id => closeModal(id));
+            ['modal-add-table', 'modal-picker', 'modal-early', 'modal-checkout', 'modal-transfer', 'modal-add-cat', 'modal-add-prod', 'modal-invoice'].forEach(id => closeModal(id));
             closeDrawer();
+            $('#dialog-bd').classList.remove('show');
         }
+        if (e.key === 'Enter' && $('#dialog-bd').classList.contains('show')) dialogOk();
     });
 
-    /* ============ Close modal on backdrop click ============ */
-    document.querySelectorAll('.modal-backdrop').forEach(m => {
-        m.addEventListener('click', e => {
-            if (e.target === m) {
-                if (m.id === 'modal-table') { closeTableModal(); }
-                else { m.classList.remove('show'); }
-            }
-        });
+    /* ============ Backdrop Close ============ */
+    document.querySelectorAll('.modal-bd').forEach(m => {
+        m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
     });
 
-    /* ============ 3D Background Particles ============ */
+    /* ================================================================
+       SPACE BACKGROUND
+       ================================================================ */
     (function () {
-        const canvas = document.getElementById('bg-canvas');
+        const canvas = document.getElementById('space-canvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let W = 0, H = 0;
-        let particles = [];
-        const COUNT = 45;
+        let stars = [], shooting = [];
+        const STAR_COUNT = 200;
         let mouse = { x: -9999, y: -9999 };
+        let tilt = { x: 0, y: 0 };
+        let current = { x: 0, y: 0 };
 
         function resize() {
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
-            particles = [];
-            for (let i = 0; i < COUNT; i++) particles.push(makeP());
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) stars.push(makeStar());
         }
-        function makeP() {
+        function makeStar() {
             return {
                 x: Math.random() * W,
                 y: Math.random() * H,
-                z: Math.random() * 1 + 0.3,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                r: Math.random() * 2 + 0.8,
-                c: ['#00E5FF', '#A855F7', '#00FF9D'][Math.floor(Math.random() * 3)]
+                z: Math.random() * 0.9 + 0.1,
+                r: Math.random() * 1.6 + 0.3,
+                c: ['#ffffff', '#a0e8ff', '#ffd0f0', '#d0ffe0'][Math.floor(Math.random() * 4)],
+                twinkle: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.02 + 0.005
             };
+        }
+        function spawnShooting() {
+            const fromLeft = Math.random() > 0.5;
+            shooting.push({
+                x: fromLeft ? -50 : W + 50,
+                y: Math.random() * H * 0.6,
+                vx: (fromLeft ? 1 : -1) * (Math.random() * 6 + 4),
+                vy: Math.random() * 2 + 1,
+                life: 1,
+                len: Math.random() * 100 + 80
+            });
         }
         function loop() {
             ctx.clearRect(0, 0, W, H);
+            current.x += (tilt.x - current.x) * 0.06;
+            current.y += (tilt.y - current.y) * 0.06;
 
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const d = Math.hypot(dx, dy);
-                    if (d < 150) {
-                        ctx.strokeStyle = 'rgba(0,229,255,' + (0.08 * (1 - d / 150)) + ')';
-                        ctx.lineWidth = 0.6;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
+            // Stars
+            stars.forEach(s => {
+                s.twinkle += s.speed;
+                const alpha = 0.5 + Math.sin(s.twinkle) * 0.4;
 
-            particles.forEach(p => {
-                const dx = p.x - mouse.x;
-                const dy = p.y - mouse.y;
+                // parallax + mouse repel
+                let px = s.x + current.x * s.z * 6;
+                let py = s.y + current.y * s.z * 6;
+
+                const dx = px - mouse.x;
+                const dy = py - mouse.y;
                 const d = Math.hypot(dx, dy);
-                if (d < 120 && d > 0.1) {
-                    p.x += (dx / d) * 1.2 * p.z;
-                    p.y += (dy / d) * 1.2 * p.z;
+                if (d < 100 && d > 0.1) {
+                    px += (dx / d) * (100 - d) * 0.15;
+                    py += (dy / d) * (100 - d) * 0.15;
                 }
-                p.x += p.vx * p.z;
-                p.y += p.vy * p.z;
-                if (p.x < 0 || p.x > W) p.vx *= -1;
-                if (p.y < 0 || p.y > H) p.vy *= -1;
 
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r * p.z, 0, Math.PI * 2);
-                ctx.fillStyle = p.c;
-                ctx.shadowColor = p.c;
-                ctx.shadowBlur = 12;
-                ctx.globalAlpha = 0.7;
+                ctx.arc(px, py, s.r * s.z, 0, Math.PI * 2);
+                ctx.fillStyle = s.c;
+                ctx.globalAlpha = alpha;
+                ctx.shadowColor = s.c;
+                ctx.shadowBlur = 8 * s.z;
                 ctx.fill();
                 ctx.shadowBlur = 0;
                 ctx.globalAlpha = 1;
             });
 
+            // Shooting stars
+            for (let i = shooting.length - 1; i >= 0; i--) {
+                const sh = shooting[i];
+                sh.x += sh.vx;
+                sh.y += sh.vy;
+                sh.life -= 0.01;
+                if (sh.life <= 0) { shooting.splice(i, 1); continue; }
+                const grad = ctx.createLinearGradient(sh.x, sh.y, sh.x - sh.vx * 8, sh.y - sh.vy * 8);
+                grad.addColorStop(0, `rgba(0,255,255,${sh.life})`);
+                grad.addColorStop(1, 'rgba(0,255,255,0)');
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(sh.x, sh.y);
+                ctx.lineTo(sh.x - sh.vx * 8, sh.y - sh.vy * 8);
+                ctx.stroke();
+            }
             requestAnimationFrame(loop);
         }
+
+        setInterval(spawnShooting, 2500);
+
         window.addEventListener('resize', resize);
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
-        window.addEventListener('touchmove', e => { if (e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; } }, { passive: true });
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            tilt.x = (e.clientX / W - 0.5) * 2;
+            tilt.y = (e.clientY / H - 0.5) * 2;
+            const n1 = document.querySelector('.nebula-1');
+            const n2 = document.querySelector('.nebula-2');
+            const n3 = document.querySelector('.nebula-3');
+            if (n1) n1.style.transform = `translate(${tilt.x * 25}px, ${tilt.y * 25}px)`;
+            if (n2) n2.style.transform = `translate(${-tilt.x * 30}px, ${-tilt.y * 30}px)`;
+            if (n3) n3.style.transform = `translate(${tilt.x * 20}px, ${-tilt.y * 20}px)`;
+        });
+        window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; tilt.x = 0; tilt.y = 0; });
+        window.addEventListener('touchmove', e => {
+            if (e.touches[0]) {
+                mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY;
+                tilt.x = (mouse.x / W - 0.5) * 2;
+                tilt.y = (mouse.y / H - 0.5) * 2;
+            }
+        }, { passive: true });
+        window.addEventListener('touchend', () => { mouse.x = -9999; mouse.y = -9999; tilt.x = 0; tilt.y = 0; });
 
         resize();
         loop();
     })();
 
-    /* ============ Init ============ */
-    function init() {
-        renderAll();
-        switchView(S.activeView || 'dashboard');
-        console.log('%c716QX NEXUS 5.0 ✅', 'color:#00E5FF;font-size:20px;font-weight:bold;');
-        console.log('%cAll systems ready', 'color:#A855F7;font-size:14px;');
+    /* ================================================================
+       INIT
+       ================================================================ */
+    async function init() {
+        try {
+            await loadAll();
+            if (!S.frozen) {
+                renderAll();
+                switchView('dashboard');
+                await log('SITE_OPEN', 'user opened the site');
+            }
+        } catch (e) {
+            console.error(e);
+            toast('فشل التحميل', 'error', 5000);
+        } finally {
+            setTimeout(() => $('#loading').classList.add('hide'), 500);
+        }
+        console.log('%c716QX NEXUS 7.0 ✅', 'color:#00FFFF;font-size:20px;font-weight:bold;');
+        console.log('%cSite: ' + SITE_ID, 'color:#C026D3;font-size:12px;');
     }
 
-    /* ============ Expose ============ */
     Object.assign(window, {
         openDrawer, closeDrawer, switchView, openModal, closeModal,
+        dialogConfirm, dialogAlert, dialogPrompt, dialogOk, dialogCancel,
         transferDaily, resetMonthly, resetDaily, resetAll,
         openAddTableModal, suggestTable, confirmAddTable, renderTables,
-        openTableModal, closeTableModal, renderTableItems,
+        openTableDetail, renderTableDetail,
         updateTableCustomer, updateTableDiscount, changeQty, pauseItem, resumeItem, removeItem,
         openProductPicker, pickerBack, pickerSelectCat, pickerAddProduct,
         openEarly, quickPayOne, quickPayAll, confirmEarly,
         openCheckout, calcSplit, confirmCheckout,
         openTransfer, confirmTransfer, deleteCurrentTable,
         renderDebts, payDebt, payDebtFull,
-        renderInvoices, printInv, exportCSV, clearInvoices,
+        renderInvoices, openInvoice, printInv, printInvFromModal, exportCSV, clearInvoices,
         renderMenu, openAddCategoryModal, confirmAddCategory, deleteCategory,
         openAddProductModal, openEditProduct, typeChanged, confirmSaveProduct, deleteProduct
     });
@@ -2311,6 +1723,5 @@ select.inp option { background: #0a0a18; color: #fff; }
     }
 })();
 </script>
-
 </body>
 </html>
